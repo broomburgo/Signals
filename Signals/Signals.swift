@@ -1,16 +1,16 @@
 import Foundation
 
-enum SignalPersistence {
+public enum SignalPersistence {
 	case Stop
 	case Continue
 }
 
-protocol ObservableType {
+public protocol ObservableType {
 	associatedtype ObservedType
 	func observe(callback: ObservedType -> SignalPersistence) -> Self
 }
 
-protocol SignalType {
+public protocol SignalType {
 	associatedtype SentType
 	func send(value: SentType) -> Self
 }
@@ -34,15 +34,15 @@ private class BoxObservable<Observable: ObservableType>: BoxObservableBase<Obser
 	}
 }
 
-class AnyObservable<Wrapped>: ObservableType {
-	typealias ObservedType = Wrapped
+public class AnyObservable<Wrapped>: ObservableType {
+	public typealias ObservedType = Wrapped
 	private let box: BoxObservableBase<Wrapped>
 
-	init<Observable: ObservableType where Observable.ObservedType == ObservedType>(_ base: Observable) {
+	public init<Observable: ObservableType where Observable.ObservedType == ObservedType>(_ base: Observable) {
 		self.box = BoxObservable(base: base)
 	}
 
-	func observe(callback: ObservedType -> SignalPersistence) -> Self {
+	public func observe(callback: ObservedType -> SignalPersistence) -> Self {
 		box.observe(callback)
 		return self
 	}
@@ -78,8 +78,8 @@ private class FixedSignal<Wrapped>: ObservableType, SignalType {
 	}
 }
 
-class AbstractSignal<Wrapped>: SignalType {
-	typealias SentType = Wrapped
+public class AbstractSignal<Wrapped>: SignalType {
+	public typealias SentType = Wrapped
 
 	private let workerQueue: dispatch_queue_t
 	private let callbackQueue: dispatch_queue_t
@@ -95,7 +95,7 @@ class AbstractSignal<Wrapped>: SignalType {
 		return self
 	}
 
-	func send(value: SentType) -> Self {
+	public func send(value: SentType) -> Self {
 		dispatch_async(workerQueue) {
 			for signal in self.fixed {
 				dispatch_async(self.callbackQueue) {
@@ -110,30 +110,30 @@ class AbstractSignal<Wrapped>: SignalType {
 	}
 }
 
-class Signal<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
-	typealias ObservedType = Wrapped
+public class Signal<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
+	public typealias ObservedType = Wrapped
 
-	override init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
+	public override init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
 		super.init(workerQueue: workerQueue, callbackQueue: callbackQueue)
 	}
 
-	func observe(callback: SentType -> SignalPersistence) -> Self {
+	public func observe(callback: SentType -> SignalPersistence) -> Self {
 		super.observeBase(callback)
 		return self
 	}
 }
 
-class SignalMap<Previous,Next>: AbstractSignal<Previous>, ObservableType {
-	typealias ObservedType = Next
+public class SignalMap<Previous,Next>: AbstractSignal<Previous>, ObservableType {
+	public typealias ObservedType = Next
 
-	let root: AnyObservable<Previous>
-	let transform: Previous -> Next
+	private let root: AnyObservable<Previous>
+	private let transform: Previous -> Next
 	private init<Observable: ObservableType where Observable.ObservedType == Previous>(root: Observable, transform: Previous -> Next) {
 		self.root = AnyObservable(root)
 		self.transform = transform
 	}
 
-	func observe(callback: Next -> SignalPersistence) -> Self {
+	public func observe(callback: Next -> SignalPersistence) -> Self {
 		root.observe { [weak self] previous in
 			guard let this = self else { return .Stop }
 			return callback(this.transform(previous))
@@ -142,18 +142,18 @@ class SignalMap<Previous,Next>: AbstractSignal<Previous>, ObservableType {
 	}
 }
 
-class SignalFlatMap<Previous,Next>: AbstractSignal<Previous>, ObservableType {
-	typealias ObservedType = Next
+public class SignalFlatMap<Previous,Next>: AbstractSignal<Previous>, ObservableType {
+	public typealias ObservedType = Next
 
-	let root: AnyObservable<Previous>
-	let transform: Previous -> AnyObservable<Next>
+	private let root: AnyObservable<Previous>
+	private let transform: Previous -> AnyObservable<Next>
 	private var dependentPersistence = SignalPersistence.Continue
 	private init<Observable: ObservableType, OtherObservable: ObservableType where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next>(root: Observable, transform: Previous -> OtherObservable) {
 		self.root = AnyObservable(root)
 		self.transform = { AnyObservable(transform($0)) }
 	}
 
-	func observe(callback: Next -> SignalPersistence) -> Self {
+	public func observe(callback: Next -> SignalPersistence) -> Self {
 		root.observe { [weak self] previous in
 			guard let this = self else { return .Stop }
 			guard this.dependentPersistence != .Stop else { return .Stop }
@@ -170,17 +170,17 @@ class SignalFlatMap<Previous,Next>: AbstractSignal<Previous>, ObservableType {
 	}
 }
 
-class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
-	typealias ObservedType = Wrapped
+public class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
+	public typealias ObservedType = Wrapped
 
-	let root: AnyObservable<Wrapped>
-	let predicate: Wrapped -> Bool
-	private init<Observable: ObservableType where Observable.ObservedType == Wrapped>(root: Observable, predicate: Wrapped -> Bool) {
+	private let root: AnyObservable<Wrapped>
+	private let predicate: Wrapped -> Bool
+	private init<Observable: ObservableType where Observable.ObservedType == Wrapped>(root: Observable, predicate: ObservedType -> Bool) {
 		self.root = AnyObservable(root)
 		self.predicate = predicate
 	}
 
-	func observe(callback: Wrapped -> SignalPersistence) -> Self {
+	public func observe(callback: Wrapped -> SignalPersistence) -> Self {
 		root.observe { [weak self] value in
 			guard let this = self else { return .Stop }
 			let valid = this.predicate(value)
@@ -195,15 +195,15 @@ class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
 }
 
 extension ObservableType {
-	func map<Other>(transform: ObservedType -> Other) -> SignalMap<ObservedType,Other> {
-		return SignalMap(root: self, transform: transform)
+	public func map<Other>(transform: ObservedType -> Other) -> AnyObservable<Other> {
+		return AnyObservable(SignalMap(root: self, transform: transform))
 	}
 
-	func flatMap<OtherObservable: ObservableType>(transform: ObservedType -> OtherObservable) -> SignalFlatMap<ObservedType,OtherObservable.ObservedType> {
-		return SignalFlatMap(root: self, transform: transform)
+	public func flatMap<OtherObservable: ObservableType>(transform: ObservedType -> OtherObservable) -> AnyObservable<OtherObservable.ObservedType> {
+		return AnyObservable(SignalFlatMap(root: self, transform: transform))
 	}
 
-	func filter(predicate: ObservedType -> Bool) -> SignalFilter<ObservedType> {
-		return SignalFilter(root: self, predicate: predicate)
+	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
+		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
 }
