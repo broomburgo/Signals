@@ -11,6 +11,8 @@
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CD9D1D32BDD5003CE220 /* SignalsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CD9C1D32BDD5003CE220 /* SignalsTests.swift */; };
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
+		38BC834C1D364761000F8BDE /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834B1D364761000F8BDE /* Deferred.swift */; };
+		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
 		38EE33001D33E1A800E4DF8E /* Bind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EE32FF1D33E1A800E4DF8E /* Bind.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +34,8 @@
 		3826CD9C1D32BDD5003CE220 /* SignalsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalsTests.swift; sourceTree = "<group>"; };
 		3826CD9E1D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3826CDA71D32BDE0003CE220 /* Signals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signals.swift; sourceTree = "<group>"; };
+		38BC834B1D364761000F8BDE /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
+		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		38EE32FF1D33E1A800E4DF8E /* Bind.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bind.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,8 +62,9 @@
 			isa = PBXGroup;
 			children = (
 				3826CD8F1D32BDD5003CE220 /* Signals */,
-				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
+				38BC834F1D3647FF000F8BDE /* Resources */,
 				3826CD8E1D32BDD5003CE220 /* Products */,
+				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,10 +80,10 @@
 		3826CD8F1D32BDD5003CE220 /* Signals */ = {
 			isa = PBXGroup;
 			children = (
-				3826CD901D32BDD5003CE220 /* Signals.h */,
-				3826CD921D32BDD5003CE220 /* Info.plist */,
-				3826CDA71D32BDE0003CE220 /* Signals.swift */,
 				38EE32FF1D33E1A800E4DF8E /* Bind.swift */,
+				38BC834B1D364761000F8BDE /* Deferred.swift */,
+				38BC834D1D3647DF000F8BDE /* Operators.swift */,
+				3826CDA71D32BDE0003CE220 /* Signals.swift */,
 			);
 			path = Signals;
 			sourceTree = "<group>";
@@ -90,6 +95,16 @@
 				3826CD9E1D32BDD5003CE220 /* Info.plist */,
 			);
 			path = SignalsTests;
+			sourceTree = "<group>";
+		};
+		38BC834F1D3647FF000F8BDE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3826CD901D32BDD5003CE220 /* Signals.h */,
+				3826CD921D32BDD5003CE220 /* Info.plist */,
+			);
+			name = Resources;
+			path = Signals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +216,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				38EE33001D33E1A800E4DF8E /* Bind.swift in Sources */,
+				38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */,
+				38BC834C1D364761000F8BDE /* Deferred.swift in Sources */,
 				3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
