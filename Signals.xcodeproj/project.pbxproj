@@ -62,7 +62,6 @@
 			isa = PBXGroup;
 			children = (
 				3826CD8F1D32BDD5003CE220 /* Signals */,
-				38BC834F1D3647FF000F8BDE /* Resources */,
 				3826CD8E1D32BDD5003CE220 /* Products */,
 				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
 			);
@@ -80,6 +79,7 @@
 		3826CD8F1D32BDD5003CE220 /* Signals */ = {
 			isa = PBXGroup;
 			children = (
+				38BC834F1D3647FF000F8BDE /* Resources */,
 				38EE32FF1D33E1A800E4DF8E /* Bind.swift */,
 				38BC834B1D364761000F8BDE /* Deferred.swift */,
 				38BC834D1D3647DF000F8BDE /* Operators.swift */,
@@ -104,7 +104,6 @@
 				3826CD921D32BDD5003CE220 /* Info.plist */,
 			);
 			name = Resources;
-			path = Signals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
