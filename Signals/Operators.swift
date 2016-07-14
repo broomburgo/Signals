@@ -9,9 +9,8 @@ public class SignalMap<Previous,Next>: AbstractSignal<Previous>, ObservableType 
 	}
 
 	public func observe(callback: Next -> SignalPersistence) -> Self {
-		root.observe { [weak self] previous in
-			guard let this = self else { return .Stop }
-			return callback(this.transform(previous))
+		root.observe { previous in
+			return callback(self.transform(previous))
 		}
 		return self
 	}
@@ -29,17 +28,16 @@ public class SignalFlatMap<Previous,Next>: AbstractSignal<Previous>, ObservableT
 	}
 
 	public func observe(callback: Next -> SignalPersistence) -> Self {
-		root.observe { [weak self] previous in
-			guard let this = self else { return .Stop }
-			guard this.dependentPersistence != .Stop else { return .Stop }
-			let newObservable = this.transform(previous)
-			newObservable.observe { [weak this] value in
-				guard let this = this else { return .Stop }
+		root.observe { previous in
+			guard self.dependentPersistence != .Stop else { return .Stop }
+			let newObservable = self.transform(previous)
+			newObservable.observe { [weak self] value in
+				guard let this = self else { return .Stop }
 				let newPersistence = callback(value)
 				this.dependentPersistence = newPersistence
 				return newPersistence
 			}
-			return this.dependentPersistence
+			return self.dependentPersistence
 		}
 		return self
 	}
@@ -56,9 +54,8 @@ public class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
 	}
 
 	public func observe(callback: Wrapped -> SignalPersistence) -> Self {
-		root.observe { [weak self] value in
-			guard let this = self else { return .Stop }
-			if this.predicate(value) {
+		root.observe { value in
+			if self.predicate(value) {
 				return callback(value)
 			} else {
 				return .Continue
