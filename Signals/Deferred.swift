@@ -84,6 +84,10 @@ public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferre
 		return self
 	}
 
+	public func getReadOnly() -> Deferred<Wrapped> {
+		return Deferred(value: value, observable: signal)
+	}
+
 	public init(_ value: Wrapped) {
 		self.signal = Signal()
 		super.init(value: value, observable: signal)
