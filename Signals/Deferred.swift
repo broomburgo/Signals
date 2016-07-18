@@ -19,7 +19,7 @@ public class Deferred<Wrapped>: DeferredType {
 	private var value: Wrapped?
 
 	private let root: AnyObservable<WrappedType>
-	private init<Observable: ObservableType where Observable.ObservedType == WrappedType>(value: Wrapped?, observable: Observable) {
+	init<Observable: ObservableType where Observable.ObservedType == WrappedType>(value: Wrapped?, observable: Observable) {
 		self.value = value
 		self.root = AnyObservable(observable)
 	}

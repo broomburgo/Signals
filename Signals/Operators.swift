@@ -70,6 +70,10 @@ extension ObservableType {
 		return AnyObservable(self)
 	}
 
+	public func single() -> Deferred<ObservedType> {
+		return Deferred(value: nil, observable: self)
+	}
+
 	public func map<Other>(transform: ObservedType -> Other) -> AnyObservable<Other> {
 		return AnyObservable(SignalMap(root: self, transform: transform))
 	}
