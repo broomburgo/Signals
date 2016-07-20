@@ -40,10 +40,6 @@ public class Deferred<Wrapped>: DeferredType {
 			return Deferred<Other>(value: nil, observable: root.flatMap(transform))
 		}
 	}
-
-	public func filter(predicate: Wrapped -> Bool) -> Deferred<Wrapped> {
-		return Deferred(value: value, observable: root.filter(predicate))
-	}
 }
 
 public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferredType {

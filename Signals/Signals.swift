@@ -75,12 +75,12 @@ public class AbstractSignal<Wrapped>: SignalType {
 	private let callbackQueue: dispatch_queue_t
 	private var fixed: [FixedSignal<SentType>] = []
 
-	internal init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
+	init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
 		self.workerQueue = workerQueue
 		self.callbackQueue = callbackQueue
 	}
 
-	internal func observeBase(callback: SentType -> SignalPersistence) -> Self {
+	func observeBase(callback: SentType -> SignalPersistence) -> Self {
 		fixed.append(FixedSignal<SentType>().observe(callback))
 		return self
 	}
