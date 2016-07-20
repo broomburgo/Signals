@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftCheck
 @testable import Signals
 
 class SignalsTests: XCTestCase {

@@ -11,6 +11,8 @@
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CD9D1D32BDD5003CE220 /* SignalsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CD9C1D32BDD5003CE220 /* SignalsTests.swift */; };
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
+		38AA43971D3F68B3001F0438 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; };
+		38AA439A1D3F68DF001F0438 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38BC834C1D364761000F8BDE /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834B1D364761000F8BDE /* Deferred.swift */; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
 		38BC835A1D367F7E000F8BDE /* Accessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Accessories.swift */; };
@@ -27,6 +29,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		38AA43991D3F68D5001F0438 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				38AA439A1D3F68DF001F0438 /* SwiftCheck.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3826CD8D1D32BDD5003CE220 /* Signals.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Signals.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD901D32BDD5003CE220 /* Signals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Signals.h; sourceTree = "<group>"; };
@@ -35,6 +50,7 @@
 		3826CD9C1D32BDD5003CE220 /* SignalsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalsTests.swift; sourceTree = "<group>"; };
 		3826CD9E1D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3826CDA71D32BDE0003CE220 /* Signals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signals.swift; sourceTree = "<group>"; };
+		38AA43961D3F68B3001F0438 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftCheck.framework; path = Carthage/Build/iOS/SwiftCheck.framework; sourceTree = "<group>"; };
 		38BC834B1D364761000F8BDE /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		38BC83591D367F7E000F8BDE /* Accessories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessories.swift; sourceTree = "<group>"; };
@@ -46,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38AA43971D3F68B3001F0438 /* SwiftCheck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				3826CD8F1D32BDD5003CE220 /* Signals */,
+				38AA43981D3F68B8001F0438 /* Frameworks */,
 				3826CD8E1D32BDD5003CE220 /* Products */,
 				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
 			);
@@ -100,6 +118,14 @@
 			path = SignalsTests;
 			sourceTree = "<group>";
 		};
+		38AA43981D3F68B8001F0438 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				38AA43961D3F68B3001F0438 /* SwiftCheck.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		38BC834F1D3647FF000F8BDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +157,7 @@
 				3826CD891D32BDD5003CE220 /* Frameworks */,
 				3826CD8A1D32BDD5003CE220 /* Headers */,
 				3826CD8B1D32BDD5003CE220 /* Resources */,
+				38AA43991D3F68D5001F0438 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -343,6 +370,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Signals/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -362,6 +393,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Signals/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
