@@ -3,7 +3,7 @@ public class SignalMap<Previous,Next>: AbstractSignal<Previous>, ObservableType 
 
 	private let root: AnyObservable<Previous>
 	private let transform: Previous -> Next
-	private init<Observable: ObservableType where Observable.ObservedType == Previous>(root: Observable, transform: Previous -> Next) {
+	init<Observable: ObservableType where Observable.ObservedType == Previous>(root: Observable, transform: Previous -> Next) {
 		self.root = AnyObservable(root)
 		self.transform = transform
 	}
@@ -22,7 +22,7 @@ public class SignalFlatMap<Previous,Next>: AbstractSignal<Previous>, ObservableT
 	private let root: AnyObservable<Previous>
 	private let transform: Previous -> AnyObservable<Next>
 	private var dependentPersistence = SignalPersistence.Continue
-	private init<Observable: ObservableType, OtherObservable: ObservableType where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next>(root: Observable, transform: Previous -> OtherObservable) {
+	init<Observable: ObservableType, OtherObservable: ObservableType where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next>(root: Observable, transform: Previous -> OtherObservable) {
 		self.root = AnyObservable(root)
 		self.transform = { AnyObservable(transform($0)) }
 	}
@@ -48,7 +48,7 @@ public class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
 
 	private let root: AnyObservable<Wrapped>
 	private let predicate: Wrapped -> Bool
-	private init<Observable: ObservableType where Observable.ObservedType == Wrapped>(root: Observable, predicate: ObservedType -> Bool) {
+	init<Observable: ObservableType where Observable.ObservedType == Wrapped>(root: Observable, predicate: ObservedType -> Bool) {
 		self.root = AnyObservable(root)
 		self.predicate = predicate
 	}
@@ -62,27 +62,5 @@ public class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
 			}
 		}
 		return self
-	}
-}
-
-extension ObservableType {
-	public func observable() -> AnyObservable<ObservedType> {
-		return AnyObservable(self)
-	}
-
-	public func single() -> Deferred<ObservedType> {
-		return Deferred(value: nil, observable: self)
-	}
-
-	public func map<Other>(transform: ObservedType -> Other) -> AnyObservable<Other> {
-		return AnyObservable(SignalMap(root: self, transform: transform))
-	}
-
-	public func flatMap<OtherObservable: ObservableType>(transform: ObservedType -> OtherObservable) -> AnyObservable<OtherObservable.ObservedType> {
-		return AnyObservable(SignalFlatMap(root: self, transform: transform))
-	}
-
-	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
-		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
 }

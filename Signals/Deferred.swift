@@ -1,24 +1,9 @@
-import Foundation
-import Functional
-
-public protocol DeferredType {
-	associatedtype WrappedType
-
-	var isFilled: Bool { get }
-	func peek() -> WrappedType?
-	func upon(callback: WrappedType -> ()) -> Self
-}
-
-public protocol FillableDeferredType: DeferredType {
-	func fill(value: WrappedType) -> Self
-}
-
 public class Deferred<Wrapped>: DeferredType {
 	public typealias WrappedType = Wrapped
 
 	private var value: Wrapped?
-
 	private let root: AnyObservable<WrappedType>
+	
 	init<Observable: ObservableType where Observable.ObservedType == WrappedType>(value: Wrapped?, observable: Observable) {
 		self.value = value
 		self.root = AnyObservable(observable)
@@ -58,14 +43,6 @@ public class Deferred<Wrapped>: DeferredType {
 
 	public func filter(predicate: Wrapped -> Bool) -> Deferred<Wrapped> {
 		return Deferred(value: value, observable: root.filter(predicate))
-	}
-}
-
-extension Deferred: ObservableType {
-	public typealias ObservedType = WrappedType
-
-	public func observe(callback: ObservedType -> SignalPersistence) -> Self {
-		return upon(callback |> ignoreOutput)
 	}
 }
 

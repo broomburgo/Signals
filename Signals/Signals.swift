@@ -1,19 +1,8 @@
 import Foundation
-import Functional
 
 public enum SignalPersistence {
 	case Stop
 	case Continue
-}
-
-public protocol ObservableType {
-	associatedtype ObservedType
-	func observe(callback: ObservedType -> SignalPersistence) -> Self
-}
-
-public protocol SignalType {
-	associatedtype SentType
-	func send(value: SentType) -> Self
 }
 
 class BoxObservableBase<Wrapped>: ObservableType {

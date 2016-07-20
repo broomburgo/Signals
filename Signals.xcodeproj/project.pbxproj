@@ -13,10 +13,10 @@
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
 		38AA43971D3F68B3001F0438 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; };
 		38AA439A1D3F68DF001F0438 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38BC834C1D364761000F8BDE /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834B1D364761000F8BDE /* Deferred.swift */; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
-		38BC835A1D367F7E000F8BDE /* Accessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Accessories.swift */; };
-		38EE33001D33E1A800E4DF8E /* Bind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EE32FF1D33E1A800E4DF8E /* Bind.swift */; };
+		38BC835A1D367F7E000F8BDE /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Tools.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,10 +51,10 @@
 		3826CD9E1D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3826CDA71D32BDE0003CE220 /* Signals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signals.swift; sourceTree = "<group>"; };
 		38AA43961D3F68B3001F0438 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftCheck.framework; path = Carthage/Build/iOS/SwiftCheck.framework; sourceTree = "<group>"; };
+		38AA43A11D3F849A001F0438 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		38BC834B1D364761000F8BDE /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
-		38BC83591D367F7E000F8BDE /* Accessories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessories.swift; sourceTree = "<group>"; };
-		38EE32FF1D33E1A800E4DF8E /* Bind.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bind.swift; sourceTree = "<group>"; };
+		38BC83591D367F7E000F8BDE /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,9 +81,9 @@
 			isa = PBXGroup;
 			children = (
 				3826CD8F1D32BDD5003CE220 /* Signals */,
+				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
 				38AA43981D3F68B8001F0438 /* Frameworks */,
 				3826CD8E1D32BDD5003CE220 /* Products */,
-				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,11 +99,7 @@
 		3826CD8F1D32BDD5003CE220 /* Signals */ = {
 			isa = PBXGroup;
 			children = (
-				38BC83591D367F7E000F8BDE /* Accessories.swift */,
-				38EE32FF1D33E1A800E4DF8E /* Bind.swift */,
-				38BC834B1D364761000F8BDE /* Deferred.swift */,
-				38BC834D1D3647DF000F8BDE /* Operators.swift */,
-				3826CDA71D32BDE0003CE220 /* Signals.swift */,
+				38AA439F1D3F83EB001F0438 /* Elements */,
 				38BC834F1D3647FF000F8BDE /* Resources */,
 			);
 			path = Signals;
@@ -124,6 +120,26 @@
 				38AA43961D3F68B3001F0438 /* SwiftCheck.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		38AA439F1D3F83EB001F0438 /* Elements */ = {
+			isa = PBXGroup;
+			children = (
+				38BC834B1D364761000F8BDE /* Deferred.swift */,
+				38BC834D1D3647DF000F8BDE /* Operators.swift */,
+				38AA43A11D3F849A001F0438 /* Protocols.swift */,
+				3826CDA71D32BDE0003CE220 /* Signals.swift */,
+				38BC83591D367F7E000F8BDE /* Tools.swift */,
+				38AA43A01D3F83F6001F0438 /* Tests */,
+			);
+			name = Elements;
+			sourceTree = "<group>";
+		};
+		38AA43A01D3F83F6001F0438 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Tests;
 			sourceTree = "<group>";
 		};
 		38BC834F1D3647FF000F8BDE /* Resources */ = {
@@ -244,9 +260,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38BC835A1D367F7E000F8BDE /* Accessories.swift in Sources */,
-				38EE33001D33E1A800E4DF8E /* Bind.swift in Sources */,
+				38BC835A1D367F7E000F8BDE /* Tools.swift in Sources */,
 				38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */,
+				38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */,
 				38BC834C1D364761000F8BDE /* Deferred.swift in Sources */,
 				3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */,
 			);
