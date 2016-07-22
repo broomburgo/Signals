@@ -1,3 +1,5 @@
+import Functional
+
 public class Deferred<Wrapped>: DeferredType {
 	public typealias WrappedType = Wrapped
 
@@ -42,7 +44,7 @@ public class Deferred<Wrapped>: DeferredType {
 	}
 }
 
-public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferredType {
+public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferredType, WrapperType {
 	private let signal: Signal<Wrapped>
 
 	public init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
