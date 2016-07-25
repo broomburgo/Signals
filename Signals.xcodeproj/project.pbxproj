@@ -10,8 +10,6 @@
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
-		38AA43971D3F68B3001F0438 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; };
-		38AA439A1D3F68DF001F0438 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38AA43A61D3F87DF001F0438 /* SignalsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* SignalsSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
@@ -19,6 +17,8 @@
 		38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */; };
 		38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */; };
 		38B2D89C1D46580C00E27E62 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B2D89B1D46580C00E27E62 /* Bindings.swift */; };
+		38B2D8B91D4667E600E27E62 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; };
+		38B2D8BB1D4667EF00E27E62 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38BC834C1D364761000F8BDE /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834B1D364761000F8BDE /* Deferred.swift */; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
 		38BC835A1D367F7E000F8BDE /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Utilities.swift */; };
@@ -42,7 +42,16 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				38AA439A1D3F68DF001F0438 /* SwiftCheck.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38B2D8BA1D4667E900E27E62 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				38B2D8BB1D4667EF00E27E62 /* SwiftCheck.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,7 +83,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38AA43971D3F68B3001F0438 /* SwiftCheck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +91,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */,
+				38B2D8B91D4667E600E27E62 /* SwiftCheck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +218,7 @@
 				3826CD931D32BDD5003CE220 /* Sources */,
 				3826CD941D32BDD5003CE220 /* Frameworks */,
 				3826CD951D32BDD5003CE220 /* Resources */,
+				38B2D8BA1D4667E900E27E62 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -450,6 +460,10 @@
 		3826CDA51D32BDD5003CE220 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = it.exfalsoquodlibet.SignalsTests;
@@ -460,6 +474,10 @@
 		3826CDA61D32BDD5003CE220 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = it.exfalsoquodlibet.SignalsTests;
