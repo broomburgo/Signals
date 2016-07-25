@@ -20,10 +20,7 @@ public protocol FillableDeferredType: DeferredType {
 	func fill(value: WrappedType) -> Self
 }
 
-public protocol BindableType {
-	associatedtype BoundType
-	func bind<Observable: ObservableType where Observable.ObservedType == BoundType>(to observable: Observable)
-}
+
 
 extension ObservableType {
 	public func observable() -> AnyObservable<ObservedType> {
@@ -54,17 +51,6 @@ extension Deferred: ObservableType {
 		return upon {
 			callback($0)
 			return
-		}
-	}
-}
-
-extension AbstractSignal: BindableType {
-	public typealias BoundType = Wrapped
-	public func bind<Observable : ObservableType where Observable.ObservedType == BoundType>(to observable: Observable) {
-		observable.observe { [weak self] value in
-			guard let this = self else { return .Stop }
-			this.send(value)
-			return .Continue
 		}
 	}
 }
