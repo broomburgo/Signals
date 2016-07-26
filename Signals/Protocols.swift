@@ -42,6 +42,10 @@ extension ObservableType {
 	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
 		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
+
+	public func cached() -> AnyObservable<ObservedType> {
+		return AnyObservable(SignalCached(root: self))
+	}
 }
 
 extension Deferred: ObservableType {

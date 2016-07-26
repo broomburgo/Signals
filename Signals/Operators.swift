@@ -64,3 +64,37 @@ public class SignalFilter<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
 		return self
 	}
 }
+
+public class SignalCached<Wrapped>: AbstractSignal<Wrapped>, ObservableType {
+	public typealias ObservedType = Wrapped
+
+	private let root: AnyObservable<Wrapped>
+	private var cachedValue: Wrapped? = nil
+	private var dependentPersistence = SignalPersistence.Continue
+	private var ignoreFirst: Bool = false
+	init<Observable: ObservableType where Observable.ObservedType == Wrapped>(root: Observable) {
+		self.root = AnyObservable(root)
+		super.init()
+		root.observe { value in
+			guard self.ignoreFirst == false else { return .Stop }
+			guard self.dependentPersistence != .Stop else { return .Stop }
+			self.cachedValue = value
+			return self.dependentPersistence
+		}
+	}
+
+	public func observe(callback: Wrapped -> SignalPersistence) -> Self {
+		ignoreFirst = true
+		if let cached = cachedValue {
+			dependentPersistence = callback(cached)
+		}
+		root.observe { value in
+			guard self.dependentPersistence != .Stop else { return .Stop }
+			self.cachedValue = value
+			self.dependentPersistence = callback(value)
+			return self.dependentPersistence
+		}
+
+		return self
+	}
+}

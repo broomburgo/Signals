@@ -141,4 +141,41 @@ class OperatorsSpec: XCTestCase {
 
 		waitForExpectationsWithTimeout(1, handler: nil)
 	}
+
+	func testCached() {
+		let signal = Signal<Int>()
+
+		let expectedValue1 = 42
+
+		let cached = signal.cached()
+
+		signal.send(expectedValue1)
+
+		let willObserve1 = expectationWithDescription("willObserve1")
+		let willObserve2 = expectationWithDescription("willObserve2")
+
+		let delayTime1 = dispatch_time(DISPATCH_TIME_NOW, Int64(0.25 * Double(NSEC_PER_SEC)))
+		dispatch_after(delayTime1, dispatch_get_main_queue()) {
+			let expectedValue2 = 43
+
+			var observedOnce = false
+
+			cached.observe { value in
+				if observedOnce {
+					XCTAssertEqual(value, expectedValue2)
+					willObserve2.fulfill()
+					return .Continue
+				} else {
+					observedOnce = true
+					XCTAssertEqual(value, expectedValue1)
+					willObserve1.fulfill()
+					return .Continue
+				}
+			}
+
+			signal.send(expectedValue2)
+		}
+
+		waitForExpectationsWithTimeout(1, handler: nil)
+	}
 }
