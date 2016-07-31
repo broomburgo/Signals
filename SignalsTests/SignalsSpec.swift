@@ -9,7 +9,7 @@ class SignalsSpec: XCTestCase {
 		let expectedValue1 = 42
 		let willObserve1 = expectationWithDescription("willObserve1")
 
-		signal.observe { value in
+		signal.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .Continue
@@ -30,7 +30,7 @@ class SignalsSpec: XCTestCase {
 
 		var observedOnce = false
 
-		signal.observe { value in
+		signal.onNext { value in
 			if observedOnce {
 				XCTAssertEqual(value, expectedValue2)
 				willObserve2.fulfill()
@@ -61,7 +61,7 @@ class SignalsSpec: XCTestCase {
 
 		var observedOnce = false
 
-		signal.observe { value in
+		signal.onNext { value in
 			if observedOnce {
 				fatalError()
 			} else {

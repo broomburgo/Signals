@@ -1,9 +1,9 @@
-public protocol ObservableType {
+public protocol ObservableType: class {
 	associatedtype ObservedType
-	func observe(callback: ObservedType -> SignalPersistence) -> Self
+	func onNext(callback: ObservedType -> SignalPersistence) -> Self
 }
 
-public protocol SignalType {
+public protocol SignalType: class {
 	associatedtype SentType
 	func send(value: SentType) -> Self
 }
@@ -19,8 +19,6 @@ public protocol DeferredType {
 public protocol FillableDeferredType: DeferredType {
 	func fill(value: WrappedType) -> Self
 }
-
-
 
 extension ObservableType {
 	public func observable() -> AnyObservable<ObservedType> {
@@ -42,16 +40,18 @@ extension ObservableType {
 	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
 		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
+}
 
-	public func cached() -> AnyObservable<ObservedType> {
-		return AnyObservable(SignalCached(root: self))
+extension ObservableType where Self: SignalType, ObservedType == Self.SentType {
+	public func cached() -> SignalCached<ObservedType> {
+		return SignalCached<ObservedType>(rootObservable: self, rootSignal: self)
 	}
 }
 
 extension Deferred: ObservableType {
 	public typealias ObservedType = WrappedType
 
-	public func observe(callback: ObservedType -> SignalPersistence) -> Self {
+	public func onNext(callback: ObservedType -> SignalPersistence) -> Self {
 		return upon {
 			callback($0)
 			return

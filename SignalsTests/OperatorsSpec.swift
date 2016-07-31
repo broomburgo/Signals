@@ -10,7 +10,7 @@ class OperatorsSpec: XCTestCase {
 		let expectedValue1 = "42"
 		let willObserve1 = expectationWithDescription("willObserve1")
 
-		signal.map { "\($0)" }.observe { value in
+		signal.map { "\($0)" }.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .Continue
@@ -31,12 +31,12 @@ class OperatorsSpec: XCTestCase {
 		let willObserve2 = expectationWithDescription("willObserve2")
 
 		signal
-			.map { $0*2 } .observe { value in
+			.map { $0*2 } .onNext { value in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
 				return .Continue
 			}
-			.map { "\($0)"} .observe { value in
+			.map { "\($0)"} .onNext { value in
 				XCTAssertEqual(value, expectedValue2)
 				willObserve2.fulfill()
 				return .Continue
@@ -63,7 +63,7 @@ class OperatorsSpec: XCTestCase {
 				willObserve1.fulfill()
 				return signal2
 			}
-			.observe { value in
+			.onNext { value in
 				XCTAssertEqual(value, expectedValue2)
 				willObserve2.fulfill()
 				return .Continue
@@ -97,7 +97,7 @@ class OperatorsSpec: XCTestCase {
 				willObserve1.fulfill()
 				return signal2
 			}
-			.observe { value in
+			.onNext { value in
 				XCTAssertEqual(value, expectedValue2)
 				willObserve2.fulfill()
 				return .Stop
@@ -130,7 +130,7 @@ class OperatorsSpec: XCTestCase {
 		let expectedValue1 = 43
 		let willObserve1 = expectationWithDescription("willObserve1")
 
-		signal.filter { $0 != unexpectedValue1 }.observe { value in
+		signal.filter { $0 != unexpectedValue1 }.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .Continue
@@ -160,7 +160,7 @@ class OperatorsSpec: XCTestCase {
 
 			var observedOnce = false
 
-			cached.observe { value in
+			cached.onNext { value in
 				if observedOnce {
 					XCTAssertEqual(value, expectedValue2)
 					willObserve2.fulfill()

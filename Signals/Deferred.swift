@@ -23,7 +23,7 @@ public class Deferred<Wrapped>: DeferredType {
 		if let value = peek() {
 			callback(value)
 		} else {
-			root.observe {
+			root.onNext {
 				callback($0)
 				return .Stop
 			}

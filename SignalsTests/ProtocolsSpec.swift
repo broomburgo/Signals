@@ -11,7 +11,7 @@ class ProtocolsSpec: XCTestCase {
 
 		let willObserve = expectationWithDescription("willObserve")
 
-		deferred.observable().observe { value in
+		deferred.observable().onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
 			return .Continue
@@ -60,7 +60,7 @@ class ProtocolsSpec: XCTestCase {
 
 		let willObserve = expectationWithDescription("willObserve")
 
-		signal2.observe { value in
+		signal2.onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
 			return .Continue
@@ -82,7 +82,7 @@ class ProtocolsSpec: XCTestCase {
 
 		let willObserve = expectationWithDescription("willObserve")
 
-		signal.observe { value in
+		signal.onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
 			return .Continue
