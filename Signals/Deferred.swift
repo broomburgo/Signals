@@ -42,6 +42,14 @@ public class Deferred<Wrapped>: DeferredType {
 			return Deferred<Other>(value: nil, observable: root.flatMap(transform))
 		}
 	}
+
+	public func zip<Other>(with other: Deferred<Other>) -> Deferred<(Wrapped,Other)> {
+		return flatMap { (selfValue) in
+			other.map { otherValue in
+				(selfValue,otherValue)
+			}
+		}
+	}
 }
 
 public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferredType, WrapperType {
