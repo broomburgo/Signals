@@ -55,9 +55,13 @@ public class Deferred<Wrapped>: DeferredType {
 public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferredType, WrapperType {
 	private let signal: Signal<Wrapped>
 
-	public init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
-		self.signal = Signal<Wrapped>(workerQueue: workerQueue, callbackQueue: callbackQueue)
+	init(signal: Signal<Wrapped>) {
+		self.signal = signal
 		super.init(value: nil, observable: signal)
+	}
+
+	public convenience init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
+		self.init(signal: Signal<Wrapped>(workerQueue: workerQueue, callbackQueue: callbackQueue))
 	}
 
 	public func fill(value: WrappedType) -> Self {
@@ -74,5 +78,14 @@ public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferre
 	public init(_ value: Wrapped) {
 		self.signal = Signal()
 		super.init(value: value, observable: signal)
+	}
+}
+
+extension Deferred {
+	public func union(with other: Deferred, workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) -> Deferred {
+		let fillable = FillableDeferred<Wrapped>(workerQueue: workerQueue, callbackQueue: callbackQueue)
+		upon { fillable.fill($0) }
+		other.upon { fillable.fill($0) }
+		return fillable.getReadOnly()
 	}
 }
