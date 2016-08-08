@@ -44,10 +44,10 @@ public class Deferred<Wrapped>: DeferredType {
 	}
 
 	public func zip<Other>(with other: Deferred<Other>) -> Deferred<(Wrapped,Other)> {
-		return flatMap { (selfValue) in
-			other.map { otherValue in
-				(selfValue,otherValue)
-			}
+		if let value = value {
+			return other.map { (value,$0) }
+		} else {
+			return Deferred<(Wrapped,Other)>(value: nil, observable: root.zip(with: other))
 		}
 	}
 }

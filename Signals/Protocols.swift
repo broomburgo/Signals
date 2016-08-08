@@ -40,6 +40,14 @@ extension ObservableType {
 	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
 		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
+
+	public func zip<OtherObservable: ObservableType>(with other: OtherObservable) -> AnyObservable<(ObservedType,OtherObservable.ObservedType)> {
+		return flatMap { selfValue in
+			other.map { otherValue in
+				(selfValue,otherValue)
+			}
+		}
+	}
 }
 
 extension ObservableType where Self: SignalType, ObservedType == Self.SentType {
