@@ -26,7 +26,7 @@ public struct WriterDeferred<Wrapped, Logger: Monoid>: WrapperType {
 
 	public func flatMap<Other>(transform: Wrapped -> FillableDeferred<Writer<Other,Logger>>) -> WriterDeferred<Other,Logger> {
 		return WriterDeferred<Other,Logger>(internalDeferred.flatMap { writer in
-			let (oldValue, _) = writer.runWriter()
+			let (oldValue, _) = writer.runWriter
 			let newDeferred = transform(oldValue)
 			return newDeferred.map { newWriter in writer.flatMap { _ in newWriter } }
 			}
