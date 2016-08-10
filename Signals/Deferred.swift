@@ -1,91 +1,152 @@
 import Functional
 
-public class Deferred<Wrapped>: DeferredType {
-	public typealias WrappedType = Wrapped
+public protocol DeferredType: WrapperType {
+	init(optionalValue: WrappedType?)
+	var peek: WrappedType? { get }
+	func fill(value: WrappedType) -> Self
+	func upon(callback: WrappedType -> ()) -> Self
+}
 
-	private var value: Wrapped?
-	private let root: AnyObservable<WrappedType>
-	
-	init<Observable: ObservableType where Observable.ObservedType == WrappedType>(value: Wrapped?, observable: Observable) {
-		self.value = value
-		self.root = AnyObservable(observable)
-	}
-
-	public var isFilled: Bool {
-		return value != nil
-	}
-
-	public func peek() -> WrappedType? {
-		return value
-	}
-
-	public func upon(callback: WrappedType -> ()) -> Self {
-		if let value = peek() {
-			callback(value)
-		} else {
-			root.onNext {
-				callback($0)
-				return .Stop
-			}
-		}
-		return self
-	}
-
-	public func map<Other>(transform: Wrapped -> Other) -> Deferred<Other> {
-		return Deferred<Other>(value: value.map(transform), observable: root.map(transform))
-	}
-
-	public func flatMap<Other>(transform: Wrapped -> Deferred<Other>) -> Deferred<Other> {
-		if let value = value {
-			return transform(value)
-		} else {
-			return Deferred<Other>(value: nil, observable: root.flatMap(transform))
-		}
-	}
-
-	public func zip<Other>(with other: Deferred<Other>) -> Deferred<(Wrapped,Other)> {
-		if let value = value {
-			return other.map { (value,$0) }
-		} else {
-			return Deferred<(Wrapped,Other)>(value: nil, observable: root.zip(with: other))
-		}
+extension WrapperType where Self: DeferredType {
+	public init(_ value: WrappedType) {
+		self.init(optionalValue: value)
 	}
 }
 
-public final class FillableDeferred<Wrapped>: Deferred<Wrapped>, FillableDeferredType, WrapperType {
-	private let signal: Signal<Wrapped>
+//MARK: - Data
+public final class Deferred<Wrapped>: DeferredType {
+	public typealias WrappedType = Wrapped
 
-	init(signal: Signal<Wrapped>) {
-		self.signal = signal
-		super.init(value: nil, observable: signal)
+	private var value: WrappedType?
+	private let signal: AnySignal<WrappedType>
+	private let observable: AnyObservable<WrappedType>
+
+	public init<
+		SignalObservable: protocol<SignalType,ObservableType>
+		where
+		SignalObservable.SentType == WrappedType,
+		SignalObservable.ObservedType == WrappedType
+		>
+		(_ optionalValue: WrappedType?, _ signalObservable: SignalObservable) {
+		self.value = optionalValue
+		self.signal = AnySignal(signalObservable)
+		self.observable = AnyObservable(signalObservable)
 	}
 
-	public convenience init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
-		self.init(signal: Signal<Wrapped>(workerQueue: workerQueue, callbackQueue: callbackQueue))
+	public convenience init(optionalValue: WrappedType?) {
+		self.init(optionalValue,Signal<WrappedType>())
 	}
 
-	public func fill(value: WrappedType) -> Self {
+	public convenience init() {
+		self.init(nil,Signal<WrappedType>())
+	}
+
+	public var peek: WrappedType? {
+		return value
+	}
+
+	public func fill(value: WrappedType) -> Deferred<Wrapped> {
 		guard self.value == nil else { return self }
 		self.value = value
 		signal.send(value)
 		return self
 	}
 
-	public func getReadOnly() -> Deferred<Wrapped> {
-		return Deferred(value: value, observable: signal)
-	}
-
-	public init(_ value: Wrapped) {
-		self.signal = Signal()
-		super.init(value: value, observable: signal)
+	public func upon(callback: WrappedType -> ()) -> Deferred<Wrapped> {
+		if let value = value {
+			callback(value)
+		} else {
+			observable.onNext {
+				callback($0)
+				return .Stop
+			}
+		}
+		return self
 	}
 }
 
-extension Deferred {
-	public func union(with other: Deferred, workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) -> Deferred {
-		let fillable = FillableDeferred<Wrapped>(workerQueue: workerQueue, callbackQueue: callbackQueue)
-		upon { fillable.fill($0) }
-		other.upon { fillable.fill($0) }
-		return fillable.getReadOnly()
+//MARK: - Functor and Monad
+extension DeferredType {
+	public func map <OtherType> (transform: WrappedType -> OtherType) -> Deferred<OtherType> {
+		let newDeferred = Deferred<OtherType>(optionalValue: nil)
+		upon { (value) in
+			newDeferred.fill(transform(value))
+		}
+		return newDeferred
+	}
+
+	public func flatMap <
+		OtherType,
+		OtherDeferredType: DeferredType
+		where
+		OtherDeferredType.WrappedType == OtherType
+		>
+		(transform: WrappedType -> OtherDeferredType) -> Deferred<OtherType> {
+		let newDeferred = Deferred<OtherType>(optionalValue: nil)
+		upon { (value) in
+			transform(value)
+				.upon { (otherValue) in
+					newDeferred.fill(otherValue)
+			}
+		}
+		return newDeferred
+	}
+}
+
+//MARK: - Applicative Functor
+extension DeferredType where WrappedType: MorphismType {
+	public func apply (value: WrappedType.StartType) -> Deferred<WrappedType.EndType> {
+		let newDeferred = Deferred<WrappedType.EndType>(optionalValue: nil)
+		upon { (transform) in
+			newDeferred.fill(transform.apply(value))
+		}
+		return newDeferred
+	}
+}
+
+//MARK: - Utility
+extension DeferredType {
+	public var isFilled: Bool {
+		return peek != nil
+	}
+
+	public func union <
+		OtherDeferredType: DeferredType
+		where
+		OtherDeferredType.WrappedType == WrappedType
+		>
+		(other: OtherDeferredType) -> Deferred<WrappedType> {
+		let newDeferred = Deferred<WrappedType>(optionalValue: nil)
+		upon { (value) in
+			newDeferred.fill(value)
+		}
+		other.upon { (value) in
+			newDeferred.fill(value)
+		}
+		return newDeferred
+	}
+
+	public func zip <
+		OtherType,
+		OtherDeferredType: DeferredType
+		where
+		OtherDeferredType.WrappedType == OtherType
+		>
+		(other: OtherDeferredType) -> Deferred<(WrappedType,OtherType)> {
+		return flatMap { selfValue in
+			other.map { otherValue in
+				(selfValue,otherValue)
+			}
+		}
+	}
+}
+
+extension Deferred: ObservableType {
+	public typealias ObservedType = WrappedType
+	public func onNext(callback: ObservedType -> SignalPersistence) -> Self {
+		upon { (value) in
+			callback(value)
+		}
+		return self
 	}
 }

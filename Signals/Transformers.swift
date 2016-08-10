@@ -1,35 +1,25 @@
 import Functional
 
-public struct WriterDeferred<Wrapped, Logger: Monoid>: WrapperType {
-	public typealias WrappedType = Wrapped
-
-	private let internalDeferred: Deferred<Writer<Wrapped,Logger>>
-	init(_ internalDeferred: Deferred<Writer<Wrapped,Logger>>) {
-		self.internalDeferred = internalDeferred
+extension DeferredType where WrappedType: WriterType {
+	public func mapWriterLift <OtherType> (transform: WrappedType.WrappedType -> OtherType) -> Deferred<Writer<OtherType,WrappedType.LogType>> {
+		return map { (writer) -> Writer<OtherType,WrappedType.LogType> in
+			writer.map(transform)
+		}
 	}
 
-	public init(_ writer: Writer<Wrapped,Logger>) {
-		self.internalDeferred = FillableDeferred(writer)
+	public func flatMapWriterLift <OtherType> (transform: WrappedType.WrappedType -> Writer<OtherType,WrappedType.LogType>) -> Deferred<Writer<OtherType,WrappedType.LogType>> {
+		return flatMap { (either) -> Deferred<Writer<OtherType,WrappedType.LogType>> in
+			Deferred<Writer<OtherType,WrappedType.LogType>>(either.flatMap(transform))
+		}
 	}
 
-	public init(_ value: Wrapped) {
-		self.internalDeferred = FillableDeferred(Writer(value))
-	}
-
-	public func get() -> Deferred<Writer<Wrapped,Logger>> {
-		return internalDeferred
-	}
-
-	public func map<Other>(transform: Wrapped -> Other) -> WriterDeferred<Other,Logger> {
-		return WriterDeferred<Other,Logger>(internalDeferred.map { $0.map(transform)})
-	}
-
-	public func flatMap<Other>(transform: Wrapped -> FillableDeferred<Writer<Other,Logger>>) -> WriterDeferred<Other,Logger> {
-		return WriterDeferred<Other,Logger>(internalDeferred.flatMap { writer in
-			let (oldValue, _) = writer.runWriter
-			let newDeferred = transform(oldValue)
-			return newDeferred.map { newWriter in writer.flatMap { _ in newWriter } }
+	public func flatMapWriter <OtherType> (transform: WrappedType.WrappedType -> Deferred<Writer<OtherType,WrappedType.LogType>>) -> Deferred<Writer<OtherType,WrappedType.LogType>> {
+		return flatMap { (writer) -> Deferred<Writer<OtherType,WrappedType.LogType>> in
+			let newDeferred = Deferred<Writer<OtherType,WrappedType.LogType>>(optionalValue: nil)
+			transform(writer.runWriter.0).upon { (newWriter) in
+				newDeferred.fill(writer.flatMap { _ in newWriter})
 			}
-		)
+			return newDeferred
+		}
 	}
 }

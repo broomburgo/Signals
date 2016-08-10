@@ -8,25 +8,9 @@ public protocol SignalType: class {
 	func send(value: SentType) -> Self
 }
 
-public protocol DeferredType {
-	associatedtype WrappedType
-
-	var isFilled: Bool { get }
-	func peek() -> WrappedType?
-	func upon(callback: WrappedType -> ()) -> Self
-}
-
-public protocol FillableDeferredType: DeferredType {
-	func fill(value: WrappedType) -> Self
-}
-
 extension ObservableType {
-	public func observable() -> AnyObservable<ObservedType> {
+	public var observable: AnyObservable<ObservedType> {
 		return AnyObservable(self)
-	}
-
-	public func single() -> Deferred<ObservedType> {
-		return Deferred(value: nil, observable: self)
 	}
 
 	public func map<Other>(transform: ObservedType -> Other) -> AnyObservable<Other> {
@@ -40,29 +24,25 @@ extension ObservableType {
 	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
 		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
+}
 
-	public func zip<OtherObservable: ObservableType>(with other: OtherObservable) -> AnyObservable<(ObservedType,OtherObservable.ObservedType)> {
-		return flatMap { selfValue in
-			other.map { otherValue in
-				(selfValue,otherValue)
-			}
+extension ObservableType {
+	public var single: Deferred<ObservedType> {
+		let deferred = Deferred<ObservedType>()
+		onNext { (value) -> SignalPersistence in
+			deferred.fill(value)
+			return .Stop
 		}
+		return deferred
 	}
 }
 
 extension ObservableType where Self: SignalType, ObservedType == Self.SentType {
-	public func cached() -> SignalCached<ObservedType> {
+	public var cached: SignalCached<ObservedType> {
 		return SignalCached<ObservedType>(rootObservable: self, rootSignal: self)
 	}
-}
 
-extension Deferred: ObservableType {
-	public typealias ObservedType = WrappedType
-
-	public func onNext(callback: ObservedType -> SignalPersistence) -> Self {
-		return upon {
-			callback($0)
-			return
-		}
+	public var single: Deferred<ObservedType> {
+		return Deferred(nil,self)
 	}
 }

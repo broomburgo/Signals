@@ -1,4 +1,5 @@
 import XCTest
+import Functional
 import SwiftCheck
 @testable import Signals
 
@@ -6,7 +7,7 @@ class DeferredSpec: XCTestCase {
 
 	func testInitWithSignal() {
 		let signal = Signal<Int>()
-		let deferred = Deferred(value: nil, observable: signal)
+		let deferred = Deferred(nil, signal)
 
 		let expectedValue = 42
 
@@ -26,13 +27,13 @@ class DeferredSpec: XCTestCase {
 	func testFillableInitWithNonNilValue() {
 		property("Deferred constructed with non nill value is already filled") <- {
 			let expectedValue = 42
-			let deferred = FillableDeferred(expectedValue)
+			let deferred = Deferred(expectedValue)
 
-			let firstPeek = deferred.peek() == expectedValue
+			let firstPeek = deferred.peek == expectedValue
 
 			let unexpectedValue = 43
 			deferred.fill(unexpectedValue)
-			let secondPeek = deferred.peek() == expectedValue
+			let secondPeek = deferred.peek == expectedValue
 
 			return firstPeek && secondPeek
 		}
@@ -40,24 +41,24 @@ class DeferredSpec: XCTestCase {
 
 	func testFillableFill() {
 		property("Deferred should only be filled once") <- {
-			let deferred = FillableDeferred<Int>()
+			let deferred = Deferred<Int>()
 
-			XCTAssertNil(deferred.peek())
+			XCTAssertNil(deferred.peek)
 
 			let expectedValue = 42
 			deferred.fill(expectedValue)
-			let firstPeek = deferred.peek() == expectedValue
+			let firstPeek = deferred.peek == expectedValue
 
 			let unexpectedValue = 43
 			deferred.fill(unexpectedValue)
-			let secondPeek = deferred.peek() == expectedValue
+			let secondPeek = deferred.peek == expectedValue
 
 			return firstPeek && secondPeek
 		}
 	}
 
 	func testFillableUpon() {
-		let deferred = FillableDeferred<Int>()
+		let deferred = Deferred<Int>()
 		let expectedValue = 42
 		let unexpectedValue = 43
 
@@ -74,12 +75,12 @@ class DeferredSpec: XCTestCase {
 	}
 
 	func testFillableUponReadOnly() {
-		let deferred = FillableDeferred<Int>()
+		let deferred = Deferred<Int>()
 		let expectedValue = 42
 		let unexpectedValue = 43
 
 		let willUpon = expectationWithDescription("willUpon")
-		deferred.getReadOnly().upon { value in
+		deferred.upon { value in
 			XCTAssertEqual(value, expectedValue)
 			willUpon.fulfill()
 		}
@@ -91,13 +92,15 @@ class DeferredSpec: XCTestCase {
 	}
 
 	func testMap() {
-		let deferred = FillableDeferred<Int>()
+		let deferred = Deferred<Int>()
 		let fillValue1 = 42
 		let fillValue2 = 43
 		let expectedValue = "42"
 
 		let willUpon = expectationWithDescription("willUpon")
-		deferred.map { "\($0)" } .upon { value in
+
+		let newDeferred: Deferred<String> = deferred.map { "\($0)" }
+		newDeferred.upon { (value) in
 			XCTAssertEqual(value, expectedValue)
 			willUpon.fulfill()
 		}
@@ -109,8 +112,8 @@ class DeferredSpec: XCTestCase {
 	}
 
 	func testFlatMap() {
-		let deferred1 = FillableDeferred<Int>()
-		let deferred2 = FillableDeferred<String>()
+		let deferred1 = Deferred<Int>()
+		let deferred2 = Deferred<String>()
 
 		let expectedValue1 = 42
 		let expectedValue2 = "42"
@@ -119,7 +122,7 @@ class DeferredSpec: XCTestCase {
 		let willUpon2 = expectationWithDescription("willUpon2")
 
 		deferred1
-			.flatMap { (value) -> FillableDeferred<String> in
+			.flatMap { (value) -> Deferred<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willUpon1.fulfill()
 				return deferred2
