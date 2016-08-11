@@ -8,8 +8,8 @@ extension DeferredType where WrappedType: WriterType {
 	}
 
 	public func flatMapWriterLift <OtherType> (transform: WrappedType.WrappedType -> Writer<OtherType,WrappedType.LogType>) -> Deferred<Writer<OtherType,WrappedType.LogType>> {
-		return flatMap { (either) -> Deferred<Writer<OtherType,WrappedType.LogType>> in
-			Deferred<Writer<OtherType,WrappedType.LogType>>(either.flatMap(transform))
+		return flatMap { (writer) -> Deferred<Writer<OtherType,WrappedType.LogType>> in
+			Deferred<Writer<OtherType,WrappedType.LogType>>(writer.flatMap(transform))
 		}
 	}
 
