@@ -147,7 +147,7 @@ class OperatorsSpec: XCTestCase {
 
 		let expectedValue1 = 42
 
-		let cached = signal.cached()
+		let cached = signal.cached
 
 		signal.send(expectedValue1)
 

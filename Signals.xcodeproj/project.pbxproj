@@ -160,7 +160,7 @@
 				38AA43A11D3F849A001F0438 /* Protocols.swift */,
 				3826CDA71D32BDE0003CE220 /* Signals.swift */,
 				38BC83591D367F7E000F8BDE /* Utilities.swift */,
-				38AA43A01D3F83F6001F0438 /* Tests */,
+				38AA43A01D3F83F6001F0438 /* Spec */,
 				38E587D51D42525E00B12C2B /* Transformers.swift */,
 				38B2D89B1D46580C00E27E62 /* Bindings.swift */,
 				38F6A3AF1D4E325100B824FA /* TypeErasers.swift */,
@@ -168,7 +168,7 @@
 			name = Elements;
 			sourceTree = "<group>";
 		};
-		38AA43A01D3F83F6001F0438 /* Tests */ = {
+		38AA43A01D3F83F6001F0438 /* Spec */ = {
 			isa = PBXGroup;
 			children = (
 				38AA43BD1D3FC863001F0438 /* DeferredSpec.swift */,
@@ -177,7 +177,7 @@
 				38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */,
 				38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */,
 			);
-			name = Tests;
+			name = Spec;
 			sourceTree = "<group>";
 		};
 		38BC834F1D3647FF000F8BDE /* Resources */ = {
