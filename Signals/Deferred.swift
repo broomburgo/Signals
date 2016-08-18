@@ -98,7 +98,7 @@ extension DeferredType where WrappedType: MorphismType {
 	public func apply (value: WrappedType.StartType) -> Deferred<WrappedType.EndType> {
 		let newDeferred = Deferred<WrappedType.EndType>(optionalValue: nil)
 		upon { (transform) in
-			newDeferred.fill(transform.apply(value))
+			newDeferred.fill(transform.direct(value))
 		}
 		return newDeferred
 	}
