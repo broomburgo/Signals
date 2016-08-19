@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		382372821D51E09B003D2F23 /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 382372811D51E09B003D2F23 /* Functional.framework */; };
-		382372831D51E0B6003D2F23 /* Functional.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 382372811D51E09B003D2F23 /* Functional.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
@@ -40,16 +39,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		38AA43991D3F68D5001F0438 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				382372831D51E0B6003D2F23 /* Functional.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		38B2D8BA1D4667E900E27E62 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -211,7 +200,6 @@
 				3826CD891D32BDD5003CE220 /* Frameworks */,
 				3826CD8A1D32BDD5003CE220 /* Headers */,
 				3826CD8B1D32BDD5003CE220 /* Resources */,
-				38AA43991D3F68D5001F0438 /* CopyFiles */,
 			);
 			buildRules = (
 			);
