@@ -93,12 +93,19 @@ extension DeferredType {
 	}
 }
 
-//MARK: - Applicative Functor
+//MARK: - Applicative
 extension DeferredType where WrappedType: MorphismType {
-	public func apply (value: WrappedType.StartType) -> Deferred<WrappedType.EndType> {
+	public func apply <
+		OtherDeferredType: DeferredType
+		where
+		OtherDeferredType.WrappedType == WrappedType.StartType
+		>
+		(other: OtherDeferredType) -> Deferred<WrappedType.EndType> {
 		let newDeferred = Deferred<WrappedType.EndType>(optionalValue: nil)
 		upon { (transform) in
-			newDeferred.fill(transform.direct(value))
+			other.upon { (value) in
+				newDeferred.fill(transform.direct(value))
+			}
 		}
 		return newDeferred
 	}
