@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		382372821D51E09B003D2F23 /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 382372811D51E09B003D2F23 /* Functional.framework */; };
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
-		385B294B1D5B5A620046B04A /* Functional.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 382372811D51E09B003D2F23 /* Functional.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38AA43A61D3F87DF001F0438 /* SignalsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* SignalsSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
@@ -24,6 +22,7 @@
 		38BC834C1D364761000F8BDE /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834B1D364761000F8BDE /* Deferred.swift */; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
 		38BC835A1D367F7E000F8BDE /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Utilities.swift */; };
+		38DA493F1D816CCD00674DE6 /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38DA493E1D816CCD00674DE6 /* Functional.framework */; };
 		38E587D61D42525E00B12C2B /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E587D51D42525E00B12C2B /* Transformers.swift */; };
 		38F6A3B01D4E325100B824FA /* TypeErasers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F6A3AF1D4E325100B824FA /* TypeErasers.swift */; };
 /* End PBXBuildFile section */
@@ -46,14 +45,12 @@
 			dstSubfolderSpec = 10;
 			files = (
 				38B2D8BB1D4667EF00E27E62 /* SwiftCheck.framework in CopyFiles */,
-				385B294B1D5B5A620046B04A /* Functional.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		382372811D51E09B003D2F23 /* Functional.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Functional.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD8D1D32BDD5003CE220 /* Signals.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Signals.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD901D32BDD5003CE220 /* Signals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Signals.h; sourceTree = "<group>"; };
 		3826CD921D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +68,7 @@
 		38BC834B1D364761000F8BDE /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		38BC83591D367F7E000F8BDE /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		38DA493E1D816CCD00674DE6 /* Functional.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Functional.framework; path = Carthage/Build/iOS/Functional.framework; sourceTree = "<group>"; };
 		38E587D51D42525E00B12C2B /* Transformers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
 		38F6A3AF1D4E325100B824FA /* TypeErasers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeErasers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				382372821D51E09B003D2F23 /* Functional.framework in Frameworks */,
+				38DA493F1D816CCD00674DE6 /* Functional.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,7 +133,7 @@
 		38AA43981D3F68B8001F0438 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				382372811D51E09B003D2F23 /* Functional.framework */,
+				38DA493E1D816CCD00674DE6 /* Functional.framework */,
 				38AA43961D3F68B3001F0438 /* SwiftCheck.framework */,
 			);
 			name = Frameworks;
