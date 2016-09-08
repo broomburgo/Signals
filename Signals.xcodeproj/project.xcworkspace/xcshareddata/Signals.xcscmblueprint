@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7D718686C5DFBCBAC3490CB212FDD790EB63236E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7D718686C5DFBCBAC3490CB212FDD790EB63236E" : 0,
+    "084D4633B5ECC638C4DA4ECB53B48ABF351654D6" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7F85E362-F0EC-4B63-B72C-FB6B1FEC1780",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7D718686C5DFBCBAC3490CB212FDD790EB63236E" : "Signals\/",
+    "084D4633B5ECC638C4DA4ECB53B48ABF351654D6" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Signals",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Signals.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/gitlab.facile.it\/erocca\/MutuiPartnerNetwork.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "084D4633B5ECC638C4DA4ECB53B48ABF351654D6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/gitlab.facile.it\/erocca\/Signals.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7D718686C5DFBCBAC3490CB212FDD790EB63236E"
+    }
+  ]
+}
