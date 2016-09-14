@@ -3,19 +3,19 @@ import SwiftCheck
 @testable import Functional
 
 extension Writer where Wrapped: Equatable, Log: Equatable {
-	func isEqualTo(other: Writer<Wrapped,Log>) -> Bool {
+	func isEqualTo(_ other: Writer<Wrapped,Log>) -> Bool {
 		return self.runWriter == other.runWriter
 	}
 
-	static func firstLaw(f f: Wrapped -> Writer<Wrapped,Log>) -> Wrapped -> Bool {
+	static func firstLaw(f: @escaping (Wrapped) -> Writer<Wrapped,Log>) -> (Wrapped) -> Bool {
 		return { x in (Writer(x).flatMap(f)).isEqualTo(f(x)) }
 	}
 
-	static func secondLaw() -> Wrapped -> Bool {
+	static func secondLaw() -> (Wrapped) -> Bool {
 		return { x in (Writer(x).flatMap(Writer.init)).isEqualTo(Writer(x)) }
 	}
 
-	static func thirdLaw(f f: Wrapped -> Writer<Wrapped,Log>, g: Wrapped -> Writer<Wrapped,Log>) -> Wrapped -> Bool {
+	static func thirdLaw(f: @escaping (Wrapped) -> Writer<Wrapped,Log>, g: @escaping (Wrapped) -> Writer<Wrapped,Log>) -> (Wrapped) -> Bool {
 		return { x in (Writer(x).flatMap(f).flatMap(g)).isEqualTo(Writer(x).flatMap { a in f(a).flatMap(g) }) }
 	}
 }
@@ -42,7 +42,7 @@ class WriterSpec: XCTestCase {
 	func testFunctorLaws() {
 		property("map(identity) ≡ identity") <- forAll { (arbitraryWriter: ArbitraryWriter) in
 			let writer = arbitraryWriter.getWriter()
-			let mapId: Writer<Int,String> -> Writer<Int,String> = Use(Writer.map).with(identity)
+			let mapId: (Writer<Int,String>) -> Writer<Int,String> = Use(Writer.map).with(identity)
 			return mapId(writer).isEqualTo(identity(writer))
 		}
 
@@ -50,9 +50,9 @@ class WriterSpec: XCTestCase {
 			let f = fArrow.getArrow
 			let g = gArrow.getArrow
 			let h = compose(f,g)
-			let mapH: Writer<Int,String> -> Writer<String,String> = Use(Writer.map).with(h)
-			let mapF: Writer<Int,String> -> Writer<Bool,String> = Use(Writer.map).with(f)
-			let mapG: Writer<Bool,String> -> Writer<String,String> = Use(Writer.map).with(g)
+			let mapH: (Writer<Int,String>) -> Writer<String,String> = Use(Writer.map).with(h)
+			let mapF: (Writer<Int,String>) -> Writer<Bool,String> = Use(Writer.map).with(f)
+			let mapG: (Writer<Bool,String>) -> Writer<String,String> = Use(Writer.map).with(g)
 			let mapGF = compose(mapF,mapG)
 			return mapH(arbitraryWriter.getWriter()).isEqualTo(mapGF(arbitraryWriter.getWriter()))
 		}

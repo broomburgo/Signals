@@ -1,5 +1,5 @@
 extension Bool {
-	public func analyze<T>(@autoclosure ifTrue ifTrue: () -> T, @autoclosure ifFalse: () -> T) -> T {
+	public func analyze<T>(ifTrue: @autoclosure () -> T, ifFalse: @autoclosure () -> T) -> T {
 		if self {
 			return ifTrue()
 		} else {

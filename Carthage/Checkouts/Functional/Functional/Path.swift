@@ -21,30 +21,30 @@ public struct PathTo<Target> {
 		self.root = root
 	}
 
-	public func get(keys: [String]) -> Either<Target> {
-		guard keys.count > 0 else { return Either.Left(errorNoKeys) }
+	public func get(_ keys: [String]) -> Either<Target> {
+		guard keys.count > 0 else { return Either.left(errorNoKeys) }
 		var plistKeys = keys
 		let lastKey = plistKeys.removeLast()
 		return plistKeys
-			.reduce(Either.Right(root)) { current, key in
-				current.flatMap { As<PropertyList>($0[key]).get.eitherWithError(errorNoPlistForKey(key)) }
+			.reduce(Either.right(root)) { current, key in
+				current.flatMap { As<PropertyList>($0[key]).get.eitherWithError(self.errorNoPlistForKey(key)) }
 			}
-			.flatMap { As<Target>($0[lastKey]).get.eitherWithError(errorNoTargetForLastKey(lastKey)) }
+			.flatMap { As<Target>($0[lastKey]).get.eitherWithError(self.errorNoTargetForLastKey(lastKey)) }
 	}
 
-	private var errorNoKeys: NSError {
+	fileprivate var errorNoKeys: NSError {
 		return NSError(domain: "Path", code: 0, userInfo: [
 			NSLocalizedDescriptionKey : "No keys",
 			pathToErrorInfoRootPlistKey : root ])
 	}
 
-	private func errorNoPlistForKey(key: String) -> NSError {
+	fileprivate func errorNoPlistForKey(_ key: String) -> NSError {
 		return NSError(domain: "Path", code: 1, userInfo: [
 			NSLocalizedDescriptionKey : "No PropertyList for key \(key)",
 			pathToErrorInfoRootPlistKey : root ])
 	}
 
-	private func errorNoTargetForLastKey(key: String) -> NSError {
+	fileprivate func errorNoTargetForLastKey(_ key: String) -> NSError {
 		return NSError(domain: "Path", code: 2, userInfo: [
 			NSLocalizedDescriptionKey : "No \(Target.self) for last key \(key)",
 			pathToErrorInfoRootPlistKey : root ])

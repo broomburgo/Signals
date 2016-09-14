@@ -7,17 +7,17 @@ class SignalsSpec: XCTestCase {
 		let signal = Signal<Int>()
 
 		let expectedValue1 = 42
-		let willObserve1 = expectationWithDescription("willObserve1")
+		let willObserve1 = expectation(description: "willObserve1")
 
-		signal.onNext { value in
+		_ = signal.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
-			return .Continue
+			return .continue
 		}
 
-		signal.send(expectedValue1)
+		_ = signal.send(expectedValue1)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testSignalSendMultiple() {
@@ -25,28 +25,28 @@ class SignalsSpec: XCTestCase {
 
 		let expectedValue1 = 42
 		let expectedValue2 = 43
-		let willObserve1 = expectationWithDescription("willObserve1")
-		let willObserve2 = expectationWithDescription("willObserve2")
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
 
 		var observedOnce = false
 
-		signal.onNext { value in
+		_ = signal.onNext { value in
 			if observedOnce {
 				XCTAssertEqual(value, expectedValue2)
 				willObserve2.fulfill()
-				return .Continue
+				return .continue
 			} else {
 				observedOnce = true
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
-				return .Continue
+				return .continue
 			}
 		}
 
-		signal.send(expectedValue1)
-		signal.send(expectedValue2)
+		_ = signal.send(expectedValue1)
+		_ = signal.send(expectedValue2)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testSignalStop() {
@@ -57,27 +57,27 @@ class SignalsSpec: XCTestCase {
 		let unexpectedValue3 = 44
 		let unexpectedValue4 = 45
 		let unexpectedValue5 = 46
-		let willObserve1 = expectationWithDescription("willObserve1")
+		let willObserve1 = expectation(description: "willObserve1")
 
 		var observedOnce = false
 
-		signal.onNext { value in
+		_ = signal.onNext { value in
 			if observedOnce {
 				fatalError()
 			} else {
 				observedOnce = true
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
-				return .Stop
+				return .stop
 			}
 		}
 
-		signal.send(expectedValue1)
-		signal.send(unexpectedValue2)
-		signal.send(unexpectedValue3)
-		signal.send(unexpectedValue4)
-		signal.send(unexpectedValue5)
+		_ = signal.send(expectedValue1)
+		_ = signal.send(unexpectedValue2)
+		_ = signal.send(unexpectedValue3)
+		_ = signal.send(unexpectedValue4)
+		_ = signal.send(unexpectedValue5)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 }

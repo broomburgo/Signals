@@ -1,6 +1,6 @@
 class BoxObservableBase<Wrapped>: ObservableType {
 	typealias ObservedType = Wrapped
-	func onNext(callback: ObservedType -> SignalPersistence) -> Self {
+	func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
 		fatalError()
 	}
 }
@@ -11,29 +11,29 @@ class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.Ob
 		self.base = base
 	}
 
-	override func onNext(callback: ObservedType -> SignalPersistence) -> Self {
-		base.onNext(callback)
+	override func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+		_ = base.onNext(callback)
 		return self
 	}
 }
 
 public class AnyObservable<Wrapped>: ObservableType {
 	public typealias ObservedType = Wrapped
-	private let box: BoxObservableBase<Wrapped>
+	fileprivate let box: BoxObservableBase<Wrapped>
 
-	public init<Observable: ObservableType where Observable.ObservedType == ObservedType>(_ base: Observable) {
+	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
 		self.box = BoxObservable(base: base)
 	}
 
-	public func onNext(callback: ObservedType -> SignalPersistence) -> Self {
-		box.onNext(callback)
+	public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+		_ = box.onNext(callback)
 		return self
 	}
 }
 
 class BoxSignalBase<Wrapped>: SignalType {
 	typealias SentType = Wrapped
-	func send(value: SentType) -> Self {
+	func send(_ value: SentType) -> Self {
 		fatalError()
 	}
 }
@@ -44,22 +44,22 @@ class BoxSignal<Signal: SignalType>: BoxSignalBase<Signal.SentType> {
 		self.base = base
 	}
 
-	override func send(value: SentType) -> Self {
-		base.send(value)
+	override func send(_ value: SentType) -> Self {
+		_ = base.send(value)
 		return self
 	}
 }
 
 public class AnySignal<Wrapped>: SignalType {
 	public typealias SentType = Wrapped
-	private let box: BoxSignalBase<Wrapped>
+	fileprivate let box: BoxSignalBase<Wrapped>
 
-	public init<Signal: SignalType where Signal.SentType == SentType>(_ base: Signal) {
+	public init<Signal: SignalType>(_ base: Signal) where Signal.SentType == SentType {
 		self.box = BoxSignal(base: base)
 	}
 
-	public func send(value: SentType) -> Self {
-		box.send(value)
+	public func send(_ value: SentType) -> Self {
+		_ = box.send(value)
 		return self
 	}
 }

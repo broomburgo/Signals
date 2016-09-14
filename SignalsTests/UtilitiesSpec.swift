@@ -4,26 +4,26 @@ import XCTest
 class UtilitiesSpec: XCTestCase {
 
 	func testAlways() {
-		let function: Int -> () = { _ in }
+		let function: (Int) -> () = { _ in }
 		let alwaysFunction = always(function)
 
-		XCTAssertEqual(alwaysFunction(42), SignalPersistence.Continue)
-		XCTAssertEqual(alwaysFunction(2), SignalPersistence.Continue)
-		XCTAssertEqual(alwaysFunction(-100), SignalPersistence.Continue)
-		XCTAssertEqual(alwaysFunction(0), SignalPersistence.Continue)
-		XCTAssertEqual(alwaysFunction(Int.max), SignalPersistence.Continue)
-		XCTAssertEqual(alwaysFunction(Int.min), SignalPersistence.Continue)
+		XCTAssertEqual(alwaysFunction(42), SignalPersistence.continue)
+		XCTAssertEqual(alwaysFunction(2), SignalPersistence.continue)
+		XCTAssertEqual(alwaysFunction(-100), SignalPersistence.continue)
+		XCTAssertEqual(alwaysFunction(0), SignalPersistence.continue)
+		XCTAssertEqual(alwaysFunction(Int.max), SignalPersistence.continue)
+		XCTAssertEqual(alwaysFunction(Int.min), SignalPersistence.continue)
 	}
 
 	func testOnce() {
-		let function: Int -> () = { _ in }
+		let function: (Int) -> () = { _ in }
 		let onceFunction = once(function)
 
-		XCTAssertEqual(onceFunction(42), SignalPersistence.Stop)
-		XCTAssertEqual(onceFunction(2), SignalPersistence.Stop)
-		XCTAssertEqual(onceFunction(-100), SignalPersistence.Stop)
-		XCTAssertEqual(onceFunction(0), SignalPersistence.Stop)
-		XCTAssertEqual(onceFunction(Int.max), SignalPersistence.Stop)
-		XCTAssertEqual(onceFunction(Int.min), SignalPersistence.Stop)
+		XCTAssertEqual(onceFunction(42), SignalPersistence.stop)
+		XCTAssertEqual(onceFunction(2), SignalPersistence.stop)
+		XCTAssertEqual(onceFunction(-100), SignalPersistence.stop)
+		XCTAssertEqual(onceFunction(0), SignalPersistence.stop)
+		XCTAssertEqual(onceFunction(Int.max), SignalPersistence.stop)
+		XCTAssertEqual(onceFunction(Int.min), SignalPersistence.stop)
 	}
 }

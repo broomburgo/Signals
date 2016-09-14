@@ -3,7 +3,7 @@ import Foundation
 public protocol Semigroup {
 	/// AXIOM: is associative
 	/// a.compose(b.compose(c)) = (a.compose(b)).compose(c)
-	func compose(other: Self) -> Self
+	func compose(_ other: Self) -> Self
 }
 
 public protocol EmptyType {

@@ -11,17 +11,17 @@ class DeferredSpec: XCTestCase {
 
 		let expectedValue = 42
 
-		let willUpon = expectationWithDescription("willUpon")
-		deferred.upon { value in
+		let willUpon = expectation(description: "willUpon")
+		_ = deferred.upon { value in
 			XCTAssertEqual(value, expectedValue)
 			willUpon.fulfill()
 		}
 
-		signal.send(expectedValue)
+		_ = signal.send(expectedValue)
 		let unexpectedValue = 43
-		signal.send(unexpectedValue)
+		_ = signal.send(unexpectedValue)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testFillableInitWithNonNilValue() {
@@ -32,7 +32,7 @@ class DeferredSpec: XCTestCase {
 			let firstPeek = deferred.peek == expectedValue
 
 			let unexpectedValue = 43
-			deferred.fill(unexpectedValue)
+			_ = deferred.fill(unexpectedValue)
 			let secondPeek = deferred.peek == expectedValue
 
 			return firstPeek && secondPeek
@@ -46,11 +46,11 @@ class DeferredSpec: XCTestCase {
 			XCTAssertNil(deferred.peek)
 
 			let expectedValue = 42
-			deferred.fill(expectedValue)
+			_ = deferred.fill(expectedValue)
 			let firstPeek = deferred.peek == expectedValue
 
 			let unexpectedValue = 43
-			deferred.fill(unexpectedValue)
+			_ = deferred.fill(unexpectedValue)
 			let secondPeek = deferred.peek == expectedValue
 
 			return firstPeek && secondPeek
@@ -62,16 +62,16 @@ class DeferredSpec: XCTestCase {
 		let expectedValue = 42
 		let unexpectedValue = 43
 
-		let willUpon = expectationWithDescription("willUpon")
-		deferred.upon { value in
+		let willUpon = expectation(description: "willUpon")
+		_ = deferred.upon { value in
 			XCTAssertEqual(value, expectedValue)
 			willUpon.fulfill()
 		}
 
-		deferred.fill(expectedValue)
-		deferred.fill(unexpectedValue)
+		_ = deferred.fill(expectedValue)
+		_ = deferred.fill(unexpectedValue)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testFillableUponReadOnly() {
@@ -79,16 +79,16 @@ class DeferredSpec: XCTestCase {
 		let expectedValue = 42
 		let unexpectedValue = 43
 
-		let willUpon = expectationWithDescription("willUpon")
-		deferred.upon { value in
+		let willUpon = expectation(description: "willUpon")
+		_ = deferred.upon { value in
 			XCTAssertEqual(value, expectedValue)
 			willUpon.fulfill()
 		}
 
-		deferred.fill(expectedValue)
-		deferred.fill(unexpectedValue)
+		_ = deferred.fill(expectedValue)
+		_ = deferred.fill(unexpectedValue)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testMap() {
@@ -97,18 +97,18 @@ class DeferredSpec: XCTestCase {
 		let fillValue2 = 43
 		let expectedValue = "42"
 
-		let willUpon = expectationWithDescription("willUpon")
+		let willUpon = expectation(description: "willUpon")
 
 		let newDeferred: Deferred<String> = deferred.map { "\($0)" }
-		newDeferred.upon { (value) in
+		_ = newDeferred.upon { (value) in
 			XCTAssertEqual(value, expectedValue)
 			willUpon.fulfill()
 		}
 
-		deferred.fill(fillValue1)
-		deferred.fill(fillValue2)
+		_ = deferred.fill(fillValue1)
+		_ = deferred.fill(fillValue2)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testFlatMap() {
@@ -118,10 +118,10 @@ class DeferredSpec: XCTestCase {
 		let expectedValue1 = 42
 		let expectedValue2 = "42"
 
-		let willUpon1 = expectationWithDescription("willUpon1")
-		let willUpon2 = expectationWithDescription("willUpon2")
+		let willUpon1 = expectation(description: "willUpon1")
+		let willUpon2 = expectation(description: "willUpon2")
 
-		deferred1
+		_ = deferred1
 			.flatMap { (value) -> Deferred<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willUpon1.fulfill()
@@ -132,12 +132,12 @@ class DeferredSpec: XCTestCase {
 				willUpon2.fulfill()
 		}
 
-		deferred1.fill(expectedValue1)
-		let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.25 * Double(NSEC_PER_SEC)))
-		dispatch_after(delayTime, dispatch_get_main_queue()) {
-			deferred2.fill(expectedValue2)
+		_ = deferred1.fill(expectedValue1)
+		let delayTime = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+		DispatchQueue.main.asyncAfter(deadline: delayTime) {
+			_ = deferred2.fill(expectedValue2)
 		}
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 }

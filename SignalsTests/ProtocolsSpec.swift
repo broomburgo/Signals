@@ -12,16 +12,16 @@ class ProtocolsSpec: XCTestCase {
 		let sentValue = 42
 		let expectedValue = 84
 
-		let willObserve = expectationWithDescription("willObserve")
+		let willObserve = expectation(description: "willObserve")
 
-		signal2.onNext { value in
+		_ = signal2.onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
-			return .Continue
+			return .continue
 		}
 
-		signal1.send(sentValue)
+		_ = signal1.send(sentValue)
 
-		waitForExpectationsWithTimeout(1, handler: nil)
+		waitForExpectations(timeout: 1, handler: nil)
 	}
 }

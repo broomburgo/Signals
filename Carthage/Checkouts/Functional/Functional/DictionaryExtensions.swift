@@ -13,11 +13,11 @@ extension Dictionary {
 			let selfValue = self[key]
 			let otherValue = other[key]
 			switch (selfValue,otherValue) {
-			case (.Some,.None):
+			case (.some,.none):
 				return false
-			case (.None,.Some):
+			case (.none,.some):
 				return false
-			case let (.Some(left),.Some(right)):
+			case let (.some(left),.some(right)):
 				if predicate(left,right) == false {
 					return false
 				}

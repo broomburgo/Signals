@@ -15,8 +15,8 @@ public struct Writer<Wrapped,Log: Monoid>: WriterType {
 	public typealias WrappedType = Wrapped
 	public typealias LogType = Log
 
-	private let value: Wrapped
-	private let info: Log
+	fileprivate let value: Wrapped
+	fileprivate let info: Log
 	public init(_ value: WrappedType, _ info: LogType) {
 		self.value = value
 		self.info = info
@@ -29,19 +29,19 @@ public struct Writer<Wrapped,Log: Monoid>: WriterType {
 
 //MARK: - Functor and Monad
 extension WriterType {
-	public func map <OtherType> (@noescape transform: WrappedType -> OtherType) -> Writer<OtherType,LogType> {
+	public func map <OtherType> (_ transform: (WrappedType) -> OtherType) -> Writer<OtherType,LogType> {
 		let (value,info) = runWriter
 		return Writer(transform(value),info)
 	}
 
 	public func flatMap <
 		OtherType,
-		OtherWriterType: WriterType
+		OtherWriterType: WriterType>
+		(_ transform: (WrappedType) -> OtherWriterType) -> Writer<OtherType,LogType>
 		where
 		OtherWriterType.WrappedType == OtherType,
 		OtherWriterType.LogType == LogType
-		>
-		(@noescape transform: WrappedType -> OtherWriterType) -> Writer<OtherType,LogType> {
+		 {
 		let (value,info) = runWriter
 		let (otherValue,otherInfo) = transform(value).runWriter
 		return Writer(otherValue,info.compose(otherInfo))
@@ -51,12 +51,12 @@ extension WriterType {
 //MARK: - Applicative
 extension WriterType where WrappedType: HomomorphismType {
 	public func apply <
-		OtherWriterType: WriterType
+		OtherWriterType: WriterType>
+		(_ other: OtherWriterType) -> Writer<WrappedType.TargetType,LogType>
 		where
 		OtherWriterType.WrappedType == WrappedType.SourceType,
 		OtherWriterType.LogType == LogType
-		>
-		(other: OtherWriterType) -> Writer<WrappedType.TargetType,LogType> {
+		 {
 		let (morphism,info) = runWriter
 		let (wrapped,otherInfo) = other.runWriter
 		return Writer(morphism.direct(wrapped),info.compose(otherInfo))
@@ -65,17 +65,17 @@ extension WriterType where WrappedType: HomomorphismType {
 
 //MARK: - Utility
 extension WriterType {
-	public func tell(newInfo: LogType) -> Self {
+	public func tell(_ newInfo: LogType) -> Self {
 		let (oldValue,oldInfo) = runWriter
 		return Self(oldValue, oldInfo.compose(newInfo))
 	}
 
-	public func read(@noescape transform: WrappedType -> LogType) -> Self {
+	public func read(_ transform: (WrappedType) -> LogType) -> Self {
 		let (oldValue,oldInfo) = runWriter
 		return Self(oldValue, oldInfo.compose(transform(oldValue)))
 	}
 
-	public func censor(@noescape transform: LogType -> LogType) -> Self {
+	public func censor(_ transform: (LogType) -> LogType) -> Self {
 		let (oldValue,oldInfo) = runWriter
 		return Self(oldValue,transform(oldInfo))
 	}

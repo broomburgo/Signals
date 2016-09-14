@@ -1,13 +1,13 @@
-public func always <T> (callback: T -> ()) -> T -> SignalPersistence {
+public func always <T> (_ callback: @escaping (T) -> ()) -> (T) -> SignalPersistence {
 	return { x in
 		callback(x)
-		return .Continue
+		return .continue
 	}
 }
 
-public func once <T> (callback: T -> ()) -> T -> SignalPersistence {
+public func once <T> (_ callback: @escaping (T) -> ()) -> (T) -> SignalPersistence {
 	return { x in
 		callback(x)
-		return .Stop
+		return .stop
 	}
 }

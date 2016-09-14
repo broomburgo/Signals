@@ -1,29 +1,29 @@
 import Foundation
 
 public enum SignalPersistence {
-	case Stop
-	case Continue
+	case stop
+	case `continue`
 }
 
 private class FixedSignal<Wrapped>: ObservableType, SignalType {
 	typealias ObservedType = Wrapped
 	typealias SentType = Wrapped
-	typealias Observation = ObservedType -> SignalPersistence
+	typealias Observation = (ObservedType) -> SignalPersistence
 
-	var observation: (ObservedType -> SignalPersistence)? = nil
+	var observation: ((ObservedType) -> SignalPersistence)? = nil
 
-	func onNext(callback: ObservedType -> SignalPersistence) -> Self {
+	func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
 		guard observation == nil else { return self }
 		observation = callback
 		return self
 	}
 
-	func send(value: ObservedType) -> Self {
+	func send(_ value: ObservedType) -> Self {
 		if let persistence = observation?(value) {
 			switch persistence {
-			case .Stop:
+			case .stop:
 				observation = nil
-			case .Continue:
+			case .continue:
 				break
 			}
 		}
@@ -39,28 +39,28 @@ public class Signal<Wrapped>: ObservableType, SignalType {
 	public typealias ObservedType = Wrapped
 	public typealias SentType = Wrapped
 
-	private let workerQueue: dispatch_queue_t
-	private let callbackQueue: dispatch_queue_t
-	private var fixed: [FixedSignal<SentType>] = []
+	fileprivate let workerQueue: DispatchQueue
+	fileprivate let callbackQueue: DispatchQueue
+	fileprivate var fixed: [FixedSignal<SentType>] = []
 
-	public init(workerQueue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), callbackQueue: dispatch_queue_t = dispatch_get_main_queue()) {
+	public init(workerQueue: DispatchQueue = DispatchQueue.global(), callbackQueue: DispatchQueue = DispatchQueue.main) {
 		self.workerQueue = workerQueue
 		self.callbackQueue = callbackQueue
 	}
 
-	public func onNext(callback: SentType -> SignalPersistence) -> Self {
+	public func onNext(_ callback: @escaping (SentType) -> SignalPersistence) -> Self {
 		fixed.append(FixedSignal<SentType>().onNext(callback))
 		return self
 	}
 
-	public func send(value: SentType) -> Self {
-		dispatch_async(workerQueue) {
+	public func send(_ value: SentType) -> Self {
+		workerQueue.async {
 			for signal in self.fixed {
-				dispatch_async(self.callbackQueue) {
-					signal.send(value)
+				self.callbackQueue.async {
+					_ = signal.send(value)
 				}
 			}
-			dispatch_async(self.callbackQueue) {
+			self.callbackQueue.async {
 				self.fixed = self.fixed.filter { $0.isActive }
 			}
 		}

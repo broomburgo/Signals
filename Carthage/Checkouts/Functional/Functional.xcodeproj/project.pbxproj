@@ -30,7 +30,6 @@
 		38E587DB1D4255BB00B12C2B /* Curry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E587DA1D4255BB00B12C2B /* Curry.swift */; };
 		38EE32BC1D2FA6E100E4DF8E /* Functional.h in Headers */ = {isa = PBXBuildFile; fileRef = 38EE32BB1D2FA6E100E4DF8E /* Functional.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		38EE32C31D2FA6E100E4DF8E /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38EE32B81D2FA6E100E4DF8E /* Functional.framework */; };
-		38EE32E61D2FC6E100E4DF8E /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EE32E51D2FC6E100E4DF8E /* DispatchQueue.swift */; };
 		38EE33041D33EFF000E4DF8E /* Monoid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EE33031D33EFF000E4DF8E /* Monoid.swift */; };
 		38EEFD7A1D54DA6900EB4FFF /* Morphism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EEFD791D54DA6900EB4FFF /* Morphism.swift */; };
 /* End PBXBuildFile section */
@@ -93,7 +92,6 @@
 		38EE32BD1D2FA6E100E4DF8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38EE32C21D2FA6E100E4DF8E /* FunctionalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FunctionalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		38EE32C91D2FA6E100E4DF8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		38EE32E51D2FC6E100E4DF8E /* DispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = "<group>"; };
 		38EE33031D33EFF000E4DF8E /* Monoid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monoid.swift; sourceTree = "<group>"; };
 		38EEFD791D54DA6900EB4FFF /* Morphism.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Morphism.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,7 +164,6 @@
 			isa = PBXGroup;
 			children = (
 				38E587DA1D4255BB00B12C2B /* Curry.swift */,
-				38EE32E51D2FC6E100E4DF8E /* DispatchQueue.swift */,
 				38BC83491D364369000F8BDE /* Functions.swift */,
 				380D86C41D34FB3600DA245E /* Operators.swift */,
 				387A67471D66E9BE0070C304 /* Path.swift */,
@@ -299,14 +296,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Facile.it;
 				TargetAttributes = {
 					38EE32B71D2FA6E100E4DF8E = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 					38EE32C11D2FA6E100E4DF8E = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -364,7 +363,6 @@
 				385B293A1D5B13430046B04A /* Optional.swift in Sources */,
 				383860CA1D488C76002B8F14 /* DictionaryExtensions.swift in Sources */,
 				385B29461D5B2CEB0046B04A /* EitherTransformer.swift in Sources */,
-				38EE32E61D2FC6E100E4DF8E /* DispatchQueue.swift in Sources */,
 				385B29411D5B20630046B04A /* Writer.swift in Sources */,
 				38BC834A1D364369000F8BDE /* Functions.swift in Sources */,
 				383860C41D488BAE002B8F14 /* OptionalExtensions.swift in Sources */,
@@ -407,8 +405,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -456,8 +456,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -477,6 +479,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -488,6 +491,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -503,6 +507,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -510,6 +515,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -524,6 +530,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = it.facile.Functional;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -538,6 +545,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = it.facile.FunctionalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -552,6 +560,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = it.facile.FunctionalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

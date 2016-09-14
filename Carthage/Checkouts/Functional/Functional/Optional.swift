@@ -1,13 +1,17 @@
 public protocol OptionalType: WrapperType {
 	init()
-	func runOptional<A>(@noescape ifSome ifSome: WrappedType -> A, @noescape ifNone: () -> A) -> A
+	func runOptional<A>(ifSome: (WrappedType) -> A, ifNone: () -> A) -> A
 }
 
 //MARK: - Data
 extension Optional: OptionalType {
+	public init() {
+		self = .none
+	}
+
 	public typealias WrappedType = Wrapped
 
-	public func runOptional<A>(@noescape ifSome ifSome: WrappedType -> A, @noescape ifNone: () -> A) -> A {
+	public func runOptional<A>(ifSome: (WrappedType) -> A, ifNone: () -> A) -> A {
 		if let this = self {
 			return ifSome(this)
 		} else {
@@ -18,7 +22,7 @@ extension Optional: OptionalType {
 
 //MARK: - Functor and Monad
 extension OptionalType {
-	public func map <OtherType> (@noescape transform: WrappedType -> OtherType) -> Optional<OtherType> {
+	public func map <OtherType> (_ transform: (WrappedType) -> OtherType) -> Optional<OtherType> {
 		return runOptional(
 			ifSome: { (wrapped) -> Optional<OtherType> in
 				Optional(transform(wrapped))
@@ -30,11 +34,11 @@ extension OptionalType {
 
 	public func flatMap <
 		OtherType,
-		OtherOptionalType: OptionalType
+		OtherOptionalType: OptionalType>
+		(_ transform: (WrappedType) -> OtherOptionalType) -> Optional<OtherType>
 		where
 		OtherOptionalType.WrappedType == OtherType
-		>
-		(@noescape transform: WrappedType -> OtherOptionalType) -> Optional<OtherType> {
+		 {
 		return runOptional(
 			ifSome: { (wrapped) -> Optional<OtherType> in
 				transform(wrapped).map { $0 }
@@ -48,11 +52,11 @@ extension OptionalType {
 //MARK: - Applicative
 extension OptionalType where WrappedType: HomomorphismType {
 	public func apply <
-		OtherOptionalType: OptionalType
+		OtherOptionalType: OptionalType>
+		(_ other: OtherOptionalType) -> Optional<WrappedType.TargetType>
 		where
 		OtherOptionalType.WrappedType == WrappedType.SourceType
-		>
-		(other: OtherOptionalType) -> Optional<WrappedType.TargetType> {
+		 {
 		return runOptional(
 			ifSome: { (morphism) -> Optional<WrappedType.TargetType> in
 				other.runOptional(
@@ -71,7 +75,7 @@ extension OptionalType where WrappedType: HomomorphismType {
 
 //MARK: - Utility
 extension OptionalType {
-	public func getOrElse(@autoclosure elseValue: () -> WrappedType) -> WrappedType {
+	public func getOrElse(_ elseValue: @autoclosure () -> WrappedType) -> WrappedType {
 		return runOptional(
 			ifSome: { (wrapped) -> WrappedType in
 				return wrapped
@@ -91,7 +95,7 @@ extension OptionalType {
 		})
 	}
 
-	public func ifNotNil(@noescape action: WrappedType -> ()) {
+	public func ifNotNil(_ action: (WrappedType) -> ()) {
 		runOptional(
 			ifSome: { (wrapped) -> () in
 				action(wrapped)
@@ -101,7 +105,7 @@ extension OptionalType {
 		})
 	}
 
-	public func filter(@noescape predicate: WrappedType -> Bool) -> Optional<WrappedType> {
+	public func filter(_ predicate: (WrappedType) -> Bool) -> Optional<WrappedType> {
 		return flatMap { (wrapped) -> Optional<WrappedType> in
 			if predicate(wrapped) {
 				return Optional(wrapped)
@@ -113,11 +117,11 @@ extension OptionalType {
 
 	public func zip <
 		OtherType,
-		OtherOptionalType: OptionalType
+		OtherOptionalType: OptionalType>
+		(_ other: @autoclosure () -> OtherOptionalType) -> Optional<(WrappedType,OtherType)>
 		where
 		OtherOptionalType.WrappedType == OtherType
-		>
-		(@autoclosure other: () -> OtherOptionalType) -> Optional<(WrappedType,OtherType)> {
+		 {
 		return flatMap { selfValue in
 			other().map { otherValue in
 				(selfValue,otherValue)

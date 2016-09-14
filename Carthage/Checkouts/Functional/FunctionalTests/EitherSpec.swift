@@ -2,32 +2,32 @@ import XCTest
 import SwiftCheck
 @testable import Functional
 
-extension String: ErrorType {}
+extension String: Error {}
 
 extension Either where Wrapped: Equatable {
-	func isEqualTo(other: Either<Wrapped>) -> Bool {
+	func isEqualTo(_ other: Either<Wrapped>) -> Bool {
 		switch (self,other) {
-		case let (.Right(rightValue),.Right(leftValue)):
+		case let (.right(rightValue),.right(leftValue)):
 			return rightValue == leftValue
-		case let (.Left(rightError),.Left(leftError)):
+		case let (.left(rightError),.left(leftError)):
 			guard let
 				rightString = rightError as? String,
-				leftString = leftError as? String else { return false }
+				let leftString = leftError as? String else { return false }
 			return leftString == rightString
 		default:
 			return false
 		}
 	}
 
-	static func firstLaw(f f: Wrapped -> Either<Wrapped>) -> Wrapped -> Bool {
+	static func firstLaw(f: @escaping (Wrapped) -> Either<Wrapped>) -> (Wrapped) -> Bool {
 		return { x in (Either(x).flatMap(f)).isEqualTo(f(x)) }
 	}
 
-	static func secondLaw() -> Wrapped -> Bool {
+	static func secondLaw() -> (Wrapped) -> Bool {
 		return { x in (Either(x).flatMap(Either.init)).isEqualTo(Either(x)) }
 	}
 
-	static func thirdLaw(f f: Wrapped -> Either<Wrapped>, g: Wrapped -> Either<Wrapped>) -> Wrapped -> Bool {
+	static func thirdLaw(f: @escaping (Wrapped) -> Either<Wrapped>, g: @escaping (Wrapped) -> Either<Wrapped>) -> (Wrapped) -> Bool {
 		return { x in (Either(x).flatMap(f).flatMap(g)).isEqualTo(Either(x).flatMap { a in f(a).flatMap(g) }) }
 	}
 }
@@ -41,7 +41,7 @@ struct ArbitraryEither: Arbitrary {
 	static var arbitrary: Gen<ArbitraryEither> {
 		return Gen<ArbitraryEither>.zip(Int.arbitrary, String.arbitrary, Bool.arbitrary)
 			.map { (value: Int, error: String, isRight: Bool) -> Either<Int> in
-				isRight.analyze(ifTrue: Either.Right(value), ifFalse: Either.Left(error))
+				isRight.analyze(ifTrue: Either.right(value), ifFalse: Either.left(error))
 			}
 		.map(ArbitraryEither.init)
 	}
@@ -51,7 +51,7 @@ class EitherSpec: XCTestCase {
 	func testFunctorLaws() {
 		property("map(identity) ≡ identity") <- forAll { (arbitraryEither: ArbitraryEither) in
 			let either = arbitraryEither.either
-			let mapId: Either<Int> -> Either<Int> = Use(Either.map).with(identity)
+			let mapId: (Either<Int>) -> Either<Int> = Use(Either.map).with(identity)
 			return mapId(either).isEqualTo(identity(either))
 		}
 
@@ -59,9 +59,9 @@ class EitherSpec: XCTestCase {
 			let f = fArrow.getArrow
 			let g = gArrow.getArrow
 			let h = compose(f,g)
-			let mapH: Either<Int> -> Either<String> = Use(Either.map).with(h)
-			let mapF: Either<Int> -> Either<Bool> = Use(Either.map).with(f)
-			let mapG: Either<Bool> -> Either<String> = Use(Either.map).with(g)
+			let mapH: (Either<Int>) -> Either<String> = Use(Either.map).with(h)
+			let mapF: (Either<Int>) -> Either<Bool> = Use(Either.map).with(f)
+			let mapG: (Either<Bool>) -> Either<String> = Use(Either.map).with(g)
 			let mapGF = compose(mapF,mapG)
 			return mapH(arbitraryEither.either).isEqualTo(mapGF(arbitraryEither.either))
 		}
@@ -85,9 +85,9 @@ class EitherSpec: XCTestCase {
 		property("Either.getOrElse should work properly") <- forAll { (arbitraryEither: ArbitraryEither, elseValue: Int) in
 			let either = arbitraryEither.either
 			switch arbitraryEither.either {
-			case let .Right(value):
+			case let .right(value):
 				return value == either.getOrElse(elseValue)
-			case .Left:
+			case .left:
 				return elseValue == either.getOrElse(elseValue)
 			}
 		}

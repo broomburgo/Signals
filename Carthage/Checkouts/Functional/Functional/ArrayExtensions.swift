@@ -15,25 +15,25 @@ extension Array {
 		return m_self
 	}
 
-	public func find(@noescape predicate: Element -> Bool) -> Element? {
+	public func find(_ predicate: (Element) -> Bool) -> Element? {
 		for element in self {
 			if predicate(element) { return element }
 		}
 		return nil
 	}
 
-	public func mapSome<Other>(@noescape transform: Element -> Other?) -> [Other] {
+	public func mapSome<Other>(_ transform: (Element) -> Other?) -> [Other] {
 		return flatMap(transform)
 	}
 
-	public func accumulate(@noescape combine: (Element, Element) throws -> Element) rethrows -> Element? {
+	public func accumulate(combine: (Element, Element) throws -> Element) rethrows -> Element? {
 		guard let head = head, let tail = tail else { return first }
-		return try tail.reduce(head, combine: combine)
+		return try tail.reduce(head, combine)
 	}
 
 	public func isEqual(to other: [Element], considering predicate: (Element,Element) -> Bool) -> Bool {
 		guard count == other.count else { return false }
-		for (index,element) in enumerate() {
+		for (index,element) in enumerated() {
 			if predicate(element,other[index]) == false {
 				return false
 			}

@@ -2,20 +2,20 @@ public protocol HomomorphismType {
 	associatedtype SourceType
 	associatedtype TargetType
 
-	func direct(value: SourceType) -> TargetType
+	func direct(_ value: SourceType) -> TargetType
 }
 
 public struct Homomorphism<Source,Target>: HomomorphismType {
 	public typealias SourceType = Source
 	public typealias TargetType = Target
 
-	private let directFunction: SourceType -> TargetType
-	public init(_ directFunction: SourceType -> TargetType) {
+	fileprivate let directFunction: (SourceType) -> TargetType
+	public init(_ directFunction: @escaping (SourceType) -> TargetType) {
 		self.directFunction = directFunction
 	}
 
 	/// HomomorphismType
-	public func direct(value: SourceType) -> TargetType {
+	public func direct(_ value: SourceType) -> TargetType {
 		return directFunction(value)
 	}
 }
@@ -29,13 +29,13 @@ extension EndomorphismType {
 public struct Endomorphism<Source>: EndomorphismType, Monoid {
 	public typealias SourceType = Source
 
-	let directFunction: Source -> Source
-	public init(_ directFunction: Source -> Source) {
+	let directFunction: (Source) -> Source
+	public init(_ directFunction: @escaping (Source) -> Source) {
 		self.directFunction = directFunction
 	}
 
 	/// HomomorphismType
-	public func direct(value: Source) -> Source {
+	public func direct(_ value: Source) -> Source {
 		return directFunction(value)
 	}
 
@@ -44,7 +44,7 @@ public struct Endomorphism<Source>: EndomorphismType, Monoid {
 		return Endomorphism { $0 }
 	}
 
-	public func compose(other: Endomorphism) -> Endomorphism {
+	public func compose(_ other: Endomorphism) -> Endomorphism {
 		return Endomorphism { other.direct(self.direct($0)) }
 	}
 
@@ -53,31 +53,31 @@ public struct Endomorphism<Source>: EndomorphismType, Monoid {
 		return Endomorphism { $0 }
 	}
 
-	public func andThen(other: Endomorphism) -> Endomorphism {
+	public func andThen(_ other: Endomorphism) -> Endomorphism {
 		return Endomorphism { other.direct(self.direct($0)) }
 	}
 }
 
 public protocol IsomorphismType: HomomorphismType {
-	func inverse(value: TargetType) -> SourceType
+	func inverse(_ value: TargetType) -> SourceType
 }
 
 public struct Isomorphism<Source,Target> {
-	let directFunction: Source -> Target
-	let inverseFunction: Target -> Source
+	let directFunction: (Source) -> Target
+	let inverseFunction: (Target) -> Source
 
-	public init(directFunction: Source -> Target, inverseFunction: Target -> Source) {
+	public init(directFunction: @escaping (Source) -> Target, inverseFunction: @escaping (Target) -> Source) {
 		self.directFunction = directFunction
 		self.inverseFunction = inverseFunction
 	}
 
 	/// HomomorphismType
-	public func direct(value: Source) -> Target {
+	public func direct(_ value: Source) -> Target {
 		return directFunction(value)
 	}
 
 	/// IsomorphismType
-	public func inverse(value: Target) -> Source {
+	public func inverse(_ value: Target) -> Source {
 		return inverseFunction(value)
 	}
 }
@@ -85,21 +85,21 @@ public struct Isomorphism<Source,Target> {
 public protocol AutomorphismType: EndomorphismType, IsomorphismType {}
 
 public struct Automorphism<Source>: AutomorphismType, Monoid {
-	let directFunction: Source -> Source
-	let inverseFunction: Source -> Source
+	let directFunction: (Source) -> Source
+	let inverseFunction: (Source) -> Source
 
-	public init(directFunction: Source -> Source, inverseFunction: Source -> Source) {
+	public init(directFunction: @escaping (Source) -> Source, inverseFunction: @escaping (Source) -> Source) {
 		self.directFunction = directFunction
 		self.inverseFunction = inverseFunction
 	}
 
 	/// HomomorphismType
-	public func direct(value: Source) -> Source {
+	public func direct(_ value: Source) -> Source {
 		return directFunction(value)
 	}
 
 	/// IsomorphismType
-	public func inverse(value: Source) -> Source {
+	public func inverse(_ value: Source) -> Source {
 		return inverseFunction(value)
 	}
 
@@ -108,7 +108,7 @@ public struct Automorphism<Source>: AutomorphismType, Monoid {
 		return Automorphism(directFunction: { $0 }, inverseFunction: { $0 })
 	}
 
-	public func compose(other: Automorphism) -> Automorphism {
+	public func compose(_ other: Automorphism) -> Automorphism {
 		return Automorphism(
 			directFunction: { other.direct(self.direct($0)) },
 			inverseFunction: { self.inverse(other.inverse($0)) })

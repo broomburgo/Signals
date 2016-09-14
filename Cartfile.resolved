@@ -1,2 +1,2 @@
-github "typelift/SwiftCheck" "v0.6.2"
-git "https://gitlab.facile.it/erocca/Functional.git" "658a580c2df97db784872c365fa8016642d9f083"
+github "typelift/SwiftCheck" "706c8075760a65061161797a380b17bd6bd5d055"
+git "https://gitlab.facile.it/erocca/Functional.git" "fad06dae66ebbd7843b2e397a51dc82412373aeb"

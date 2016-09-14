@@ -1,11 +1,11 @@
 public protocol ObservableType: class {
 	associatedtype ObservedType
-	func onNext(callback: ObservedType -> SignalPersistence) -> Self
+	func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self
 }
 
 public protocol SignalType: class {
 	associatedtype SentType
-	func send(value: SentType) -> Self
+	func send(_ value: SentType) -> Self
 }
 
 extension ObservableType {
@@ -13,15 +13,15 @@ extension ObservableType {
 		return AnyObservable(self)
 	}
 
-	public func map<Other>(transform: ObservedType -> Other) -> AnyObservable<Other> {
+	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> AnyObservable<Other> {
 		return AnyObservable(SignalMap(root: self, transform: transform))
 	}
 
-	public func flatMap<OtherObservable: ObservableType>(transform: ObservedType -> OtherObservable) -> AnyObservable<OtherObservable.ObservedType> {
+	public func flatMap<OtherObservable: ObservableType>(_ transform: @escaping (ObservedType) -> OtherObservable) -> AnyObservable<OtherObservable.ObservedType> {
 		return AnyObservable(SignalFlatMap(root: self, transform: transform))
 	}
 
-	public func filter(predicate: ObservedType -> Bool) -> AnyObservable<ObservedType> {
+	public func filter(_ predicate: @escaping (ObservedType) -> Bool) -> AnyObservable<ObservedType> {
 		return AnyObservable(SignalFilter(root: self, predicate: predicate))
 	}
 }
@@ -29,9 +29,9 @@ extension ObservableType {
 extension ObservableType {
 	public var single: Deferred<ObservedType> {
 		let deferred = Deferred<ObservedType>()
-		onNext { (value) -> SignalPersistence in
-			deferred.fill(value)
-			return .Stop
+		_ = onNext { (value) -> SignalPersistence in
+			_ = deferred.fill(value)
+			return .stop
 		}
 		return deferred
 	}

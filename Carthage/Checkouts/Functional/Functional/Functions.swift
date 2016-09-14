@@ -1,22 +1,22 @@
-public func ignoreInput<A,B>(function: () -> B) -> A -> B {
+public func ignoreInput<A,B>(_ function: @escaping () -> B) -> (A) -> B {
 	return { _ in
 		let b = function()
 		return b
 	}
 }
 
-public func ignoreOutput<A,B>(function: A -> B) -> A -> () {
+public func ignoreOutput<A,B>(_ function: @escaping (A) -> B) -> (A) -> () {
 	return { a in
-		function(a)
+		_ = function(a)
 		return
 	}
 }
 
-public func compose <A, B, C> (first: A -> B, _ second: B -> C) -> A -> C {
+public func compose <A, B, C> (_ first: @escaping (A) -> B, _ second: @escaping (B) -> C) -> (A) -> C {
 	return { second(first($0)) }
 }
 
-public func identity<A>(value: A) -> A {
+public func identity<A>(_ value: A) -> A {
 	return value
 }
 

@@ -1,14 +1,14 @@
 public protocol BindableType {
 	associatedtype BoundType
-	func bind<Observable: ObservableType where Observable.ObservedType == BoundType>(to observable: Observable)
+	func bind<Observable: ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType
 }
 
 extension SignalType where Self: BindableType, SentType == Self.BoundType {
-	public func bind<Observable : ObservableType where Observable.ObservedType == BoundType>(to observable: Observable) {
-		observable.onNext { [weak self] value in
-			guard let this = self else { return .Stop }
-			this.send(value)
-			return .Continue
+	public func bind<Observable : ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType {
+		_ = observable.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			_ = this.send(value)
+			return .continue
 		}
 	}
 }
@@ -24,16 +24,16 @@ extension SignalCached: BindableType {
 public final class Binding<Bound>: BindableType {
 	public typealias BoundType = Bound
 
-	private let bindCallback: Bound -> ()
-	public init(bindCallback: Bound -> ()) {
+	fileprivate let bindCallback: (Bound) -> ()
+	public init(bindCallback: @escaping (Bound) -> ()) {
 		self.bindCallback = bindCallback
 	}
 
-	public func bind<Observable : ObservableType where Observable.ObservedType == BoundType>(to observable: Observable) {
-		observable.onNext { [weak self] value in
-			guard let this = self else { return .Stop }
+	public func bind<Observable : ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType {
+		_ = observable.onNext { [weak self] value in
+			guard let this = self else { return .stop }
 			this.bindCallback(value)
-			return .Continue
+			return .continue
 		}
 	}
 }

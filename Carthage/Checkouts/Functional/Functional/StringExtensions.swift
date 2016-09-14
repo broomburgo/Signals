@@ -3,7 +3,7 @@ extension String: Monoid {
 		return ""
 	}
 
-	public func compose(other: String) -> String {
+	public func compose(_ other: String) -> String {
 		return self + other
 	}
 }

@@ -1,10 +1,10 @@
 extension Optional {
-	public func eitherWithError(@autoclosure error: () -> ErrorType) -> Either<Wrapped> {
+	public func eitherWithError(_ error: @autoclosure () -> Error) -> Either<Wrapped> {
 		switch self {
-		case .None:
-			return .Left(error())
-		case let .Some(value):
-			return .Right(value)
+		case .none:
+			return .left(error())
+		case let .some(value):
+			return .right(value)
 		}
 	}
 }
