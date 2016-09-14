@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias PropertyList = [String:AnyObject]
+public typealias PropertyList = [String:Any]
 
 public struct As<A> {
 	let wrapped: Any
