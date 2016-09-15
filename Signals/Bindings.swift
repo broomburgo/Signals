@@ -5,9 +5,9 @@ public protocol BindableType {
 
 extension SignalType where Self: BindableType, SentType == Self.BoundType {
 	public func bind<Observable : ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType {
-		_ = observable.onNext { [weak self] value in
+		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
-			_ = this.send(value)
+			this.send(value)
 			return .continue
 		}
 	}
@@ -30,7 +30,7 @@ public final class Binding<Bound>: BindableType {
 	}
 
 	public func bind<Observable : ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType {
-		_ = observable.onNext { [weak self] value in
+		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			this.bindCallback(value)
 			return .continue

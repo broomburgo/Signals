@@ -8,8 +8,8 @@ public class SignalMap<Previous,Next>: ObservableType {
 		self.transform = transform
 	}
 
-	public func onNext(_ callback: @escaping (Next) -> SignalPersistence) -> Self {
-		_ = root.onNext { previous in
+	@discardableResult public func onNext(_ callback: @escaping (Next) -> SignalPersistence) -> Self {
+		root.onNext { previous in
 			return callback(self.transform(previous))
 		}
 		return self
@@ -27,11 +27,11 @@ public class SignalFlatMap<Previous,Next>: ObservableType {
 		self.transform = { AnyObservable(transform($0)) }
 	}
 
-	public func onNext(_ callback: @escaping (Next) -> SignalPersistence) -> Self {
-		_ = root.onNext { previous in
+	@discardableResult public func onNext(_ callback: @escaping (Next) -> SignalPersistence) -> Self {
+		root.onNext { previous in
 			guard self.dependentPersistence != .stop else { return .stop }
 			let newObservable = self.transform(previous)
-			_ = newObservable.onNext { [weak self] value in
+			newObservable.onNext { [weak self] value in
 				guard let this = self else { return .stop }
 				let newPersistence = callback(value)
 				this.dependentPersistence = newPersistence
@@ -53,8 +53,8 @@ public class SignalFilter<Wrapped>: ObservableType {
 		self.predicate = predicate
 	}
 
-	public func onNext(_ callback: @escaping (Wrapped) -> SignalPersistence) -> Self {
-		_ = root.onNext { value in
+	@discardableResult public func onNext(_ callback: @escaping (Wrapped) -> SignalPersistence) -> Self {
+		root.onNext { value in
 			if self.predicate(value) {
 				return callback(value)
 			} else {
@@ -77,7 +77,7 @@ public class SignalCached<Wrapped>: ObservableType, SignalType {
 	init<Observable: ObservableType, Signal: SignalType>(rootObservable: Observable, rootSignal: Signal) where Observable.ObservedType == Wrapped, Signal.SentType == Wrapped {
 		self.rootObservable = AnyObservable(rootObservable)
 		self.rootSignal = AnySignal(rootSignal)
-		_ = rootObservable.onNext { [weak self] value in
+		rootObservable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			guard this.ignoreFirst == false else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
@@ -86,12 +86,12 @@ public class SignalCached<Wrapped>: ObservableType, SignalType {
 		}
 	}
 
-	public func onNext(_ callback: @escaping (Wrapped) -> SignalPersistence) -> Self {
+	 @discardableResult public func onNext(_ callback: @escaping (Wrapped) -> SignalPersistence) -> Self {
 		ignoreFirst = true
 		if let cached = cachedValue {
 			dependentPersistence = callback(cached)
 		}
-		_ = rootObservable.onNext { [weak self] value in
+		rootObservable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			this.cachedValue = value
@@ -102,8 +102,8 @@ public class SignalCached<Wrapped>: ObservableType, SignalType {
 		return self
 	}
 
-	public func send(_ value: Wrapped) -> Self {
-		_ = rootSignal.send(value)
+	@discardableResult public func send(_ value: Wrapped) -> Self {
+		rootSignal.send(value)
 		return self
 	}
 }

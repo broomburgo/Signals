@@ -12,13 +12,13 @@ private class FixedSignal<Wrapped>: ObservableType, SignalType {
 
 	var observation: ((ObservedType) -> SignalPersistence)? = nil
 
-	func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
 		guard observation == nil else { return self }
 		observation = callback
 		return self
 	}
 
-	func send(_ value: ObservedType) -> Self {
+	@discardableResult func send(_ value: ObservedType) -> Self {
 		if let persistence = observation?(value) {
 			switch persistence {
 			case .stop:
@@ -48,16 +48,16 @@ public class Signal<Wrapped>: ObservableType, SignalType {
 		self.callbackQueue = callbackQueue
 	}
 
-	public func onNext(_ callback: @escaping (SentType) -> SignalPersistence) -> Self {
+	@discardableResult public func onNext(_ callback: @escaping (SentType) -> SignalPersistence) -> Self {
 		fixed.append(FixedSignal<SentType>().onNext(callback))
 		return self
 	}
 
-	public func send(_ value: SentType) -> Self {
+	@discardableResult public func send(_ value: SentType) -> Self {
 		workerQueue.async {
 			for signal in self.fixed {
 				self.callbackQueue.async {
-					_ = signal.send(value)
+					signal.send(value)
 				}
 			}
 			self.callbackQueue.async {

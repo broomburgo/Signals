@@ -1,6 +1,6 @@
 class BoxObservableBase<Wrapped>: ObservableType {
 	typealias ObservedType = Wrapped
-	func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
 		fatalError()
 	}
 }
@@ -11,8 +11,8 @@ class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.Ob
 		self.base = base
 	}
 
-	override func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
-		_ = base.onNext(callback)
+	@discardableResult override func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+		base.onNext(callback)
 		return self
 	}
 }
@@ -25,15 +25,15 @@ public class AnyObservable<Wrapped>: ObservableType {
 		self.box = BoxObservable(base: base)
 	}
 
-	public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
-		_ = box.onNext(callback)
+	@discardableResult public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+		box.onNext(callback)
 		return self
 	}
 }
 
 class BoxSignalBase<Wrapped>: SignalType {
 	typealias SentType = Wrapped
-	func send(_ value: SentType) -> Self {
+	@discardableResult func send(_ value: SentType) -> Self {
 		fatalError()
 	}
 }
@@ -44,8 +44,8 @@ class BoxSignal<Signal: SignalType>: BoxSignalBase<Signal.SentType> {
 		self.base = base
 	}
 
-	override func send(_ value: SentType) -> Self {
-		_ = base.send(value)
+	@discardableResult override func send(_ value: SentType) -> Self {
+		base.send(value)
 		return self
 	}
 }
@@ -58,8 +58,8 @@ public class AnySignal<Wrapped>: SignalType {
 		self.box = BoxSignal(base: base)
 	}
 
-	public func send(_ value: SentType) -> Self {
-		_ = box.send(value)
+	@discardableResult public func send(_ value: SentType) -> Self {
+		box.send(value)
 		return self
 	}
 }

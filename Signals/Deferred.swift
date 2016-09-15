@@ -3,8 +3,8 @@ import Functional
 public protocol DeferredType: WrapperType {
 	init(optionalValue: WrappedType?)
 	var peek: WrappedType? { get }
-	func fill(_ value: WrappedType) -> Self
-	func upon(_ callback: @escaping (WrappedType) -> ()) -> Self
+	@discardableResult func fill(_ value: WrappedType) -> Self
+	@discardableResult func upon(_ callback: @escaping (WrappedType) -> ()) -> Self
 }
 
 extension WrapperType where Self: DeferredType {
@@ -45,18 +45,18 @@ public final class Deferred<Wrapped>: DeferredType {
 		return value
 	}
 
-	public func fill(_ value: WrappedType) -> Deferred<Wrapped> {
+	@discardableResult public func fill(_ value: WrappedType) -> Deferred<Wrapped> {
 		guard self.value == nil else { return self }
 		self.value = value
-		_ = signal.send(value)
+		signal.send(value)
 		return self
 	}
 
-	public func upon(_ callback: @escaping (WrappedType) -> ()) -> Deferred<Wrapped> {
+	@discardableResult public func upon(_ callback: @escaping (WrappedType) -> ()) -> Deferred<Wrapped> {
 		if let value = value {
 			callback(value)
 		} else {
-			_ = observable.onNext {
+			observable.onNext {
 				callback($0)
 				return .stop
 			}
@@ -69,8 +69,8 @@ public final class Deferred<Wrapped>: DeferredType {
 extension DeferredType {
 	public func map <OtherType> (_ transform: @escaping (WrappedType) -> OtherType) -> Deferred<OtherType> {
 		let newDeferred = Deferred<OtherType>(optionalValue: nil)
-		_ = upon { (value) in
-			_ = newDeferred.fill(transform(value))
+		upon { (value) in
+			newDeferred.fill(transform(value))
 		}
 		return newDeferred
 	}
@@ -83,10 +83,10 @@ extension DeferredType {
 		OtherDeferredType.WrappedType == OtherType
 		 {
 		let newDeferred = Deferred<OtherType>(optionalValue: nil)
-		_ = upon { (value) in
-			_ = transform(value)
+		upon { (value) in
+			transform(value)
 				.upon { (otherValue) in
-					_ = newDeferred.fill(otherValue)
+					newDeferred.fill(otherValue)
 			}
 		}
 		return newDeferred
@@ -102,9 +102,9 @@ extension DeferredType where WrappedType: HomomorphismType {
 		OtherDeferredType.WrappedType == WrappedType.SourceType
 		 {
 		let newDeferred = Deferred<WrappedType.TargetType>(optionalValue: nil)
-		_ = upon { (transform) in
-			_ = other.upon { (value) in
-				_ = newDeferred.fill(transform.direct(value))
+		upon { (transform) in
+			other.upon { (value) in
+				newDeferred.fill(transform.direct(value))
 			}
 		}
 		return newDeferred
@@ -117,26 +117,26 @@ extension DeferredType {
 		return peek != nil
 	}
 
-	public func union <
+	public func combined <
 		OtherDeferredType: DeferredType>
-		(_ other: OtherDeferredType) -> Deferred<WrappedType>
+		(with other: OtherDeferredType) -> Deferred<WrappedType>
 		where
 		OtherDeferredType.WrappedType == WrappedType
 		 {
 		let newDeferred = Deferred<WrappedType>(optionalValue: nil)
-		_ = upon { (value) in
-			_ = newDeferred.fill(value)
+		upon { (value) in
+			newDeferred.fill(value)
 		}
-		_ = other.upon { (value) in
-			_ = newDeferred.fill(value)
+		other.upon { (value) in
+			newDeferred.fill(value)
 		}
 		return newDeferred
 	}
 
-	public func zip <
+	public func zipped <
 		OtherType,
 		OtherDeferredType: DeferredType>
-		(_ other: OtherDeferredType) -> Deferred<(WrappedType,OtherType)>
+		(with other: OtherDeferredType) -> Deferred<(WrappedType,OtherType)>
 		where
 		OtherDeferredType.WrappedType == OtherType
 		 {
@@ -150,8 +150,8 @@ extension DeferredType {
 
 extension Deferred: ObservableType {
 	public typealias ObservedType = WrappedType
-	public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
-		_ = upon { (value) in
+	@discardableResult public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+		upon { (value) in
 			_ = callback(value)
 		}
 		return self

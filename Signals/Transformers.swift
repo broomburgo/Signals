@@ -16,8 +16,8 @@ extension DeferredType where WrappedType: WriterType {
 	public func flatMapWriter <OtherType> (_ transform: @escaping (WrappedType.WrappedType) -> Deferred<Writer<OtherType,WrappedType.LogType>>) -> Deferred<Writer<OtherType,WrappedType.LogType>> {
 		return flatMap { (writer) -> Deferred<Writer<OtherType,WrappedType.LogType>> in
 			let newDeferred = Deferred<Writer<OtherType,WrappedType.LogType>>(optionalValue: nil)
-			_ = transform(writer.runWriter.0).upon { (newWriter) in
-				_ = newDeferred.fill(writer.flatMap { _ in newWriter})
+			transform(writer.runWriter.0).upon { (newWriter) in
+				newDeferred.fill(writer.flatMap { _ in newWriter})
 			}
 			return newDeferred
 		}

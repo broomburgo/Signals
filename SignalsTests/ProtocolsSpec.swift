@@ -14,13 +14,13 @@ class ProtocolsSpec: XCTestCase {
 
 		let willObserve = expectation(description: "willObserve")
 
-		_ = signal2.onNext { value in
+		signal2.onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
 			return .continue
 		}
 
-		_ = signal1.send(sentValue)
+		signal1.send(sentValue)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}

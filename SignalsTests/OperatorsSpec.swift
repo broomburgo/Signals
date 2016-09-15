@@ -10,13 +10,13 @@ class OperatorsSpec: XCTestCase {
 		let expectedValue1 = "42"
 		let willObserve1 = expectation(description: "willObserve1")
 
-		_ = signal.map { "\($0)" }.onNext { value in
+		signal.map { "\($0)" }.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .continue
 		}
 
-		_ = signal.send(sentValue1)
+		signal.send(sentValue1)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
@@ -30,7 +30,7 @@ class OperatorsSpec: XCTestCase {
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 
-		_ = signal
+		signal
 			.map { $0*2 } .onNext { value in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
@@ -43,7 +43,7 @@ class OperatorsSpec: XCTestCase {
 				return .continue
 		}
 
-		_ = signal.send(sentValue1)
+		signal.send(sentValue1)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
@@ -58,7 +58,7 @@ class OperatorsSpec: XCTestCase {
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 
-		_ = signal1
+		signal1
 			.flatMap { (value) -> Signal<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
@@ -70,10 +70,10 @@ class OperatorsSpec: XCTestCase {
 				return .continue
 		}
 
-		_ = signal1.send(expectedValue1)
+		signal1.send(expectedValue1)
 		let delayTime = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.asyncAfter(deadline: delayTime) {
-			_ = signal2.send(expectedValue2)
+			signal2.send(expectedValue2)
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
@@ -92,7 +92,7 @@ class OperatorsSpec: XCTestCase {
 		let willObserve2 = expectation(description: "willObserve2")
 		let willEndChain1 = expectation(description: "willEndChain1")
 
-		_ = signal1
+		signal1
 			.flatMap { (value) -> Signal<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
@@ -104,16 +104,16 @@ class OperatorsSpec: XCTestCase {
 				return .stop
 		}
 
-		_ = signal1.send(expectedValue1)
+		signal1.send(expectedValue1)
 		let delayTime1 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.asyncAfter(deadline: delayTime1) {
-			_ = signal2.send(expectedValue2)
+			signal2.send(expectedValue2)
 			let delayTime2 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 			DispatchQueue.main.asyncAfter(deadline: delayTime2) {
-				_ = signal1.send(unexpectedValue1)
+				signal1.send(unexpectedValue1)
 				let delayTime3 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 				DispatchQueue.main.asyncAfter(deadline: delayTime3) {
-					_ = signal2.send(unexpectedValue2)
+					signal2.send(unexpectedValue2)
 					willEndChain1.fulfill()
 				}
 			}
@@ -131,14 +131,14 @@ class OperatorsSpec: XCTestCase {
 		let expectedValue1 = 43
 		let willObserve1 = expectation(description: "willObserve1")
 
-		_ = signal.filter { $0 != unexpectedValue1 }.onNext { value in
+		signal.filter { $0 != unexpectedValue1 }.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .continue
 		}
 
-		_ = signal.send(sentValue1)
-		_ = signal.send(sentValue2)
+		signal.send(sentValue1)
+		signal.send(sentValue2)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
@@ -150,7 +150,7 @@ class OperatorsSpec: XCTestCase {
 
 		let cached = signal.cached
 
-		_ = signal.send(expectedValue1)
+		signal.send(expectedValue1)
 
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
@@ -161,7 +161,7 @@ class OperatorsSpec: XCTestCase {
 
 			var observedOnce = false
 
-			_ = cached.onNext { value in
+			cached.onNext { value in
 				if observedOnce {
 					XCTAssertEqual(value, expectedValue2)
 					willObserve2.fulfill()
@@ -174,7 +174,7 @@ class OperatorsSpec: XCTestCase {
 				}
 			}
 
-			_ = signal.send(expectedValue2)
+			signal.send(expectedValue2)
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
