@@ -54,7 +54,7 @@ public class Signal<Wrapped>: ObservableType, SignalType {
 	}
 
 	@discardableResult public func send(_ value: SentType) -> Self {
-		workerQueue.async {
+		workerQueue.sync {
 			for signal in self.fixed {
 				self.callbackQueue.async {
 					signal.send(value)
