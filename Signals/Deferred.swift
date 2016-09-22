@@ -148,12 +148,10 @@ extension DeferredType {
 	}
 }
 
-extension Deferred: ObservableType {
-	public typealias ObservedType = WrappedType
-	@discardableResult public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
-		upon { (value) in
-			_ = callback(value)
-		}
-		return self
+extension Deferred {
+	public var asObservable: AnyObservable<WrappedType> {
+		let signal = Signal<WrappedType>()
+		upon { signal.send($0) }
+		return AnyObservable(signal)
 	}
 }

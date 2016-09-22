@@ -140,4 +140,46 @@ class DeferredSpec: XCTestCase {
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
+
+	func testAsObservableFillOnce() {
+		let deferred = Deferred<Int>()
+		let observable = deferred.asObservable
+
+		let expectedValue1 = 42
+		let willObserve1 = expectation(description: "willObserve1")
+
+		observable.onNext { value in
+			XCTAssertEqual(value, expectedValue1)
+			willObserve1.fulfill()
+			return .continue
+		}
+
+		deferred.fill(expectedValue1)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testAsObservableFillMultiple() {
+		let deferred = Deferred<Int>()
+		let observable = deferred.asObservable
+
+		let expectedValue1 = 42
+		let willObserve1 = expectation(description: "willObserve1")
+
+		var observed = false
+
+		observable.onNext { value in
+			XCTAssertFalse(observed)
+			observed = true
+			XCTAssertEqual(value, expectedValue1)
+			willObserve1.fulfill()
+			return .continue
+		}
+
+		deferred.fill(expectedValue1)
+		deferred.fill(expectedValue1)
+		deferred.fill(expectedValue1)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
 }
