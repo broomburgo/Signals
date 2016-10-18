@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3813B58E1DB5027500681424 /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3813B58D1DB5027500681424 /* Functional.framework */; };
+		3813B58F1DB5038600681424 /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3813B58D1DB5027500681424 /* Functional.framework */; };
+		3813B5901DB5039300681424 /* Functional.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3813B58D1DB5027500681424 /* Functional.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Signals.swift */; };
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38AA43A61D3F87DF001F0438 /* SignalsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* SignalsSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
-		38AA43BE1D3FC863001F0438 /* DeferredSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43BD1D3FC863001F0438 /* DeferredSpec.swift */; };
 		38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */; };
 		38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */; };
 		38B2D89C1D46580C00E27E62 /* Bindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B2D89B1D46580C00E27E62 /* Bindings.swift */; };
 		38B2D8B91D4667E600E27E62 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; };
 		38B2D8BB1D4667EF00E27E62 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		38BC834C1D364761000F8BDE /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834B1D364761000F8BDE /* Deferred.swift */; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
 		38BC835A1D367F7E000F8BDE /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Utilities.swift */; };
-		38DA493F1D816CCD00674DE6 /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38DA493E1D816CCD00674DE6 /* Functional.framework */; };
 		38E587D61D42525E00B12C2B /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E587D51D42525E00B12C2B /* Transformers.swift */; };
 		38F6A3B01D4E325100B824FA /* TypeErasers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F6A3AF1D4E325100B824FA /* TypeErasers.swift */; };
 /* End PBXBuildFile section */
@@ -45,12 +45,14 @@
 			dstSubfolderSpec = 10;
 			files = (
 				38B2D8BB1D4667EF00E27E62 /* SwiftCheck.framework in CopyFiles */,
+				3813B5901DB5039300681424 /* Functional.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3813B58D1DB5027500681424 /* Functional.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Functional.framework; path = Carthage/Build/iOS/Functional.framework; sourceTree = "<group>"; };
 		3826CD8D1D32BDD5003CE220 /* Signals.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Signals.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD901D32BDD5003CE220 /* Signals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Signals.h; sourceTree = "<group>"; };
 		3826CD921D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -61,14 +63,11 @@
 		38AA43A11D3F849A001F0438 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		38AA43A51D3F87DF001F0438 /* SignalsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SignalsSpec.swift; path = SignalsTests/SignalsSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperatorsSpec.swift; path = SignalsTests/OperatorsSpec.swift; sourceTree = SOURCE_ROOT; };
-		38AA43BD1D3FC863001F0438 /* DeferredSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeferredSpec.swift; path = SignalsTests/DeferredSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtocolsSpec.swift; path = SignalsTests/ProtocolsSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UtilitiesSpec.swift; path = SignalsTests/UtilitiesSpec.swift; sourceTree = SOURCE_ROOT; };
 		38B2D89B1D46580C00E27E62 /* Bindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
-		38BC834B1D364761000F8BDE /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		38BC83591D367F7E000F8BDE /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		38DA493E1D816CCD00674DE6 /* Functional.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Functional.framework; path = Carthage/Build/iOS/Functional.framework; sourceTree = "<group>"; };
 		38E587D51D42525E00B12C2B /* Transformers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
 		38F6A3AF1D4E325100B824FA /* TypeErasers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeErasers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,7 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38DA493F1D816CCD00674DE6 /* Functional.framework in Frameworks */,
+				3813B58E1DB5027500681424 /* Functional.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +87,7 @@
 			files = (
 				3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */,
 				38B2D8B91D4667E600E27E62 /* SwiftCheck.framework in Frameworks */,
+				3813B58F1DB5038600681424 /* Functional.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,7 +133,7 @@
 		38AA43981D3F68B8001F0438 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				38DA493E1D816CCD00674DE6 /* Functional.framework */,
+				3813B58D1DB5027500681424 /* Functional.framework */,
 				38AA43961D3F68B3001F0438 /* SwiftCheck.framework */,
 			);
 			name = Frameworks;
@@ -142,7 +142,6 @@
 		38AA439F1D3F83EB001F0438 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
-				38BC834B1D364761000F8BDE /* Deferred.swift */,
 				38BC834D1D3647DF000F8BDE /* Operators.swift */,
 				38AA43A11D3F849A001F0438 /* Protocols.swift */,
 				3826CDA71D32BDE0003CE220 /* Signals.swift */,
@@ -158,7 +157,6 @@
 		38AA43A01D3F83F6001F0438 /* Spec */ = {
 			isa = PBXGroup;
 			children = (
-				38AA43BD1D3FC863001F0438 /* DeferredSpec.swift */,
 				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
 				38AA43A51D3F87DF001F0438 /* SignalsSpec.swift */,
 				38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */,
@@ -293,7 +291,6 @@
 				38F6A3B01D4E325100B824FA /* TypeErasers.swift in Sources */,
 				38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */,
 				38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */,
-				38BC834C1D364761000F8BDE /* Deferred.swift in Sources */,
 				3826CDA81D32BDE0003CE220 /* Signals.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,7 +303,6 @@
 				38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */,
 				38AA43A61D3F87DF001F0438 /* SignalsSpec.swift in Sources */,
 				38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */,
-				38AA43BE1D3FC863001F0438 /* DeferredSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

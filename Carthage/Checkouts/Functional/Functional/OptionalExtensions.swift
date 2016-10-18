@@ -8,3 +8,13 @@ extension Optional {
 		}
 	}
 }
+
+extension Optional: Monoid {
+	public static var empty: Optional {
+		return nil
+	}
+
+	public func compose(_ other: Optional) -> Optional {
+		return self ?? other
+	}
+}

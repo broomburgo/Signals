@@ -1,3 +1,5 @@
+import Functional
+
 public protocol ObservableType: class {
 	associatedtype ObservedType
 	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self
@@ -30,7 +32,7 @@ extension ObservableType {
 	public var single: Deferred<ObservedType> {
 		let deferred = Deferred<ObservedType>()
 		onNext { (value) -> SignalPersistence in
-			deferred.fill(value)
+			deferred.fill(with: value)
 			return .stop
 		}
 		return deferred
@@ -43,6 +45,11 @@ extension ObservableType where Self: SignalType, ObservedType == Self.SentType {
 	}
 
 	public var single: Deferred<ObservedType> {
-		return Deferred(nil,self)
+		let deferred = Deferred<ObservedType>(nil)
+		onNext {
+			deferred.fill(with: $0)
+			return .stop
+		}
+		return deferred
 	}
 }

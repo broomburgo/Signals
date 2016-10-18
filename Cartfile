@@ -1,2 +1,2 @@
-github "typelift/SwiftCheck" "swift-develop"
-git "https://gitlab.facile.it/erocca/Functional.git" "master"
+github "typelift/SwiftCheck"
+github "broomburgo/Functional" "master"

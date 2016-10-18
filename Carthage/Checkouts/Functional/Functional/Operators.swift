@@ -28,3 +28,14 @@ public struct Use<A,B,C> {
 		}
 	}
 }
+
+public struct As<A> {
+	let wrapped: Any
+	init(_ wrapped: Any) {
+		self.wrapped = wrapped
+	}
+
+	var get: A? {
+		return wrapped as? A
+	}
+}

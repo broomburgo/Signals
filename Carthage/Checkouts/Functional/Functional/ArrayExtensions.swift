@@ -1,4 +1,8 @@
 extension Array {
+	public subscript (index: UInt) -> Element {
+		return self[Int(index)]
+	}
+
 	public var head: Element? {
 		return first
 	}
@@ -49,7 +53,7 @@ extension Array where Element: Equatable {
 }
 
 extension Array where Element: Monoid {
-	public func composeAll() -> Element {
+	public var composeAll: Element {
 		return accumulate { $0.compose($1) } ?? Element.empty
 	}
 
@@ -58,3 +62,25 @@ extension Array where Element: Monoid {
 	}
 }
 
+extension Array where Element: OptionalType, Element: Monoid {
+	public var firstOptionalSomeOrNone: Element {
+		for element in self {
+			if element.isNotNil {
+				return element
+			}
+		}
+		return Element.empty
+	}
+}
+
+extension Array: Monoid {
+	public static var empty: Array<Element> {
+		return []
+	}
+
+	public func compose(_ other: Array<Element>) -> Array<Element> {
+		var m_self = self
+		m_self.append(contentsOf: other)
+		return m_self
+	}
+}

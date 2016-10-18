@@ -19,4 +19,3 @@ public func compose <A, B, C> (_ first: @escaping (A) -> B, _ second: @escaping 
 public func identity<A>(_ value: A) -> A {
 	return value
 }
-

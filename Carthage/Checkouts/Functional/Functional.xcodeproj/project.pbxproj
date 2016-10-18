@@ -19,11 +19,13 @@
 		385B29411D5B20630046B04A /* Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B29401D5B20630046B04A /* Writer.swift */; };
 		385B29431D5B26070046B04A /* Reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B29421D5B26070046B04A /* Reader.swift */; };
 		385B29461D5B2CEB0046B04A /* EitherTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B29451D5B2CEB0046B04A /* EitherTransformer.swift */; };
-		387A67481D66E9BE0070C304 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A67471D66E9BE0070C304 /* Path.swift */; };
+		387A67481D66E9BE0070C304 /* PathTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A67471D66E9BE0070C304 /* PathTo.swift */; };
 		389E24701D5DC42D00BB2BEF /* EitherSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E246F1D5DC42D00BB2BEF /* EitherSpec.swift */; };
 		389E24721D5DCB2800BB2BEF /* OptionalSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E24711D5DCB2800BB2BEF /* OptionalSpec.swift */; };
+		38A0D6351DAB72D600C5FF06 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A0D6341DAB72D600C5FF06 /* Observer.swift */; };
+		38A0D6371DAB72E700C5FF06 /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A0D6361DAB72E700C5FF06 /* Deferred.swift */; };
+		38A0D6391DAB748300C5FF06 /* DeferredSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A0D6381DAB748300C5FF06 /* DeferredSpec.swift */; };
 		38AA43CB1D3FD774001F0438 /* WriterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43CA1D3FD774001F0438 /* WriterSpec.swift */; };
-		38AE9C361D3E32AC009027F6 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE9C351D3E32AC009027F6 /* Unit.swift */; };
 		38B2D8B61D46677800E27E62 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43C41D3FD727001F0438 /* SwiftCheck.framework */; };
 		38B2D8B81D46678F00E27E62 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43C41D3FD727001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38BC834A1D364369000F8BDE /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83491D364369000F8BDE /* Functions.swift */; };
@@ -79,12 +81,14 @@
 		385B29401D5B20630046B04A /* Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
 		385B29421D5B26070046B04A /* Reader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reader.swift; sourceTree = "<group>"; };
 		385B29451D5B2CEB0046B04A /* EitherTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTransformer.swift; sourceTree = "<group>"; };
-		387A67471D66E9BE0070C304 /* Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		387A67471D66E9BE0070C304 /* PathTo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTo.swift; sourceTree = "<group>"; };
 		389E246F1D5DC42D00BB2BEF /* EitherSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EitherSpec.swift; path = FunctionalTests/EitherSpec.swift; sourceTree = SOURCE_ROOT; };
 		389E24711D5DCB2800BB2BEF /* OptionalSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionalSpec.swift; path = FunctionalTests/OptionalSpec.swift; sourceTree = SOURCE_ROOT; };
+		38A0D6341DAB72D600C5FF06 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
+		38A0D6361DAB72E700C5FF06 /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
+		38A0D6381DAB748300C5FF06 /* DeferredSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeferredSpec.swift; path = ../FunctionalTests/DeferredSpec.swift; sourceTree = "<group>"; };
 		38AA43C41D3FD727001F0438 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftCheck.framework; path = Carthage/Build/iOS/SwiftCheck.framework; sourceTree = "<group>"; };
 		38AA43CA1D3FD774001F0438 /* WriterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WriterSpec.swift; path = FunctionalTests/WriterSpec.swift; sourceTree = SOURCE_ROOT; };
-		38AE9C351D3E32AC009027F6 /* Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		38BC83491D364369000F8BDE /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		38E587DA1D4255BB00B12C2B /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
 		38EE32B81D2FA6E100E4DF8E /* Functional.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Functional.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,6 +135,7 @@
 		385B29381D5B13180046B04A /* Monads */ = {
 			isa = PBXGroup;
 			children = (
+				38A0D6361DAB72E700C5FF06 /* Deferred.swift */,
 				385B293E1D5B18690046B04A /* Either.swift */,
 				385B29391D5B13430046B04A /* Optional.swift */,
 				385B29421D5B26070046B04A /* Reader.swift */,
@@ -146,7 +151,6 @@
 			children = (
 				38EE33031D33EFF000E4DF8E /* Monoid.swift */,
 				38EEFD791D54DA6900EB4FFF /* Morphism.swift */,
-				38AE9C351D3E32AC009027F6 /* Unit.swift */,
 				385B293B1D5B13710046B04A /* Wrapper.swift */,
 			);
 			name = Algebra;
@@ -165,8 +169,9 @@
 			children = (
 				38E587DA1D4255BB00B12C2B /* Curry.swift */,
 				38BC83491D364369000F8BDE /* Functions.swift */,
+				38A0D6341DAB72D600C5FF06 /* Observer.swift */,
 				380D86C41D34FB3600DA245E /* Operators.swift */,
-				387A67471D66E9BE0070C304 /* Path.swift */,
+				387A67471D66E9BE0070C304 /* PathTo.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -182,9 +187,10 @@
 		38AA43C91D3FD75B001F0438 /* Spec */ = {
 			isa = PBXGroup;
 			children = (
-				38AA43CA1D3FD774001F0438 /* WriterSpec.swift */,
+				38A0D6381DAB748300C5FF06 /* DeferredSpec.swift */,
 				389E246F1D5DC42D00BB2BEF /* EitherSpec.swift */,
 				389E24711D5DCB2800BB2BEF /* OptionalSpec.swift */,
+				38AA43CA1D3FD774001F0438 /* WriterSpec.swift */,
 			);
 			name = Spec;
 			sourceTree = "<group>";
@@ -350,6 +356,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				38EEFD7A1D54DA6900EB4FFF /* Morphism.swift in Sources */,
+				38A0D6351DAB72D600C5FF06 /* Observer.swift in Sources */,
+				38A0D6371DAB72E700C5FF06 /* Deferred.swift in Sources */,
 				385B29431D5B26070046B04A /* Reader.swift in Sources */,
 				383860C61D488BE4002B8F14 /* BoolExtensions.swift in Sources */,
 				385B293F1D5B18690046B04A /* Either.swift in Sources */,
@@ -358,7 +366,6 @@
 				38E587DB1D4255BB00B12C2B /* Curry.swift in Sources */,
 				385B293C1D5B13710046B04A /* Wrapper.swift in Sources */,
 				383860C21D488B3F002B8F14 /* ArrayExtensions.swift in Sources */,
-				38AE9C361D3E32AC009027F6 /* Unit.swift in Sources */,
 				38EE33041D33EFF000E4DF8E /* Monoid.swift in Sources */,
 				385B293A1D5B13430046B04A /* Optional.swift in Sources */,
 				383860CA1D488C76002B8F14 /* DictionaryExtensions.swift in Sources */,
@@ -366,7 +373,7 @@
 				385B29411D5B20630046B04A /* Writer.swift in Sources */,
 				38BC834A1D364369000F8BDE /* Functions.swift in Sources */,
 				383860C41D488BAE002B8F14 /* OptionalExtensions.swift in Sources */,
-				387A67481D66E9BE0070C304 /* Path.swift in Sources */,
+				387A67481D66E9BE0070C304 /* PathTo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +382,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				389E24721D5DCB2800BB2BEF /* OptionalSpec.swift in Sources */,
+				38A0D6391DAB748300C5FF06 /* DeferredSpec.swift in Sources */,
 				38AA43CB1D3FD774001F0438 /* WriterSpec.swift in Sources */,
 				389E24701D5DC42D00BB2BEF /* EitherSpec.swift in Sources */,
 			);
