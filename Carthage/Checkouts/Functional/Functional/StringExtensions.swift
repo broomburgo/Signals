@@ -7,3 +7,9 @@ extension String: Monoid {
 		return self + other
 	}
 }
+
+extension String {
+	public var toInt: Int? {
+		return Int(self)
+	}
+}
