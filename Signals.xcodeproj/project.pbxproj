@@ -23,7 +23,6 @@
 		38B2D8BB1D4667EF00E27E62 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43961D3F68B3001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
 		38BC835A1D367F7E000F8BDE /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83591D367F7E000F8BDE /* Utilities.swift */; };
-		38E587D61D42525E00B12C2B /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E587D51D42525E00B12C2B /* Transformers.swift */; };
 		38F6A3B01D4E325100B824FA /* TypeErasers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F6A3AF1D4E325100B824FA /* TypeErasers.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,7 +67,6 @@
 		38B2D89B1D46580C00E27E62 /* Bindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bindings.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		38BC83591D367F7E000F8BDE /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		38E587D51D42525E00B12C2B /* Transformers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
 		38F6A3AF1D4E325100B824FA /* TypeErasers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeErasers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -147,7 +145,6 @@
 				3826CDA71D32BDE0003CE220 /* Signals.swift */,
 				38BC83591D367F7E000F8BDE /* Utilities.swift */,
 				38AA43A01D3F83F6001F0438 /* Spec */,
-				38E587D51D42525E00B12C2B /* Transformers.swift */,
 				38B2D89B1D46580C00E27E62 /* Bindings.swift */,
 				38F6A3AF1D4E325100B824FA /* TypeErasers.swift */,
 			);
@@ -286,7 +283,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				38BC835A1D367F7E000F8BDE /* Utilities.swift in Sources */,
-				38E587D61D42525E00B12C2B /* Transformers.swift in Sources */,
 				38B2D89C1D46580C00E27E62 /* Bindings.swift in Sources */,
 				38F6A3B01D4E325100B824FA /* TypeErasers.swift in Sources */,
 				38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */,
