@@ -19,6 +19,7 @@
 		385B29411D5B20630046B04A /* Writer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B29401D5B20630046B04A /* Writer.swift */; };
 		385B29431D5B26070046B04A /* Reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B29421D5B26070046B04A /* Reader.swift */; };
 		385B29461D5B2CEB0046B04A /* EitherTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B29451D5B2CEB0046B04A /* EitherTransformer.swift */; };
+		3864B7411DCB422C00C25BC5 /* Prism.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3864B7401DCB422C00C25BC5 /* Prism.swift */; };
 		387A67481D66E9BE0070C304 /* PathTo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A67471D66E9BE0070C304 /* PathTo.swift */; };
 		389E24701D5DC42D00BB2BEF /* EitherSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E246F1D5DC42D00BB2BEF /* EitherSpec.swift */; };
 		389E24721D5DCB2800BB2BEF /* OptionalSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E24711D5DCB2800BB2BEF /* OptionalSpec.swift */; };
@@ -29,6 +30,7 @@
 		38B2D8B61D46677800E27E62 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38AA43C41D3FD727001F0438 /* SwiftCheck.framework */; };
 		38B2D8B81D46678F00E27E62 /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38AA43C41D3FD727001F0438 /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38BC834A1D364369000F8BDE /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC83491D364369000F8BDE /* Functions.swift */; };
+		38D9C4341DCA4E8700740F7F /* Lens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D9C4331DCA4E8700740F7F /* Lens.swift */; };
 		38E587DB1D4255BB00B12C2B /* Curry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E587DA1D4255BB00B12C2B /* Curry.swift */; };
 		38EE32BC1D2FA6E100E4DF8E /* Functional.h in Headers */ = {isa = PBXBuildFile; fileRef = 38EE32BB1D2FA6E100E4DF8E /* Functional.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		38EE32C31D2FA6E100E4DF8E /* Functional.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38EE32B81D2FA6E100E4DF8E /* Functional.framework */; };
@@ -81,6 +83,7 @@
 		385B29401D5B20630046B04A /* Writer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
 		385B29421D5B26070046B04A /* Reader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reader.swift; sourceTree = "<group>"; };
 		385B29451D5B2CEB0046B04A /* EitherTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTransformer.swift; sourceTree = "<group>"; };
+		3864B7401DCB422C00C25BC5 /* Prism.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Prism.swift; sourceTree = "<group>"; };
 		387A67471D66E9BE0070C304 /* PathTo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTo.swift; sourceTree = "<group>"; };
 		389E246F1D5DC42D00BB2BEF /* EitherSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EitherSpec.swift; path = FunctionalTests/EitherSpec.swift; sourceTree = SOURCE_ROOT; };
 		389E24711D5DCB2800BB2BEF /* OptionalSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionalSpec.swift; path = FunctionalTests/OptionalSpec.swift; sourceTree = SOURCE_ROOT; };
@@ -90,6 +93,7 @@
 		38AA43C41D3FD727001F0438 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftCheck.framework; path = Carthage/Build/iOS/SwiftCheck.framework; sourceTree = "<group>"; };
 		38AA43CA1D3FD774001F0438 /* WriterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WriterSpec.swift; path = FunctionalTests/WriterSpec.swift; sourceTree = SOURCE_ROOT; };
 		38BC83491D364369000F8BDE /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		38D9C4331DCA4E8700740F7F /* Lens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lens.swift; sourceTree = "<group>"; };
 		38E587DA1D4255BB00B12C2B /* Curry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curry.swift; sourceTree = "<group>"; };
 		38EE32B81D2FA6E100E4DF8E /* Functional.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Functional.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38EE32BB1D2FA6E100E4DF8E /* Functional.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
@@ -149,8 +153,10 @@
 		385B293D1D5B13DA0046B04A /* Algebra */ = {
 			isa = PBXGroup;
 			children = (
+				38D9C4331DCA4E8700740F7F /* Lens.swift */,
 				38EE33031D33EFF000E4DF8E /* Monoid.swift */,
 				38EEFD791D54DA6900EB4FFF /* Morphism.swift */,
+				3864B7401DCB422C00C25BC5 /* Prism.swift */,
 				385B293B1D5B13710046B04A /* Wrapper.swift */,
 			);
 			name = Algebra;
@@ -370,10 +376,12 @@
 				385B293A1D5B13430046B04A /* Optional.swift in Sources */,
 				383860CA1D488C76002B8F14 /* DictionaryExtensions.swift in Sources */,
 				385B29461D5B2CEB0046B04A /* EitherTransformer.swift in Sources */,
+				3864B7411DCB422C00C25BC5 /* Prism.swift in Sources */,
 				385B29411D5B20630046B04A /* Writer.swift in Sources */,
 				38BC834A1D364369000F8BDE /* Functions.swift in Sources */,
 				383860C41D488BAE002B8F14 /* OptionalExtensions.swift in Sources */,
 				387A67481D66E9BE0070C304 /* PathTo.swift in Sources */,
+				38D9C4341DCA4E8700740F7F /* Lens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

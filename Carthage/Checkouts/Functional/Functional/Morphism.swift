@@ -20,6 +20,8 @@ public struct Homomorphism<Source,Target>: HomomorphismType {
 	}
 }
 
+public typealias Hom<A,B> = Homomorphism<A,B>
+
 public protocol EndomorphismType: HomomorphismType {}
 
 extension EndomorphismType {
@@ -58,6 +60,8 @@ public struct Endomorphism<Source>: EndomorphismType, Monoid {
 	}
 }
 
+public typealias Endo<A> = Endomorphism<A>
+
 public protocol IsomorphismType: HomomorphismType {
 	func inverse(_ value: TargetType) -> SourceType
 }
@@ -81,6 +85,8 @@ public struct Isomorphism<Source,Target> {
 		return inverseFunction(value)
 	}
 }
+
+public typealias Iso<A,B> = Isomorphism<A,B>
 
 public protocol AutomorphismType: EndomorphismType, IsomorphismType {}
 
@@ -114,3 +120,5 @@ public struct Automorphism<Source>: AutomorphismType, Monoid {
 			inverseFunction: { self.inverse(other.inverse($0)) })
 	}
 }
+
+public typealias Auto<A> = Automorphism<A>
