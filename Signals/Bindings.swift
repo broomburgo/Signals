@@ -3,22 +3,22 @@ public protocol BindableType {
 	func bind<Observable: ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType
 }
 
-extension SignalType where Self: BindableType, SentType == Self.BoundType {
+extension VariableType where Self: BindableType, WrappedType == Self.BoundType {
 	public func bind<Observable : ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType {
 		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
-			this.send(value)
-			return .continue
+			this.update(value)
+			return .again
 		}
 	}
 }
 
-extension Signal: BindableType {
-	public typealias BoundType = SentType
+extension Variable: BindableType {
+	public typealias BoundType = WrappedType
 }
 
-extension SignalCached: BindableType {
-	public typealias BoundType = SentType
+extension CachedVariable: BindableType {
+	public typealias BoundType = WrappedType
 }
 
 public final class Binding<Bound>: BindableType {
@@ -33,7 +33,7 @@ public final class Binding<Bound>: BindableType {
 		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			this.bindCallback(value)
-			return .continue
+			return .again
 		}
 	}
 }

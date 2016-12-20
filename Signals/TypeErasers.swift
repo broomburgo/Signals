@@ -1,6 +1,8 @@
 class BoxObservableBase<Wrapped>: ObservableType {
 	typealias ObservedType = Wrapped
-	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+
+	@discardableResult
+	func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
 		fatalError()
 	}
 }
@@ -11,7 +13,8 @@ class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.Ob
 		self.base = base
 	}
 
-	@discardableResult override func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+	@discardableResult
+	override func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
 		base.onNext(callback)
 		return self
 	}
@@ -25,41 +28,45 @@ public class AnyObservable<Wrapped>: ObservableType {
 		self.box = BoxObservable(base: base)
 	}
 
-	@discardableResult public func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self {
+	@discardableResult
+	public func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
 		box.onNext(callback)
 		return self
 	}
 }
 
-class BoxSignalBase<Wrapped>: SignalType {
-	typealias SentType = Wrapped
-	@discardableResult func send(_ value: SentType) -> Self {
+class BoxVariableBase<Wrapped>: VariableType {
+	typealias WrappedType = Wrapped
+	@discardableResult
+	func update(_ value: WrappedType) -> Self {
 		fatalError()
 	}
 }
 
-class BoxSignal<Signal: SignalType>: BoxSignalBase<Signal.SentType> {
-	let base: Signal
-	init(base: Signal) {
+class BoxVariable<Variable: VariableType>: BoxVariableBase<Variable.WrappedType> {
+	let base: Variable
+	init(base: Variable) {
 		self.base = base
 	}
 
-	@discardableResult override func send(_ value: SentType) -> Self {
-		base.send(value)
+	@discardableResult
+	override func update(_ value: WrappedType) -> Self {
+		base.update(value)
 		return self
 	}
 }
 
-public class AnySignal<Wrapped>: SignalType {
-	public typealias SentType = Wrapped
-	fileprivate let box: BoxSignalBase<Wrapped>
+public class AnyVariable<Wrapped>: VariableType {
+	public typealias WrappedType = Wrapped
+	fileprivate let box: BoxVariableBase<Wrapped>
 
-	public init<Signal: SignalType>(_ base: Signal) where Signal.SentType == SentType {
-		self.box = BoxSignal(base: base)
+	public init<Variable: VariableType>(_ base: Variable) where Variable.WrappedType == WrappedType {
+		self.box = BoxVariable(base: base)
 	}
 
-	@discardableResult public func send(_ value: SentType) -> Self {
-		box.send(value)
+	@discardableResult
+	public func update(_ value: WrappedType) -> Self {
+		box.update(value)
 		return self
 	}
 }

@@ -1,55 +1,33 @@
-import Functional
-
 public protocol ObservableType: class {
 	associatedtype ObservedType
-	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> SignalPersistence) -> Self
+	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self
 }
 
-public protocol SignalType: class {
-	associatedtype SentType
-	@discardableResult func send(_ value: SentType) -> Self
+public protocol VariableType: class {
+	associatedtype WrappedType
+	@discardableResult func update(_ value: WrappedType) -> Self
 }
 
 extension ObservableType {
-	public var observable: AnyObservable<ObservedType> {
-		return AnyObservable(self)
-	}
-
 	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> AnyObservable<Other> {
-		return AnyObservable(SignalMap(root: self, transform: transform))
+		return AnyObservable(MapObservable(root: self, transform: transform))
 	}
 
 	public func flatMap<OtherObservable: ObservableType>(_ transform: @escaping (ObservedType) -> OtherObservable) -> AnyObservable<OtherObservable.ObservedType> {
-		return AnyObservable(SignalFlatMap(root: self, transform: transform))
+		return AnyObservable(FlatMapObservable(root: self, transform: transform))
 	}
 
 	public func filter(_ predicate: @escaping (ObservedType) -> Bool) -> AnyObservable<ObservedType> {
-		return AnyObservable(SignalFilter(root: self, predicate: predicate))
+		return AnyObservable(FilterObservable(root: self, predicate: predicate))
+	}
+
+	public var single: SingleObservable<ObservedType> {
+		return SingleObservable(root: self)
 	}
 }
 
-extension ObservableType {
-	public var single: Deferred<ObservedType> {
-		let deferred = Deferred<ObservedType>()
-		onNext { (value) -> SignalPersistence in
-			deferred.fill(with: value)
-			return .stop
-		}
-		return deferred
-	}
-}
-
-extension ObservableType where Self: SignalType, ObservedType == Self.SentType {
-	public var cached: SignalCached<ObservedType> {
-		return SignalCached<ObservedType>(rootObservable: self, rootSignal: self)
-	}
-
-	public var single: Deferred<ObservedType> {
-		let deferred = Deferred<ObservedType>(nil)
-		onNext {
-			deferred.fill(with: $0)
-			return .stop
-		}
-		return deferred
+extension ObservableType where Self: VariableType, ObservedType == Self.WrappedType {
+	public var cached: CachedVariable<ObservedType> {
+		return CachedVariable<ObservedType>(rootObservable: self, rootVariable: self)
 	}
 }
