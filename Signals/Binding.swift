@@ -1,26 +1,3 @@
-//public protocol BindableType {
-//	associatedtype BoundType
-//	func bind<Observable: ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType
-//}
-//
-//extension VariableType where Self: BindableType, VariedType == Self.BoundType {
-//	public func bind<Observable : ObservableType>(to observable: Observable) where Observable.ObservedType == BoundType {
-//		observable.onNext { [weak self] value in
-//			guard let this = self else { return .stop }
-//			this.update(value)
-//			return .again
-//		}
-//	}
-//}
-//
-//extension Emitter: BindableType {
-//	public typealias BoundType = VariedType
-//}
-//
-//extension CachedObservable: BindableType {
-//	public typealias BoundType = VariedType
-//}
-
 public final class Binding<Wrapped> {
 
 	fileprivate var observable: AnyObservable<Wrapped>?
@@ -34,7 +11,8 @@ public final class Binding<Wrapped> {
 		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			guard this.active else {
-				this.clean()
+				this.observable = nil
+				this.variable = nil
 				return .stop
 			}
 			variable.update(value)
@@ -45,10 +23,10 @@ public final class Binding<Wrapped> {
 	public func disconnect() {
 		active = false
 	}
+}
 
-	fileprivate func clean() {
-		active = false
-		observable = nil
-		variable = nil
+extension VariableType {
+	public func bind<Observable>(to observable: Observable) -> Binding<VariedType> where Observable: ObservableType, Observable.ObservedType == VariedType {
+		return Binding(observable: observable, variable: self)
 	}
 }

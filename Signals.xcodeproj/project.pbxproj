@@ -10,6 +10,7 @@
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Emitter.swift */; };
+		38509FF31E0A8DE50047CAAF /* BindingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38509FF21E0A8DE50047CAAF /* BindingSpec.swift */; };
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
@@ -50,6 +51,7 @@
 		3826CD971D32BDD5003CE220 /* SignalsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD9E1D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3826CDA71D32BDE0003CE220 /* Emitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
+		38509FF21E0A8DE50047CAAF /* BindingSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BindingSpec.swift; path = SignalsTests/BindingSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43A11D3F849A001F0438 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmitterSpec.swift; path = SignalsTests/EmitterSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperatorsSpec.swift; path = SignalsTests/OperatorsSpec.swift; sourceTree = SOURCE_ROOT; };
@@ -132,6 +134,7 @@
 		38AA43A01D3F83F6001F0438 /* Spec */ = {
 			isa = PBXGroup;
 			children = (
+				38509FF21E0A8DE50047CAAF /* BindingSpec.swift */,
 				38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */,
 				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
 				38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */,
@@ -277,6 +280,7 @@
 				38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */,
 				38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */,
 				38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */,
+				38509FF31E0A8DE50047CAAF /* BindingSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,30 +1,7 @@
 import XCTest
-@testable import Signals
+import Signals
 
 class ProtocolsSpec: XCTestCase {
-
-	func testBindEmitterToEmitter() {
-		let emitter1 = Emitter<Int>()
-		let emitter2 = Emitter<Int>()
-
-		let binding = Binding(observable: emitter1.map { $0*2 }, variable: emitter2)
-
-		let sentValue = 42
-		let expectedValue = 84
-
-		let willObserve = expectation(description: "willObserve")
-
-		emitter2.onNext { value in
-			XCTAssertEqual(value, expectedValue)
-			willObserve.fulfill()
-			binding.disconnect()
-			return .again
-		}
-
-		emitter1.update(sentValue)
-
-		waitForExpectations(timeout: 1, handler: nil)
-	}
 
 	func testSingle() {
 		let emitter = Emitter<Int>()
