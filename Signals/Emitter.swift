@@ -3,7 +3,7 @@ public enum Persistence {
 	case again
 }
 
-private class FixedVariable<Wrapped>: VariableType, ObservableType {
+private class FixedEmitter<Wrapped>: VariableType, ObservableType {
 	typealias WrappedType = Wrapped
 	typealias ObservedType = Wrapped
 
@@ -34,13 +34,13 @@ private class FixedVariable<Wrapped>: VariableType, ObservableType {
 	}
 }
 
-public class Variable<Wrapped>: VariableType, ObservableType {
+public class Emitter<Wrapped>: VariableType, ObservableType {
 	public typealias WrappedType = Wrapped
 	public typealias ObservedType = Wrapped
 
 	fileprivate let workerQueue = DispatchQueue.global()
 	fileprivate let callbackQueue: DispatchQueue
-	fileprivate var fixed: [FixedVariable<WrappedType>] = []
+	fileprivate var fixed: [FixedEmitter<WrappedType>] = []
 
 	public init(callbackQueue: DispatchQueue = DispatchQueue.main) {
 		self.callbackQueue = callbackQueue
@@ -49,9 +49,9 @@ public class Variable<Wrapped>: VariableType, ObservableType {
 	@discardableResult
 	public func update(_ value: WrappedType) -> Self {
 		workerQueue.sync {
-			for variable in self.fixed {
+			for emitter in self.fixed {
 				self.callbackQueue.async {
-					variable.update(value)
+					emitter.update(value)
 				}
 			}
 			self.callbackQueue.async {
@@ -63,7 +63,7 @@ public class Variable<Wrapped>: VariableType, ObservableType {
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (WrappedType) -> Persistence) -> Self {
-		fixed.append(FixedVariable<WrappedType>().onNext(callback))
+		fixed.append(FixedEmitter<WrappedType>().onNext(callback))
 		return self
 	}
 }

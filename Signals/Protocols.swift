@@ -9,25 +9,29 @@ public protocol VariableType: class {
 }
 
 extension ObservableType {
-	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> AnyObservable<Other> {
-		return AnyObservable(MapObservable(root: self, transform: transform))
-	}
-
-	public func flatMap<OtherObservable: ObservableType>(_ transform: @escaping (ObservedType) -> OtherObservable) -> AnyObservable<OtherObservable.ObservedType> {
-		return AnyObservable(FlatMapObservable(root: self, transform: transform))
-	}
-
-	public func filter(_ predicate: @escaping (ObservedType) -> Bool) -> AnyObservable<ObservedType> {
-		return AnyObservable(FilterObservable(root: self, predicate: predicate))
+	public var any: AnyObservable<ObservedType> {
+		return AnyObservable(self)
 	}
 
 	public var single: SingleObservable<ObservedType> {
 		return SingleObservable(root: self)
 	}
+
+	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> MapObservable<ObservedType,Other> {
+		return MapObservable(root: self, transform: transform)
+	}
+
+	public func flatMap<OtherObservable: ObservableType>(_ transform: @escaping (ObservedType) -> OtherObservable) -> FlatMapObservable<ObservedType,OtherObservable.ObservedType> {
+		return FlatMapObservable(root: self, transform: transform)
+	}
+
+	public func filter(_ predicate: @escaping (ObservedType) -> Bool) -> FilterObservable<ObservedType> {
+		return FilterObservable(root: self, predicate: predicate)
+	}
 }
 
 extension ObservableType where Self: VariableType, ObservedType == Self.WrappedType {
-	public var cached: CachedVariable<ObservedType> {
-		return CachedVariable<ObservedType>(rootObservable: self, rootVariable: self)
+	public var cached: CachedObservable<ObservedType> {
+		return CachedObservable<ObservedType>(rootObservable: self, rootVariable: self)
 	}
 }

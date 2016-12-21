@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
-		3826CDA81D32BDE0003CE220 /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Variable.swift */; };
+		3826CDA81D32BDE0003CE220 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Emitter.swift */; };
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
-		38AA43A61D3F87DF001F0438 /* VariableSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* VariableSpec.swift */; };
+		38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
 		38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */; };
 		38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */; };
@@ -49,9 +49,9 @@
 		3826CD921D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3826CD971D32BDD5003CE220 /* SignalsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD9E1D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3826CDA71D32BDE0003CE220 /* Variable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
+		3826CDA71D32BDE0003CE220 /* Emitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
 		38AA43A11D3F849A001F0438 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
-		38AA43A51D3F87DF001F0438 /* VariableSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VariableSpec.swift; path = SignalsTests/VariableSpec.swift; sourceTree = SOURCE_ROOT; };
+		38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmitterSpec.swift; path = SignalsTests/EmitterSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperatorsSpec.swift; path = SignalsTests/OperatorsSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtocolsSpec.swift; path = SignalsTests/ProtocolsSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UtilitiesSpec.swift; path = SignalsTests/UtilitiesSpec.swift; sourceTree = SOURCE_ROOT; };
@@ -118,13 +118,13 @@
 		38AA439F1D3F83EB001F0438 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				38B2D89B1D46580C00E27E62 /* Bindings.swift */,
+				3826CDA71D32BDE0003CE220 /* Emitter.swift */,
 				38BC834D1D3647DF000F8BDE /* Operators.swift */,
 				38AA43A11D3F849A001F0438 /* Protocols.swift */,
-				3826CDA71D32BDE0003CE220 /* Variable.swift */,
+				38F6A3AF1D4E325100B824FA /* TypeErasers.swift */,
 				38BC83591D367F7E000F8BDE /* Utilities.swift */,
 				38AA43A01D3F83F6001F0438 /* Spec */,
-				38B2D89B1D46580C00E27E62 /* Bindings.swift */,
-				38F6A3AF1D4E325100B824FA /* TypeErasers.swift */,
 			);
 			name = Elements;
 			sourceTree = "<group>";
@@ -133,7 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
-				38AA43A51D3F87DF001F0438 /* VariableSpec.swift */,
+				38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */,
 				38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */,
 				38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */,
 			);
@@ -265,7 +265,7 @@
 				38F6A3B01D4E325100B824FA /* TypeErasers.swift in Sources */,
 				38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */,
 				38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */,
-				3826CDA81D32BDE0003CE220 /* Variable.swift in Sources */,
+				3826CDA81D32BDE0003CE220 /* Emitter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +275,7 @@
 			files = (
 				38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */,
 				38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */,
-				38AA43A61D3F87DF001F0438 /* VariableSpec.swift in Sources */,
+				38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */,
 				38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

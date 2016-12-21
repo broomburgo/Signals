@@ -13,11 +13,11 @@ extension VariableType where Self: BindableType, WrappedType == Self.BoundType {
 	}
 }
 
-extension Variable: BindableType {
+extension Emitter: BindableType {
 	public typealias BoundType = WrappedType
 }
 
-extension CachedVariable: BindableType {
+extension CachedObservable: BindableType {
 	public typealias BoundType = WrappedType
 }
 

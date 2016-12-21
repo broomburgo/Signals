@@ -1,4 +1,4 @@
-public class MapObservable<Previous,Next>: ObservableType {
+public final class MapObservable<Previous,Next>: ObservableType {
 	public typealias ObservedType = Next
 
 	fileprivate let root: AnyObservable<Previous>
@@ -18,7 +18,7 @@ public class MapObservable<Previous,Next>: ObservableType {
 	}
 }
 
-public class FlatMapObservable<Previous,Next>: ObservableType {
+public final class FlatMapObservable<Previous,Next>: ObservableType {
 	public typealias ObservedType = Next
 
 	fileprivate let root: AnyObservable<Previous>
@@ -47,7 +47,7 @@ public class FlatMapObservable<Previous,Next>: ObservableType {
 	}
 }
 
-public class FilterObservable<Wrapped>: ObservableType {
+public final class FilterObservable<Wrapped>: ObservableType {
 	public typealias ObservedType = Wrapped
 
 	fileprivate let root: AnyObservable<Wrapped>
@@ -71,7 +71,7 @@ public class FilterObservable<Wrapped>: ObservableType {
 	}
 }
 
-public class SingleObservable<Wrapped> {
+public final class SingleObservable<Wrapped> {
 	fileprivate let root: AnyObservable<Wrapped>
 
 	init<Observable: ObservableType>(root: Observable) where Observable.ObservedType == Wrapped {
@@ -88,7 +88,7 @@ public class SingleObservable<Wrapped> {
 	}
 }
 
-public class CachedVariable<Wrapped>: VariableType, ObservableType {
+public final class CachedObservable<Wrapped>: VariableType, ObservableType {
 	public typealias WrappedType = Wrapped
 	public typealias ObservedType = Wrapped
 
@@ -99,8 +99,10 @@ public class CachedVariable<Wrapped>: VariableType, ObservableType {
 	fileprivate var ignoreFirst: Bool = false
 
 	init<Observable: ObservableType, Variable: VariableType>(rootObservable: Observable, rootVariable: Variable) where Observable.ObservedType == Wrapped, Variable.WrappedType == Wrapped {
+
 		self.rootObservable = AnyObservable(rootObservable)
 		self.rootVariable = AnyVariable(rootVariable)
+		
 		rootObservable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			guard this.ignoreFirst == false else { return .stop }

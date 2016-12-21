@@ -4,25 +4,25 @@ import XCTest
 class OperatorsSpec: XCTestCase {
 
 	func testMapSingle() {
-		let variable = Variable<Int>()
+		let emitter = Emitter<Int>()
 
 		let sentValue1 = 42
 		let expectedValue1 = "42"
 		let willObserve1 = expectation(description: "willObserve1")
 
-		variable.map { "\($0)" }.onNext { value in
+		emitter.map { "\($0)" }.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .again
 		}
 
-		variable.update(sentValue1)
+		emitter.update(sentValue1)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testMapChained() {
-		let variable = Variable<Int>()
+		let emitter = Emitter<Int>()
 
 		let sentValue1 = 42
 		let expectedValue1 = 84
@@ -30,7 +30,7 @@ class OperatorsSpec: XCTestCase {
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 
-		variable
+		emitter
 			.map { $0*2 } .onNext { value in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
@@ -43,14 +43,14 @@ class OperatorsSpec: XCTestCase {
 				return .again
 		}
 
-		variable.update(sentValue1)
+		emitter.update(sentValue1)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testFlatMapSingle() {
-		let variable1 = Variable<Int>()
-		let variable2 = Variable<String>()
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<String>()
 
 		let expectedValue1 = 42
 		let expectedValue2 = "42"
@@ -58,11 +58,11 @@ class OperatorsSpec: XCTestCase {
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 
-		variable1
-			.flatMap { (value) -> Variable<String> in
+		emitter1
+			.flatMap { (value) -> Emitter<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
-				return variable2
+				return emitter2
 			}
 			.onNext { value in
 				XCTAssertEqual(value, expectedValue2)
@@ -70,18 +70,18 @@ class OperatorsSpec: XCTestCase {
 				return .again
 		}
 
-		variable1.update(expectedValue1)
+		emitter1.update(expectedValue1)
 		let delayTime = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.asyncAfter(deadline: delayTime) {
-			variable2.update(expectedValue2)
+			emitter2.update(expectedValue2)
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testFlatMapStop() {
-		let variable1 = Variable<Int>()
-		let variable2 = Variable<String>()
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<String>()
 
 		let expectedValue1 = 42
 		let expectedValue2 = "42"
@@ -92,11 +92,11 @@ class OperatorsSpec: XCTestCase {
 		let willObserve2 = expectation(description: "willObserve2")
 		let willEndChain1 = expectation(description: "willEndChain1")
 
-		variable1
-			.flatMap { (value) -> Variable<String> in
+		emitter1
+			.flatMap { (value) -> Emitter<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
-				return variable2
+				return emitter2
 			}
 			.onNext { value in
 				XCTAssertEqual(value, expectedValue2)
@@ -104,16 +104,16 @@ class OperatorsSpec: XCTestCase {
 				return .stop
 		}
 
-		variable1.update(expectedValue1)
+		emitter1.update(expectedValue1)
 		let delayTime1 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 		DispatchQueue.main.asyncAfter(deadline: delayTime1) {
-			variable2.update(expectedValue2)
+			emitter2.update(expectedValue2)
 			let delayTime2 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 			DispatchQueue.main.asyncAfter(deadline: delayTime2) {
-				variable1.update(unexpectedValue1)
+				emitter1.update(unexpectedValue1)
 				let delayTime3 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
 				DispatchQueue.main.asyncAfter(deadline: delayTime3) {
-					variable2.update(unexpectedValue2)
+					emitter2.update(unexpectedValue2)
 					willEndChain1.fulfill()
 				}
 			}
@@ -123,34 +123,35 @@ class OperatorsSpec: XCTestCase {
 	}
 
 	func testFilter() {
-		let variable = Variable<Int>()
+		let emitter = Emitter<Int>()
 
-		let sentValue1 = 42
-		let sentValue2 = 43
-		let unexpectedValue1 = 42
-		let expectedValue1 = 43
-		let willObserve1 = expectation(description: "willObserve1")
+		let unexpectedValue = 42
+		let expectedValue = 43
+		let willObserve = expectation(description: "willObserve")
 
-		variable.filter { $0 != unexpectedValue1 }.onNext { value in
-			XCTAssertEqual(value, expectedValue1)
-			willObserve1.fulfill()
-			return .again
+		emitter
+			.filter { $0 != unexpectedValue }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
 		}
 
-		variable.update(sentValue1)
-		variable.update(sentValue2)
+		emitter.update(unexpectedValue)
+		emitter.update(expectedValue)
+		emitter.update(expectedValue)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testCached() {
-		let variable = Variable<Int>()
+		let emitter = Emitter<Int>()
 
 		let expectedValue1 = 42
 
-		let cached = variable.cached
+		let cached = emitter.cached
 
-		variable.update(expectedValue1)
+		emitter.update(expectedValue1)
 
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
@@ -174,7 +175,7 @@ class OperatorsSpec: XCTestCase {
 				}
 			}
 
-			variable.update(expectedValue2)
+			emitter.update(expectedValue2)
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)

@@ -3,25 +3,25 @@ import XCTest
 
 class SignalsSpec: XCTestCase {
 
-	func testVariableSendSingle() {
-		let variable = Variable<Int>()
+	func testEmitterSendSingle() {
+		let emitter = Emitter<Int>()
 
 		let expectedValue1 = 42
 		let willObserve1 = expectation(description: "willObserve1")
 
-		variable.onNext { value in
+		emitter.onNext { value in
 			XCTAssertEqual(value, expectedValue1)
 			willObserve1.fulfill()
 			return .again
 		}
 
-		variable.update(expectedValue1)
+		emitter.update(expectedValue1)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
-	func testVariableSendMultiple() {
-		let variable = Variable<Int>()
+	func testEmitterSendMultiple() {
+		let emitter = Emitter<Int>()
 
 		let expectedValue1 = 42
 		let expectedValue2 = 43
@@ -30,7 +30,7 @@ class SignalsSpec: XCTestCase {
 
 		var observedOnce = false
 
-		variable.onNext { value in
+		emitter.onNext { value in
 			if observedOnce {
 				XCTAssertEqual(value, expectedValue2)
 				willObserve2.fulfill()
@@ -43,14 +43,14 @@ class SignalsSpec: XCTestCase {
 			}
 		}
 
-		variable.update(expectedValue1)
-		variable.update(expectedValue2)
+		emitter.update(expectedValue1)
+		emitter.update(expectedValue2)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
-	func testVariableStop() {
-		let variable = Variable<Int>()
+	func testEmitterStop() {
+		let emitter = Emitter<Int>()
 
 		let expectedValue1 = 42
 		let unexpectedValue2 = 43
@@ -61,7 +61,7 @@ class SignalsSpec: XCTestCase {
 
 		var observedOnce = false
 
-		variable.onNext { value in
+		emitter.onNext { value in
 			if observedOnce {
 				fatalError()
 			} else {
@@ -72,11 +72,11 @@ class SignalsSpec: XCTestCase {
 			}
 		}
 
-		variable.update(expectedValue1)
-		variable.update(unexpectedValue2)
-		variable.update(unexpectedValue3)
-		variable.update(unexpectedValue4)
-		variable.update(unexpectedValue5)
+		emitter.update(expectedValue1)
+		emitter.update(unexpectedValue2)
+		emitter.update(unexpectedValue3)
+		emitter.update(unexpectedValue4)
+		emitter.update(unexpectedValue5)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}

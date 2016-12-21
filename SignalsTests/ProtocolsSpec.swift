@@ -3,31 +3,31 @@ import XCTest
 
 class ProtocolsSpec: XCTestCase {
 
-	func testBindVariableToVariable() {
-		let variable1 = Variable<Int>()
-		let variable2 = Variable<Int>()
+	func testBindEmitterToEmitter() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
 
-		variable2.bind(to: variable1.map { $0*2 })
+		emitter2.bind(to: emitter1.map { $0*2 })
 
 		let sentValue = 42
 		let expectedValue = 84
 
 		let willObserve = expectation(description: "willObserve")
 
-		variable2.onNext { value in
+		emitter2.onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
 			return .again
 		}
 
-		variable1.update(sentValue)
+		emitter1.update(sentValue)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
 	func testSingle() {
-		let variable = Variable<Int>()
-		let single = variable.single
+		let emitter = Emitter<Int>()
+		let single = emitter.single
 
 		let expectedValue1 = 42
 		let expectedValue2 = 43
@@ -39,9 +39,9 @@ class ProtocolsSpec: XCTestCase {
 			willObserve1.fulfill()
 		}
 
-		variable.update(expectedValue1)
-		variable.update(expectedValue2)
-		variable.update(expectedValue3)
+		emitter.update(expectedValue1)
+		emitter.update(expectedValue2)
+		emitter.update(expectedValue3)
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
