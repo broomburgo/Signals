@@ -132,8 +132,8 @@
 		38AA43A01D3F83F6001F0438 /* Spec */ = {
 			isa = PBXGroup;
 			children = (
-				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
 				38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */,
+				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
 				38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */,
 				38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */,
 			);
