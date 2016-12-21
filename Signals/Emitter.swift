@@ -1,8 +1,3 @@
-public enum Persistence {
-	case stop
-	case again
-}
-
 private class FixedEmitter<Wrapped>: VariableType, ObservableType {
 	typealias VariedType = Wrapped
 	typealias ObservedType = Wrapped
