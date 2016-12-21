@@ -89,7 +89,7 @@ public final class SingleObservable<Wrapped> {
 }
 
 public final class CachedObservable<Wrapped>: VariableType, ObservableType {
-	public typealias WrappedType = Wrapped
+	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
 	fileprivate let rootObservable: AnyObservable<Wrapped>
@@ -98,7 +98,7 @@ public final class CachedObservable<Wrapped>: VariableType, ObservableType {
 	fileprivate var dependentPersistence = Persistence.again
 	fileprivate var ignoreFirst: Bool = false
 
-	init<Observable: ObservableType, Variable: VariableType>(rootObservable: Observable, rootVariable: Variable) where Observable.ObservedType == Wrapped, Variable.WrappedType == Wrapped {
+	init<Observable: ObservableType, Variable: VariableType>(rootObservable: Observable, rootVariable: Variable) where Observable.ObservedType == Wrapped, Variable.VariedType == Wrapped {
 
 		self.rootObservable = AnyObservable(rootObservable)
 		self.rootVariable = AnyVariable(rootVariable)

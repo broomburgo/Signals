@@ -4,8 +4,8 @@ public protocol ObservableType: class {
 }
 
 public protocol VariableType: class {
-	associatedtype WrappedType
-	@discardableResult func update(_ value: WrappedType) -> Self
+	associatedtype VariedType
+	@discardableResult func update(_ value: VariedType) -> Self
 }
 
 extension ObservableType {
@@ -30,7 +30,7 @@ extension ObservableType {
 	}
 }
 
-extension ObservableType where Self: VariableType, ObservedType == Self.WrappedType {
+extension ObservableType where Self: VariableType, ObservedType == Self.VariedType {
 	public var cached: CachedObservable<ObservedType> {
 		return CachedObservable<ObservedType>(rootObservable: self, rootVariable: self)
 	}

@@ -4,7 +4,7 @@ public enum Persistence {
 }
 
 private class FixedEmitter<Wrapped>: VariableType, ObservableType {
-	typealias WrappedType = Wrapped
+	typealias VariedType = Wrapped
 	typealias ObservedType = Wrapped
 
 	var observation: ((ObservedType) -> Persistence)? = nil
@@ -35,19 +35,19 @@ private class FixedEmitter<Wrapped>: VariableType, ObservableType {
 }
 
 public class Emitter<Wrapped>: VariableType, ObservableType {
-	public typealias WrappedType = Wrapped
+	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
 	fileprivate let workerQueue = DispatchQueue.global()
 	fileprivate let callbackQueue: DispatchQueue
-	fileprivate var fixed: [FixedEmitter<WrappedType>] = []
+	fileprivate var fixed: [FixedEmitter<VariedType>] = []
 
 	public init(callbackQueue: DispatchQueue = DispatchQueue.main) {
 		self.callbackQueue = callbackQueue
 	}
 
 	@discardableResult
-	public func update(_ value: WrappedType) -> Self {
+	public func update(_ value: VariedType) -> Self {
 		workerQueue.sync {
 			for emitter in self.fixed {
 				self.callbackQueue.async {
@@ -62,8 +62,8 @@ public class Emitter<Wrapped>: VariableType, ObservableType {
 	}
 
 	@discardableResult
-	public func onNext(_ callback: @escaping (WrappedType) -> Persistence) -> Self {
-		fixed.append(FixedEmitter<WrappedType>().onNext(callback))
+	public func onNext(_ callback: @escaping (VariedType) -> Persistence) -> Self {
+		fixed.append(FixedEmitter<VariedType>().onNext(callback))
 		return self
 	}
 }

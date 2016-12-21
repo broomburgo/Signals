@@ -42,15 +42,15 @@ public class AnyObservable<Wrapped>: ObservableType {
 //MARK: - Variable
 
 class BoxVariableBase<Wrapped>: VariableType {
-	typealias WrappedType = Wrapped
+	typealias VariedType = Wrapped
 
 	@discardableResult
-	func update(_ value: WrappedType) -> Self {
+	func update(_ value: VariedType) -> Self {
 		fatalError()
 	}
 }
 
-class BoxVariable<Variable: VariableType>: BoxVariableBase<Variable.WrappedType> {
+class BoxVariable<Variable: VariableType>: BoxVariableBase<Variable.VariedType> {
 
 	let base: Variable
 	init(base: Variable) {
@@ -58,23 +58,23 @@ class BoxVariable<Variable: VariableType>: BoxVariableBase<Variable.WrappedType>
 	}
 
 	@discardableResult
-	override func update(_ value: WrappedType) -> Self {
+	override func update(_ value: VariedType) -> Self {
 		base.update(value)
 		return self
 	}
 }
 
 public class AnyVariable<Wrapped>: VariableType {
-	public typealias WrappedType = Wrapped
+	public typealias VariedType = Wrapped
 
 	fileprivate let box: BoxVariableBase<Wrapped>
 
-	public init<Variable: VariableType>(_ base: Variable) where Variable.WrappedType == WrappedType {
+	public init<Variable: VariableType>(_ base: Variable) where Variable.VariedType == VariedType {
 		self.box = BoxVariable(base: base)
 	}
 
 	@discardableResult
-	public func update(_ value: WrappedType) -> Self {
+	public func update(_ value: VariedType) -> Self {
 		box.update(value)
 		return self
 	}

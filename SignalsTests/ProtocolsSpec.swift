@@ -7,7 +7,7 @@ class ProtocolsSpec: XCTestCase {
 		let emitter1 = Emitter<Int>()
 		let emitter2 = Emitter<Int>()
 
-		emitter2.bind(to: emitter1.map { $0*2 })
+		let binding = Binding(observable: emitter1.map { $0*2 }, variable: emitter2)
 
 		let sentValue = 42
 		let expectedValue = 84
@@ -17,6 +17,7 @@ class ProtocolsSpec: XCTestCase {
 		emitter2.onNext { value in
 			XCTAssertEqual(value, expectedValue)
 			willObserve.fulfill()
+			binding.disconnect()
 			return .again
 		}
 
