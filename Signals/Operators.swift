@@ -71,6 +71,96 @@ public final class FilterObservable<Wrapped>: ObservableType {
 	}
 }
 
+public final class UnionObservable<Wrapped>: ObservableType {
+	public typealias ObservedType = Wrapped
+
+	fileprivate let emitter: Emitter<Wrapped>
+	fileprivate let bindings: [Binding<Wrapped>]
+
+	init(roots: [AnyObservable<Wrapped>]) {
+		let emitter = Emitter<Wrapped>()
+		let bindings =  roots.map { emitter.bind(to: $0) }
+
+		self.emitter = emitter
+		self.bindings = bindings
+	}
+
+	deinit {
+		disconnectAll()
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
+		emitter.onNext { [weak self] value in
+			let persistence = callback(value)
+			if case .stop = persistence {
+				self?.disconnectAll()
+			}
+			return persistence
+		}
+		return self
+	}
+
+	private func disconnectAll() {
+		bindings.forEach { $0.disconnect() }
+	}
+}
+
+public final class DebounceObservable<Wrapped>: ObservableType {
+	public typealias ObservedType = Wrapped
+
+	fileprivate let root: AnyObservable<Wrapped>
+	fileprivate let emitter: Emitter<Wrapped>
+
+	fileprivate var currentIdentifier: Int = 0 {
+		didSet {
+			if currentIdentifier == Int.max {
+				currentIdentifier = 0
+			}
+		}
+	}
+
+	fileprivate var dependentPersistence = Persistence.again
+
+	init<Observable: ObservableType>(root: Observable, throttleDuration: Double) where Observable.ObservedType == ObservedType {
+		let emitter = Emitter<Wrapped>()
+
+		self.root = AnyObservable(root)
+		self.emitter = emitter
+
+		root.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+
+			this.currentIdentifier += 1
+			let identifier = this.currentIdentifier
+
+			DispatchQueue.main.after(throttleDuration) {
+				guard identifier == this.currentIdentifier else { return }
+				emitter.update(value)
+			}
+
+			return this.dependentPersistence
+		}
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
+
+		emitter.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+
+			this.dependentPersistence = callback(value)
+			if case .stop = this.dependentPersistence {
+				this.currentIdentifier = 0
+			}
+
+			return this.dependentPersistence
+		}
+
+		return self
+	}
+}
+
 public final class SingleObservable<Wrapped> {
 	fileprivate let root: AnyObservable<Wrapped>
 

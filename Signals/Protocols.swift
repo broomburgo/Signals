@@ -28,6 +28,14 @@ extension ObservableType {
 	public func filter(_ predicate: @escaping (ObservedType) -> Bool) -> FilterObservable<ObservedType> {
 		return FilterObservable(root: self, predicate: predicate)
 	}
+
+	public func union<Observable: ObservableType>(_ other: Observable) -> UnionObservable<ObservedType> where Observable.ObservedType == ObservedType {
+		return UnionObservable(roots: [AnyObservable(self),AnyObservable(other)])
+	}
+
+	public func debounce(_ throttleDuration: Double) -> DebounceObservable<ObservedType> {
+		return DebounceObservable(root: self, throttleDuration: throttleDuration)
+	}
 }
 
 extension ObservableType where Self: VariableType, ObservedType == Self.VariedType {

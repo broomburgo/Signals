@@ -71,8 +71,7 @@ class OperatorsSpec: XCTestCase {
 		}
 
 		emitter1.update(expectedValue1)
-		let delayTime = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-		DispatchQueue.main.asyncAfter(deadline: delayTime) {
+		after(0.25) {
 			emitter2.update(expectedValue2)
 		}
 
@@ -105,14 +104,11 @@ class OperatorsSpec: XCTestCase {
 		}
 
 		emitter1.update(expectedValue1)
-		let delayTime1 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-		DispatchQueue.main.asyncAfter(deadline: delayTime1) {
+		after(0.25) {
 			emitter2.update(expectedValue2)
-			let delayTime2 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-			DispatchQueue.main.asyncAfter(deadline: delayTime2) {
+			after(0.25) {
 				emitter1.update(unexpectedValue1)
-				let delayTime3 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-				DispatchQueue.main.asyncAfter(deadline: delayTime3) {
+				after(0.25) {
 					emitter2.update(unexpectedValue2)
 					willEndChain1.fulfill()
 				}
@@ -156,8 +152,7 @@ class OperatorsSpec: XCTestCase {
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 
-		let delayTime1 = DispatchTime.now() + Double(Int64(0.25 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-		DispatchQueue.main.asyncAfter(deadline: delayTime1) {
+		after(0.25) {
 			let expectedValue2 = 43
 
 			var observedOnce = false
@@ -179,5 +174,129 @@ class OperatorsSpec: XCTestCase {
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testUnion() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
+
+		let expectedValue1 = 42
+		let expectedValue2 = 43
+		let expectedValue3 = 44
+		let unexpectedValue1 = 45
+		let unexpectedValue2 = 46
+		let unexpectedValue3 = 47
+
+		let observable = emitter1.union(emitter2)
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+		let willObserve3 = expectation(description: "willObserve3")
+
+		var hasObserved1 = false
+		var hasObserved2 = false
+		var hasObserved3 = false
+
+		observable.onNext { value in
+			guard hasObserved1 else {
+				willObserve1.fulfill()
+				XCTAssertEqual(value, expectedValue1)
+				hasObserved1 = true
+				return .again
+			}
+			guard hasObserved2 else {
+				willObserve2.fulfill()
+				XCTAssertEqual(value, expectedValue2)
+				hasObserved2 = true
+				return .again
+			}
+			guard hasObserved3 else {
+				willObserve3.fulfill()
+				XCTAssertEqual(value, expectedValue3)
+				hasObserved3 = true
+				return .stop
+			}
+			XCTAssertTrue(false)
+			return .again
+		}
+
+		emitter1.update(expectedValue1)
+		emitter2.update(expectedValue2)
+		emitter1.update(expectedValue3)
+		emitter2.update(unexpectedValue1)
+		emitter1.update(unexpectedValue2)
+		emitter2.update(unexpectedValue3)
+
+		let willFinish = expectation(description: "willFinish")
+		after(0.25) { 
+			willFinish.fulfill()
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testDebounce() {
+		let emitter = Emitter<Int>()
+		let observable = emitter.debounce(0.25)
+
+		let unexpectedValue1 = 1
+		let unexpectedValue2 = 2
+		let expectedValue1 = 3
+		let unexpectedValue3 = 4
+		let unexpectedValue4 = 5
+		let expectedValue2 = 6
+		let unexpectedValue5 = 7
+		let unexpectedValue6 = 8
+		let unexpectedValue7 = 9
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+		var hasObservedOnce = false
+
+		observable.onNext { value in
+			if hasObservedOnce == false {
+				willObserve1.fulfill()
+				hasObservedOnce = true
+				XCTAssertEqual(value, expectedValue1)
+				return .again
+			} else {
+				willObserve2.fulfill()
+				XCTAssertEqual(value, expectedValue2)
+				return .stop
+			}
+		}
+
+		let willFinish = expectation(description: "willFinish")
+
+		emitter.update(unexpectedValue1)
+		after(0.1) {
+			emitter.update(unexpectedValue2)
+			after(0.1) {
+				emitter.update(expectedValue1)
+				after(0.3) {
+					emitter.update(unexpectedValue3)
+					after(0.1) {
+						emitter.update(unexpectedValue4)
+						after(0.1) {
+							emitter.update(expectedValue2)
+							after(0.3) {
+								emitter.update(unexpectedValue5)
+								after(0.1) {
+									emitter.update(unexpectedValue6)
+									after(0.1) {
+										emitter.update(unexpectedValue7)
+										after(0.3) {
+											willFinish.fulfill()
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		waitForExpectations(timeout: 2, handler: nil)
 	}
 }
