@@ -36,6 +36,10 @@ extension ObservableType {
 	public func debounce(_ throttleDuration: Double) -> DebounceObservable<ObservedType> {
 		return DebounceObservable(root: self, throttleDuration: throttleDuration)
 	}
+
+	public func combine<Observable: ObservableType>(_ other: Observable) -> Combine2Observable<ObservedType,Observable.ObservedType> {
+		return Combine2Observable(root1Observable: self, root2Observable: other)
+	}
 }
 
 extension ObservableType where Self: VariableType, ObservedType == Self.VariedType {

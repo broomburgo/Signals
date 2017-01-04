@@ -299,4 +299,252 @@ class OperatorsSpec: XCTestCase {
 
 		waitForExpectations(timeout: 2, handler: nil)
 	}
+
+	func testCombine2() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
+
+		let observable = emitter1.combine(emitter2)
+		let updates: [(Int?,Int?)] = [
+			(1,1),
+			(nil,2),
+			(nil,3),
+			(2,nil),
+			(3,nil),
+			(4,2),
+			(2,nil),
+			(0,0)]
+		let expected = [
+			(1,1),
+			(1,2),
+			(1,3),
+			(2,3),
+			(3,3),
+			(4,3),
+			(4,2),
+			(2,2),
+			(0,2),
+			(0,0)]
+		let expectations = expected.map { expectation(description: "\($0)") }
+
+		var index = 0
+		let maxIndex = expected.index(before: expected.endIndex)
+
+		observable.onNext { tuple in
+			guard index <= maxIndex else { return .stop }
+			let currentExpected = expected[index]
+			let currentExpectation = expectations[index]
+			XCTAssertEqual(currentExpected.0, tuple.0)
+			XCTAssertEqual(currentExpected.1, tuple.1)
+			currentExpectation.fulfill()
+			index += 1
+			return .again
+		}
+
+		updates.forEach { tuple in
+			if let updated = tuple.0 {
+				emitter1.update(updated)
+			}
+			if let updated = tuple.1 {
+				emitter2.update(updated)
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testCombine2DelayedFirstUpdate() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
+
+		let observable = emitter1.combine(emitter2)
+		let updates: [(Int?,Int?)] = [
+			(nil,1),
+			(1,nil),
+			(nil,2),
+			(nil,3),
+			(2,nil),
+			(3,nil),
+			(4,2),
+			(2,nil),
+			(0,0)]
+		let expected = [
+			(1,1),
+			(1,2),
+			(1,3),
+			(2,3),
+			(3,3),
+			(4,3),
+			(4,2),
+			(2,2),
+			(0,2),
+			(0,0)]
+		let expectations = expected.map { expectation(description: "\($0)") }
+
+		var index = 0
+		let maxIndex = expected.index(before: expected.endIndex)
+
+		observable.onNext { tuple in
+			guard index <= maxIndex else { return .stop }
+			let currentExpected = expected[index]
+			let currentExpectation = expectations[index]
+			XCTAssertEqual(currentExpected.0, tuple.0)
+			XCTAssertEqual(currentExpected.1, tuple.1)
+			currentExpectation.fulfill()
+			index += 1
+			return .again
+		}
+
+		updates.forEach { tuple in
+			if let updated = tuple.0 {
+				emitter1.update(updated)
+			}
+			if let updated = tuple.1 {
+				emitter2.update(updated)
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testCombine2EarlyStop1() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
+
+		let observable = emitter1.combine(emitter2)
+		let updates: [(Int?,Int?)] = [
+			(1,1),
+			(nil,2),
+			(nil,3),
+			(2,nil),
+			(3,nil),
+			(4,2),
+			(2,nil),
+			(0,0)]
+		let expected = [
+			(1,1),
+			(1,2),
+			(1,3),
+			(2,3),
+			(3,3),
+			(4,3),
+			(4,2),
+			(2,2),
+			(0,2),
+			(0,0)]
+		let actualExpected = Array(expected.prefix(3))
+		let expectations = actualExpected.map { expectation(description: "\($0)") }
+
+		var index = 0
+		let maxIndex = actualExpected.index(before: actualExpected.endIndex)
+
+		observable.onNext { tuple in
+			guard index <= maxIndex else { return .stop }
+			let currentExpected = expected[index]
+			let currentExpectation = expectations[index]
+			XCTAssertEqual(currentExpected.0, tuple.0)
+			XCTAssertEqual(currentExpected.1, tuple.1)
+			currentExpectation.fulfill()
+			index += 1
+			return .again
+		}
+
+		updates.forEach { tuple in
+			if let updated = tuple.0 {
+				emitter1.update(updated)
+			}
+			if let updated = tuple.1 {
+				emitter2.update(updated)
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testCombine2EarlyStop2() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
+
+		let observable = emitter1.combine(emitter2)
+		let updates: [(Int?,Int?)] = [
+			(1,1),
+			(nil,2),
+			(nil,3),
+			(2,nil),
+			(3,nil),
+			(4,2),
+			(2,nil),
+			(0,0)]
+		let expected = [
+			(1,1),
+			(1,2),
+			(1,3),
+			(2,3),
+			(3,3),
+			(4,3),
+			(4,2),
+			(2,2),
+			(0,2),
+			(0,0)]
+		let actualExpected = Array(expected.prefix(6))
+		let expectations = actualExpected.map { expectation(description: "\($0)") }
+
+		var index = 0
+		let maxIndex = actualExpected.index(before: actualExpected.endIndex)
+
+		observable.onNext { tuple in
+			guard index <= maxIndex else { return .stop }
+			let currentExpected = expected[index]
+			let currentExpectation = expectations[index]
+			XCTAssertEqual(currentExpected.0, tuple.0)
+			XCTAssertEqual(currentExpected.1, tuple.1)
+			currentExpectation.fulfill()
+			index += 1
+			return .again
+		}
+
+		updates.forEach { tuple in
+			if let updated = tuple.0 {
+				emitter1.update(updated)
+			}
+			if let updated = tuple.1 {
+				emitter2.update(updated)
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testCombine2Login() {
+		let emitter1 = Emitter<String>()
+		let emitter2 = Emitter<String>()
+
+		let rightUsername = "user"
+		let wrongPassword = "wrongPass"
+		let rightPassword = "correctPass"
+
+		let wrongLoginExpectation = expectation(description: "wrongLoginExpectation")
+		let rightLoginExpectation = expectation(description: "rightLoginExpectation")
+
+		func loginIsRight(username: String, password: String) -> Bool {
+			return username == rightUsername && password == rightPassword
+		}
+
+		let observable = emitter1.combine(emitter2)
+		observable.onNext { (username, password) in
+			if loginIsRight(username: username, password: password) {
+				rightLoginExpectation.fulfill()
+				return .stop
+			} else {
+				wrongLoginExpectation.fulfill()
+				return .again
+			}
+		}
+
+		emitter1.update(rightUsername)
+		emitter2.update(wrongPassword)
+		emitter2.update(rightPassword)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
 }

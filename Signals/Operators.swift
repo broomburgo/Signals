@@ -225,3 +225,53 @@ public final class CachedObservable<Wrapped>: VariableType, ObservableType {
 		return self
 	}
 }
+
+public final class Combine2Observable<Wrapped1,Wrapped2>: ObservableType {
+	public typealias ObservedType = (Wrapped1,Wrapped2)
+
+	fileprivate let emitter: Emitter<(Wrapped1,Wrapped2)>
+	fileprivate let root1Observable: AnyObservable<Wrapped1>
+	fileprivate let root2Observable: AnyObservable<Wrapped2>
+	fileprivate var dependentPersistence = Persistence.again
+	fileprivate var latest1: Wrapped1? = nil
+	fileprivate var latest2: Wrapped2? = nil
+
+
+	init<Observable1,Observable2>(root1Observable: Observable1, root2Observable: Observable2) where Observable1: ObservableType, Observable1.ObservedType == Wrapped1, Observable2: ObservableType, Observable2.ObservedType == Wrapped2 {
+		self.emitter = Emitter<(Wrapped1,Wrapped2)>()
+		self.root1Observable = AnyObservable(root1Observable)
+		self.root2Observable = AnyObservable(root2Observable)
+
+		root1Observable.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.latest1 = value
+			this.emitIfPossible()
+			return this.dependentPersistence
+		}
+
+		root2Observable.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.latest2 = value
+			this.emitIfPossible()
+			return this.dependentPersistence
+		}
+	}
+
+	fileprivate func emitIfPossible() {
+		guard let latest1 = self.latest1, let latest2 = self.latest2 else { return }
+		emitter.update(latest1,latest2)
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (Wrapped1, Wrapped2) -> Persistence) -> Self {
+		emitter.onNext { [weak self] tuple in
+			guard let this = self else { return .stop }
+			this.dependentPersistence = callback(tuple.0,tuple.1)
+			return this.dependentPersistence
+		}
+
+		return self
+	}
+}
