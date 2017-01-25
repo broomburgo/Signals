@@ -1,5 +1,6 @@
 import XCTest
 @testable import Signals
+import SwiftCheck
 
 class OperatorsSpec: XCTestCase {
 
@@ -544,6 +545,32 @@ class OperatorsSpec: XCTestCase {
 		emitter1.update(rightUsername)
 		emitter2.update(wrongPassword)
 		emitter2.update(rightPassword)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testMapSome() {
+		property("'mapSome' works like default 'flatMap' for collections of optionals") <- forAll { (aa: ArrayOf<OptionalOf<Int>>, ad: String) in
+			let currentExpectation = self.expectation(description: ad)
+
+			let originalArray = aa.getArray.map { $0.getOptional }
+			let filteredArray = originalArray.flatMap { $0 }
+			var generatedArray: [Int] = []
+
+			let emitter = Emitter<Int?>()
+			emitter
+				.mapSome { $0 }
+				.onNext(always { generatedArray.append($0) })
+
+			originalArray.forEach { emitter.update($0) }
+
+			after(0.1) {
+				XCTAssertEqual(generatedArray, filteredArray)
+				currentExpectation.fulfill()
+			}
+
+			return true
+		}
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}

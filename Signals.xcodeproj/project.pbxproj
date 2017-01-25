@@ -10,6 +10,9 @@
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Emitter.swift */; };
+		38305FF21E38B25900E6582F /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38305FF11E38B25900E6582F /* SwiftCheck.framework */; };
+		38305FF31E38B25D00E6582F /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38305FF11E38B25900E6582F /* SwiftCheck.framework */; };
+		38305FF41E38B26600E6582F /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38305FF11E38B25900E6582F /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38509FF31E0A8DE50047CAAF /* BindingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38509FF21E0A8DE50047CAAF /* BindingSpec.swift */; };
 		38509FF51E0A99470047CAAF /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38509FF41E0A99470047CAAF /* Tools.swift */; };
 		3878F7D61E0D44DC00156413 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F7D51E0D44DC00156413 /* Utilities.swift */; };
@@ -41,6 +44,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				38305FF41E38B26600E6582F /* SwiftCheck.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +57,7 @@
 		3826CD971D32BDD5003CE220 /* SignalsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SignalsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3826CD9E1D32BDD5003CE220 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3826CDA71D32BDE0003CE220 /* Emitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
+		38305FF11E38B25900E6582F /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftCheck.framework; path = Carthage/Build/iOS/SwiftCheck.framework; sourceTree = "<group>"; };
 		38509FF21E0A8DE50047CAAF /* BindingSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BindingSpec.swift; path = SignalsTests/BindingSpec.swift; sourceTree = SOURCE_ROOT; };
 		38509FF41E0A99470047CAAF /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		3878F7D51E0D44DC00156413 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -72,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38305FF21E38B25900E6582F /* SwiftCheck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +86,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */,
+				38305FF31E38B25D00E6582F /* SwiftCheck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +96,7 @@
 		3826CD831D32BDD5003CE220 = {
 			isa = PBXGroup;
 			children = (
+				38305FF01E38B24900E6582F /* Frameworks */,
 				3826CD8F1D32BDD5003CE220 /* Signals */,
 				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
 				3826CD8E1D32BDD5003CE220 /* Products */,
@@ -120,6 +128,14 @@
 				38509FF41E0A99470047CAAF /* Tools.swift */,
 			);
 			path = SignalsTests;
+			sourceTree = "<group>";
+		};
+		38305FF01E38B24900E6582F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				38305FF11E38B25900E6582F /* SwiftCheck.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		38AA439F1D3F83EB001F0438 /* Elements */ = {
@@ -408,7 +424,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Signals/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -430,7 +449,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Signals/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -445,7 +467,10 @@
 		3826CDA51D32BDD5003CE220 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = it.exfalsoquodlibet.SignalsTests;
@@ -457,7 +482,10 @@
 		3826CDA61D32BDD5003CE220 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SignalsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = it.exfalsoquodlibet.SignalsTests;

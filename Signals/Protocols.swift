@@ -8,6 +8,7 @@ public protocol VariableType: class {
 	@discardableResult func update(_ value: VariedType) -> Self
 }
 
+//MARK: - Main
 extension ObservableType {
 	public var any: AnyObservable<ObservedType> {
 		return AnyObservable(self)
@@ -39,6 +40,16 @@ extension ObservableType {
 
 	public func combine<Observable: ObservableType>(_ other: Observable) -> Combine2Observable<ObservedType,Observable.ObservedType> {
 		return Combine2Observable(root1Observable: self, root2Observable: other)
+	}
+}
+
+//MARK: - Derived
+extension ObservableType {
+	public func mapSome<Other>(_ transform: @escaping (ObservedType) -> Other?) -> AnyObservable<Other> {
+		return map(transform)
+			.filter { $0 != nil }
+			.map { $0! }
+			.any
 	}
 }
 
