@@ -10,7 +10,6 @@
 		3826CD911D32BDD5003CE220 /* Signals.h in Headers */ = {isa = PBXBuildFile; fileRef = 3826CD901D32BDD5003CE220 /* Signals.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3826CD981D32BDD5003CE220 /* Signals.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3826CD8D1D32BDD5003CE220 /* Signals.framework */; };
 		3826CDA81D32BDE0003CE220 /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3826CDA71D32BDE0003CE220 /* Emitter.swift */; };
-		38305FF21E38B25900E6582F /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38305FF11E38B25900E6582F /* SwiftCheck.framework */; };
 		38305FF31E38B25D00E6582F /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38305FF11E38B25900E6582F /* SwiftCheck.framework */; };
 		38305FF41E38B26600E6582F /* SwiftCheck.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38305FF11E38B25900E6582F /* SwiftCheck.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		38509FF31E0A8DE50047CAAF /* BindingSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38509FF21E0A8DE50047CAAF /* BindingSpec.swift */; };
@@ -77,7 +76,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38305FF21E38B25900E6582F /* SwiftCheck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
