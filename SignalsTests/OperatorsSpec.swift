@@ -572,16 +572,11 @@ class OperatorsSpec: XCTestCase {
 			var generatedArray: [Int] = []
 
 			let emitter = Emitter<Int?>()
-			let filtered = emitter.filter { $0 != nil }
-			let mapped = filtered.map { $0! }
-			mapped.onNext(always { generatedArray.append($0) })
-//			emitter
-//				.mapSome { $0 }
-//				.filter { $0 != nil }
-//				.map { $0 }
-//				.onNext(always {
-//					generatedArray.append($0!)
-//				})
+			emitter
+				.mapSome { $0 }
+				.onNext(always {
+					generatedArray.append($0)
+				})
 
 			originalArray.forEach { emitter.update($0) }
 
