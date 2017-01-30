@@ -10,14 +10,6 @@ public protocol VariableType: class {
 
 //MARK: - Main
 extension ObservableType {
-//	public var any: AnyObservable<ObservedType> {
-//		return AnyObservable(self)
-//	}
-
-	public var anyWeak: AnyWeakObservable<ObservedType> {
-		return AnyWeakObservable(self)
-	}
-
 	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> MapObservable<ObservedType,Other> {
 		return MapObservable(root: self, transform: transform)
 	}
@@ -31,7 +23,7 @@ extension ObservableType {
 	}
 
 	public func union<Observable: ObservableType>(_ other: Observable) -> UnionObservable<ObservedType> where Observable.ObservedType == ObservedType {
-		return UnionObservable(roots: self.anyWeak,other.anyWeak)
+		return UnionObservable(roots: AnyWeakObservable(self),AnyWeakObservable(other))
 	}
 
 	public func debounce(_ throttleDuration: Double) -> DebounceObservable<ObservedType> {

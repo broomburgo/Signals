@@ -6,10 +6,11 @@ class OperatorsSpec: XCTestCase {
 
 	func testAny() {
 		let emitter = Emitter<Int>()
+		let any = AnyObservable(emitter)
 		let sentValue = 42
 
 		let willObserve = expectation(description: "willObserve1")
-		emitter.anyWeak.onNext { value in
+		any.onNext { value in
 			XCTAssertEqual(value, sentValue)
 			willObserve.fulfill()
 			return .again
