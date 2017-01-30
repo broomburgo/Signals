@@ -4,6 +4,22 @@ import SwiftCheck
 
 class OperatorsSpec: XCTestCase {
 
+	func testAny() {
+		let emitter = Emitter<Int>()
+		let sentValue = 42
+
+		let willObserve = expectation(description: "willObserve1")
+		emitter.any.onNext { value in
+			XCTAssertEqual(value, sentValue)
+			willObserve.fulfill()
+			return .again
+		}
+
+		emitter.update(sentValue)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func testMapSingle() {
 		let emitter = Emitter<Int>()
 
@@ -188,8 +204,6 @@ class OperatorsSpec: XCTestCase {
 		let unexpectedValue2 = 46
 		let unexpectedValue3 = 47
 
-		let observable = emitter1.union(emitter2)
-
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 		let willObserve3 = expectation(description: "willObserve3")
@@ -198,7 +212,7 @@ class OperatorsSpec: XCTestCase {
 		var hasObserved2 = false
 		var hasObserved3 = false
 
-		observable.onNext { value in
+		emitter1.union(emitter2).onNext { value in
 			guard hasObserved1 else {
 				willObserve1.fulfill()
 				XCTAssertEqual(value, expectedValue1)
@@ -558,9 +572,16 @@ class OperatorsSpec: XCTestCase {
 			var generatedArray: [Int] = []
 
 			let emitter = Emitter<Int?>()
-			emitter
-				.mapSome { $0 }
-				.onNext(always { generatedArray.append($0) })
+			let filtered = emitter.filter { $0 != nil }
+			let mapped = filtered.map { $0! }
+			mapped.onNext(always { generatedArray.append($0) })
+//			emitter
+//				.mapSome { $0 }
+//				.filter { $0 != nil }
+//				.map { $0 }
+//				.onNext(always {
+//					generatedArray.append($0!)
+//				})
 
 			originalArray.forEach { emitter.update($0) }
 

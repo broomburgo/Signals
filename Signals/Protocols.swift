@@ -14,8 +14,8 @@ extension ObservableType {
 		return AnyObservable(self)
 	}
 
-	public var single: SingleObservable<ObservedType> {
-		return SingleObservable(root: self)
+	public var anyWeak: AnyWeakObservable<ObservedType> {
+		return AnyWeakObservable(self)
 	}
 
 	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> MapObservable<ObservedType,Other> {
@@ -31,7 +31,7 @@ extension ObservableType {
 	}
 
 	public func union<Observable: ObservableType>(_ other: Observable) -> UnionObservable<ObservedType> where Observable.ObservedType == ObservedType {
-		return UnionObservable(roots: [AnyObservable(self),AnyObservable(other)])
+		return UnionObservable(roots: self.anyWeak,other.anyWeak)
 	}
 
 	public func debounce(_ throttleDuration: Double) -> DebounceObservable<ObservedType> {
@@ -45,11 +45,10 @@ extension ObservableType {
 
 //MARK: - Derived
 extension ObservableType {
-	public func mapSome<Other>(_ transform: @escaping (ObservedType) -> Other?) -> AnyObservable<Other> {
+	public func mapSome<Other>(_ transform: @escaping (ObservedType) -> Other?) -> MapObservable<Other?,Other> {
 		return map(transform)
 			.filter { $0 != nil }
 			.map { $0! }
-			.any
 	}
 }
 

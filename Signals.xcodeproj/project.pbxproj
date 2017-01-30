@@ -18,7 +18,6 @@
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
-		38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */; };
 		38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */; };
 		38B2D89C1D46580C00E27E62 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B2D89B1D46580C00E27E62 /* Binding.swift */; };
 		38BC834E1D3647DF000F8BDE /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BC834D1D3647DF000F8BDE /* Operators.swift */; };
@@ -63,7 +62,6 @@
 		38AA43A11D3F849A001F0438 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmitterSpec.swift; path = SignalsTests/EmitterSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperatorsSpec.swift; path = SignalsTests/OperatorsSpec.swift; sourceTree = SOURCE_ROOT; };
-		38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtocolsSpec.swift; path = SignalsTests/ProtocolsSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UtilitiesSpec.swift; path = SignalsTests/UtilitiesSpec.swift; sourceTree = SOURCE_ROOT; };
 		38B2D89B1D46580C00E27E62 /* Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
@@ -157,7 +155,6 @@
 				38509FF21E0A8DE50047CAAF /* BindingSpec.swift */,
 				38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */,
 				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
-				38AA43BF1D3FCF0C001F0438 /* ProtocolsSpec.swift */,
 				38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */,
 			);
 			name = Spec;
@@ -301,7 +298,6 @@
 				38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */,
 				38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */,
 				38509FF51E0A99470047CAAF /* Tools.swift in Sources */,
-				38AA43C01D3FCF0C001F0438 /* ProtocolsSpec.swift in Sources */,
 				38509FF31E0A8DE50047CAAF /* BindingSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,12 +1,13 @@
 public final class MapObservable<Previous,Next>: ObservableType {
 	public typealias ObservedType = Next
 
-	fileprivate let root: AnyObservable<Previous>
+	fileprivate let root: AnyWeakObservable<Previous>
 	fileprivate let transform: (Previous) -> Next
 
 	init<Observable: ObservableType>(root: Observable, transform: @escaping (Previous) -> Next) where Observable.ObservedType == Previous {
-		self.root = AnyObservable(root)
+		self.root = AnyWeakObservable(root)
 		self.transform = transform
+		root.onNext { _ in _ = self; return .again }
 	}
 
 	@discardableResult
@@ -21,13 +22,14 @@ public final class MapObservable<Previous,Next>: ObservableType {
 public final class FlatMapObservable<Previous,Next>: ObservableType {
 	public typealias ObservedType = Next
 
-	fileprivate let root: AnyObservable<Previous>
+	fileprivate let root: AnyWeakObservable<Previous>
 	fileprivate let transform: (Previous) -> AnyObservable<Next>
 	fileprivate var dependentPersistence = Persistence.again
 
 	init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
-		self.root = AnyObservable(root)
+		self.root = AnyWeakObservable(root)
 		self.transform = { AnyObservable(transform($0)) }
+		root.onNext { _ in _ = self; return self.dependentPersistence }
 	}
 
 	@discardableResult
@@ -35,10 +37,9 @@ public final class FlatMapObservable<Previous,Next>: ObservableType {
 		root.onNext { previous in
 			guard self.dependentPersistence != .stop else { return .stop }
 			let newObservable = self.transform(previous)
-			newObservable.onNext { [weak self] value in
-				guard let this = self else { return .stop }
+			newObservable.onNext { value in
 				let newPersistence = callback(value)
-				this.dependentPersistence = newPersistence
+				self.dependentPersistence = newPersistence
 				return newPersistence
 			}
 			return self.dependentPersistence
@@ -50,12 +51,13 @@ public final class FlatMapObservable<Previous,Next>: ObservableType {
 public final class FilterObservable<Wrapped>: ObservableType {
 	public typealias ObservedType = Wrapped
 
-	fileprivate let root: AnyObservable<Wrapped>
+	fileprivate let root: AnyWeakObservable<Wrapped>
 	fileprivate let predicate: (Wrapped) -> Bool
 	
 	init<Observable: ObservableType>(root: Observable, predicate: @escaping (ObservedType) -> Bool) where Observable.ObservedType == Wrapped {
-		self.root = AnyObservable(root)
+		self.root = AnyWeakObservable(root)
 		self.predicate = predicate
+		root.onNext { _ in _ = self; return .again }
 	}
 
 	@discardableResult
@@ -74,42 +76,33 @@ public final class FilterObservable<Wrapped>: ObservableType {
 public final class UnionObservable<Wrapped>: ObservableType {
 	public typealias ObservedType = Wrapped
 
-	fileprivate let emitter: Emitter<Wrapped>
-	fileprivate let bindings: [Binding<Wrapped>]
+	fileprivate let roots: [AnyWeakObservable<Wrapped>]
+	fileprivate var dependentPersistence = Persistence.again
 
-	init(roots: [AnyObservable<Wrapped>]) {
-		let emitter = Emitter<Wrapped>()
-		let bindings =  roots.map { emitter.bind(to: $0) }
-
-		self.emitter = emitter
-		self.bindings = bindings
-	}
-
-	deinit {
-		disconnectAll()
+	init(roots: AnyWeakObservable<Wrapped>...) {
+		self.roots = roots
+		roots.forEach {
+			$0.onNext { _ in _ = self; return self.dependentPersistence }
+		}
 	}
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
-		emitter.onNext { [weak self] value in
-			let persistence = callback(value)
-			if case .stop = persistence {
-				self?.disconnectAll()
+		roots.forEach {
+			$0.onNext { value in
+				guard self.dependentPersistence != .stop else { return .stop }
+				self.dependentPersistence  = callback(value)
+				return self.dependentPersistence
 			}
-			return persistence
 		}
 		return self
-	}
-
-	private func disconnectAll() {
-		bindings.forEach { $0.disconnect() }
 	}
 }
 
 public final class DebounceObservable<Wrapped>: ObservableType {
 	public typealias ObservedType = Wrapped
 
-	fileprivate let root: AnyObservable<Wrapped>
+	fileprivate let root: AnyWeakObservable<Wrapped>
 	fileprivate let emitter: Emitter<Wrapped>
 
 	fileprivate var currentIdentifier: Int = 0 {
@@ -125,21 +118,19 @@ public final class DebounceObservable<Wrapped>: ObservableType {
 	init<Observable: ObservableType>(root: Observable, throttleDuration: Double) where Observable.ObservedType == ObservedType {
 		let emitter = Emitter<Wrapped>()
 
-		self.root = AnyObservable(root)
+		self.root = AnyWeakObservable(root)
 		self.emitter = emitter
 
-		root.onNext { [weak self] value in
-			guard let this = self else { return .stop }
-
-			this.currentIdentifier += 1
-			let identifier = this.currentIdentifier
+		root.onNext { value in
+			self.currentIdentifier += 1
+			let identifier = self.currentIdentifier
 
 			DispatchQueue.main.after(throttleDuration) {
-				guard identifier == this.currentIdentifier else { return }
+				guard identifier == self.currentIdentifier else { return }
 				emitter.update(value)
 			}
 
-			return this.dependentPersistence
+			return self.dependentPersistence
 		}
 	}
 
@@ -161,44 +152,26 @@ public final class DebounceObservable<Wrapped>: ObservableType {
 	}
 }
 
-public final class SingleObservable<Wrapped> {
-	fileprivate let root: AnyObservable<Wrapped>
-
-	init<Observable: ObservableType>(root: Observable) where Observable.ObservedType == Wrapped {
-		self.root = AnyObservable(root)
-	}
-
-	@discardableResult
-	public func upon(_ callback: @escaping (Wrapped) -> ()) -> Self {
-		root.onNext { value in
-			callback(value)
-			return .stop
-		}
-		return self
-	}
-}
-
 public final class CachedObservable<Wrapped>: VariableType, ObservableType {
 	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
-	fileprivate let rootObservable: AnyObservable<Wrapped>
-	fileprivate let rootVariable: AnyVariable<Wrapped>
+	fileprivate let rootObservable: AnyWeakObservable<Wrapped>
+	fileprivate let rootVariable: AnyWeakVariable<Wrapped>
 	fileprivate var cachedValue: Wrapped? = nil
 	fileprivate var dependentPersistence = Persistence.again
 	fileprivate var ignoreFirst: Bool = false
 
 	init<Observable: ObservableType, Variable: VariableType>(rootObservable: Observable, rootVariable: Variable) where Observable.ObservedType == Wrapped, Variable.VariedType == Wrapped {
 
-		self.rootObservable = AnyObservable(rootObservable)
-		self.rootVariable = AnyVariable(rootVariable)
+		self.rootObservable = AnyWeakObservable(rootObservable)
+		self.rootVariable = AnyWeakVariable(rootVariable)
 		
-		rootObservable.onNext { [weak self] value in
-			guard let this = self else { return .stop }
-			guard this.ignoreFirst == false else { return .stop }
-			guard this.dependentPersistence != .stop else { return .stop }
-			this.cachedValue = value
-			return this.dependentPersistence
+		rootObservable.onNext { value in
+			guard self.ignoreFirst == false else { return .stop }
+			guard self.dependentPersistence != .stop else { return .stop }
+			self.cachedValue = value
+			return self.dependentPersistence
 		}
 	}
 
@@ -214,12 +187,11 @@ public final class CachedObservable<Wrapped>: VariableType, ObservableType {
 		if let cached = cachedValue {
 			dependentPersistence = callback(cached)
 		}
-		rootObservable.onNext { [weak self] value in
-			guard let this = self else { return .stop }
-			guard this.dependentPersistence != .stop else { return .stop }
-			this.cachedValue = value
-			this.dependentPersistence = callback(value)
-			return this.dependentPersistence
+		rootObservable.onNext { value in
+			guard self.dependentPersistence != .stop else { return .stop }
+			self.cachedValue = value
+			self.dependentPersistence = callback(value)
+			return self.dependentPersistence
 		}
 
 		return self
@@ -230,8 +202,8 @@ public final class Combine2Observable<Wrapped1,Wrapped2>: ObservableType {
 	public typealias ObservedType = (Wrapped1,Wrapped2)
 
 	fileprivate let emitter: Emitter<(Wrapped1,Wrapped2)>
-	fileprivate let root1Observable: AnyObservable<Wrapped1>
-	fileprivate let root2Observable: AnyObservable<Wrapped2>
+	fileprivate let root1Observable: AnyWeakObservable<Wrapped1>
+	fileprivate let root2Observable: AnyWeakObservable<Wrapped2>
 	fileprivate var dependentPersistence = Persistence.again
 	fileprivate var latest1: Wrapped1? = nil
 	fileprivate var latest2: Wrapped2? = nil
@@ -239,23 +211,21 @@ public final class Combine2Observable<Wrapped1,Wrapped2>: ObservableType {
 
 	init<Observable1,Observable2>(root1Observable: Observable1, root2Observable: Observable2) where Observable1: ObservableType, Observable1.ObservedType == Wrapped1, Observable2: ObservableType, Observable2.ObservedType == Wrapped2 {
 		self.emitter = Emitter<(Wrapped1,Wrapped2)>()
-		self.root1Observable = AnyObservable(root1Observable)
-		self.root2Observable = AnyObservable(root2Observable)
+		self.root1Observable = AnyWeakObservable(root1Observable)
+		self.root2Observable = AnyWeakObservable(root2Observable)
 
-		root1Observable.onNext { [weak self] value in
-			guard let this = self else { return .stop }
-			guard this.dependentPersistence != .stop else { return .stop }
-			this.latest1 = value
-			this.emitIfPossible()
-			return this.dependentPersistence
+		root1Observable.onNext { value in
+			guard self.dependentPersistence != .stop else { return .stop }
+			self.latest1 = value
+			self.emitIfPossible()
+			return self.dependentPersistence
 		}
 
-		root2Observable.onNext { [weak self] value in
-			guard let this = self else { return .stop }
-			guard this.dependentPersistence != .stop else { return .stop }
-			this.latest2 = value
-			this.emitIfPossible()
-			return this.dependentPersistence
+		root2Observable.onNext { value in
+			guard self.dependentPersistence != .stop else { return .stop }
+			self.latest2 = value
+			self.emitIfPossible()
+			return self.dependentPersistence
 		}
 	}
 
