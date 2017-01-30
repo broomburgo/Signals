@@ -23,12 +23,12 @@ public final class FlatMapObservable<Previous,Next>: ObservableType {
 	public typealias ObservedType = Next
 
 	fileprivate let root: AnyWeakObservable<Previous>
-	fileprivate let transform: (Previous) -> AnyObservable<Next>
+	fileprivate let transform: (Previous) -> AnyWeakObservable<Next>
 	fileprivate var dependentPersistence = Persistence.again
 
 	init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
 		self.root = AnyWeakObservable(root)
-		self.transform = { AnyObservable(transform($0)) }
+		self.transform = { AnyWeakObservable(transform($0)) }
 		root.onNext { _ in _ = self; return self.dependentPersistence }
 	}
 

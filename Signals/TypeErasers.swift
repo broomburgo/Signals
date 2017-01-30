@@ -30,6 +30,7 @@ public class AnyWeakObservable<Wrapped>: ObservableType {
 
 	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
 		self.box = BoxObservableWeak(base: base)
+		box.onNext { _ in _ = self; return .again }
 	}
 
 	@discardableResult
@@ -39,35 +40,36 @@ public class AnyWeakObservable<Wrapped>: ObservableType {
 	}
 }
 
-class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.ObservedType> {
-
-	let base: Observable
-	init(base: Observable) {
-		self.base = base
-	}
-
-	@discardableResult
-	override func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
-		base.onNext(callback)
-		return self
-	}
-}
-
-public class AnyObservable<Wrapped>: ObservableType {
-	public typealias ObservedType = Wrapped
-
-	fileprivate let box: BoxObservableBase<Wrapped>
-
-	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
-		self.box = BoxObservable(base: base)
-	}
-
-	@discardableResult
-	public func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
-		box.onNext(callback)
-		return self
-	}
-}
+//class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.ObservedType> {
+//
+//	let base: Observable
+//	init(base: Observable) {
+//		self.base = base
+//	}
+//
+//	@discardableResult
+//	override func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
+//		base.onNext(callback)
+//		return self
+//	}
+//}
+//
+//public class AnyObservable<Wrapped>: ObservableType {
+//	public typealias ObservedType = Wrapped
+//
+//	fileprivate let box: BoxObservableBase<Wrapped>
+//
+//	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
+//		self.box = BoxObservable(base: base)
+//		box.onNext { _ in _ = self; return .again }
+//	}
+//
+//	@discardableResult
+//	public func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
+//		box.onNext(callback)
+//		return self
+//	}
+//}
 
 //MARK: - Variable
 

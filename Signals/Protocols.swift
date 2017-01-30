@@ -10,9 +10,9 @@ public protocol VariableType: class {
 
 //MARK: - Main
 extension ObservableType {
-	public var any: AnyObservable<ObservedType> {
-		return AnyObservable(self)
-	}
+//	public var any: AnyObservable<ObservedType> {
+//		return AnyObservable(self)
+//	}
 
 	public var anyWeak: AnyWeakObservable<ObservedType> {
 		return AnyWeakObservable(self)

@@ -9,7 +9,7 @@ class OperatorsSpec: XCTestCase {
 		let sentValue = 42
 
 		let willObserve = expectation(description: "willObserve1")
-		emitter.any.onNext { value in
+		emitter.anyWeak.onNext { value in
 			XCTAssertEqual(value, sentValue)
 			willObserve.fulfill()
 			return .again

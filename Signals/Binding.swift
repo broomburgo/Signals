@@ -1,12 +1,12 @@
 public final class Binding<Wrapped> {
 
-	fileprivate var observable: AnyObservable<Wrapped>?
-	fileprivate var variable: AnyVariable<Wrapped>?
+	fileprivate var observable: AnyWeakObservable<Wrapped>?
+	fileprivate var variable: AnyWeakVariable<Wrapped>?
 	fileprivate var active = true
 
 	public init<Observable: ObservableType, Variable: VariableType>(observable: Observable, variable: Variable) where Observable.ObservedType == Wrapped, Variable.VariedType == Wrapped {
-		self.observable = AnyObservable(observable)
-		self.variable = AnyVariable(variable)
+		self.observable = AnyWeakObservable(observable)
+		self.variable = AnyWeakVariable(variable)
 
 		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
