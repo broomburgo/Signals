@@ -14,6 +14,44 @@ class BoxObservableBase<Wrapped>: ObservableType {
 
 }
 
+class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.ObservedType> {
+
+	let base: Observable
+	init(base: Observable) {
+		self.base = base
+	}
+
+	override func concatenate(_ value: Any) {
+		base.concatenate(value)
+	}
+
+	@discardableResult
+	override func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
+		base.onNext(callback)
+		return self
+	}
+}
+
+public class AnyObservable<Wrapped>: ObservableType {
+	public typealias ObservedType = Wrapped
+
+	fileprivate let box: BoxObservableBase<Wrapped>
+
+	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
+		self.box = BoxObservable(base: base)
+	}
+
+	public func concatenate(_ value: Any) {
+		box.concatenate(value)
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
+		box.onNext(callback)
+		return self
+	}
+}
+
 class BoxObservableWeak<Observable: ObservableType>: BoxObservableBase<Observable.ObservedType> {
 
 	weak var base: Observable?
@@ -41,49 +79,8 @@ public class AnyWeakObservable<Wrapped>: ObservableType {
 		self.box = BoxObservableWeak(base: base)
 	}
 
-	fileprivate var concatenated: Any?
 	public func concatenate(_ value: Any) {
-		concatenated = value
-	}
-
-	@discardableResult
-	public func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
-		box.onNext(callback)
-		return self
-	}
-}
-
-class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.ObservedType> {
-
-	let base: Observable
-	init(base: Observable) {
-		self.base = base
-	}
-
-	override func concatenate(_ value: Any) {
-		base.concatenate(value)
-	}
-
-	@discardableResult
-	override func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
-		base.onNext(callback)
-		return self
-	}
-}
-
-public class AnyObservable<Wrapped>: ObservableType {
-	public typealias ObservedType = Wrapped
-
-	fileprivate let box: BoxObservableBase<Wrapped>
-
-	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
-		self.box = BoxObservable(base: base)
-		box.onNext { _ in _ = self; return .again }
-	}
-
-	fileprivate var concatenated: Any?
-	public func concatenate(_ value: Any) {
-		concatenated = value
+		box.concatenate(value)
 	}
 
 	@discardableResult

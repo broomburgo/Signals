@@ -21,6 +21,23 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testAnyWeak() {
+		let emitter = Emitter<Int>()
+		let anyWeak = AnyWeakObservable(emitter)
+		let sentValue = 42
+
+		let willObserve = expectation(description: "willObserve1")
+		anyWeak.onNext { value in
+			XCTAssertEqual(value, sentValue)
+			willObserve.fulfill()
+			return .again
+		}
+
+		emitter.update(sentValue)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func testMapSingle() {
 		let emitter = Emitter<Int>()
 
