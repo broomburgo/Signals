@@ -25,12 +25,12 @@ public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 	public typealias ObservedType = Next
 
 	fileprivate let root: AnyWeakObservable<Previous>
-	fileprivate let transform: (Previous) -> AnyWeakObservable<Next>
+	fileprivate let transform: (Previous) -> AnyObservable<Next>
 	fileprivate var dependentPersistence = Persistence.again
 
 	init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
 		self.root = AnyWeakObservable(root)
-		self.transform = { AnyWeakObservable(transform($0)) }
+		self.transform = { AnyObservable(transform($0)) }
 		super.init()
 		root.concatenate(self)
 	}
