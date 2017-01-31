@@ -1,4 +1,4 @@
-private class FixedEmitter<Wrapped>: VariableType, ObservableType {
+private class FixedEmitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	typealias VariedType = Wrapped
 	typealias ObservedType = Wrapped
 
@@ -29,7 +29,7 @@ private class FixedEmitter<Wrapped>: VariableType, ObservableType {
 	}
 }
 
-public class Emitter<Wrapped>: VariableType, ObservableType {
+public class Emitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 

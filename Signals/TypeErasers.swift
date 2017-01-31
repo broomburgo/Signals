@@ -7,6 +7,11 @@ class BoxObservableBase<Wrapped>: ObservableType {
 	func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self {
 		fatalError()
 	}
+
+	public func concatenate(_ value: Any) {
+		fatalError()
+	}
+
 }
 
 class BoxObservableWeak<Observable: ObservableType>: BoxObservableBase<Observable.ObservedType> {
@@ -21,6 +26,10 @@ class BoxObservableWeak<Observable: ObservableType>: BoxObservableBase<Observabl
 		base?.onNext(callback)
 		return self
 	}
+
+	override func concatenate(_ value: Any) {
+		base?.concatenate(value)
+	}
 }
 
 public class AnyWeakObservable<Wrapped>: ObservableType {
@@ -30,6 +39,11 @@ public class AnyWeakObservable<Wrapped>: ObservableType {
 
 	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
 		self.box = BoxObservableWeak(base: base)
+	}
+
+	fileprivate var concatenated: Any?
+	public func concatenate(_ value: Any) {
+		concatenated = value
 	}
 
 	@discardableResult
@@ -44,6 +58,10 @@ class BoxObservable<Observable: ObservableType>: BoxObservableBase<Observable.Ob
 	let base: Observable
 	init(base: Observable) {
 		self.base = base
+	}
+
+	override func concatenate(_ value: Any) {
+		base.concatenate(value)
 	}
 
 	@discardableResult
@@ -61,6 +79,11 @@ public class AnyObservable<Wrapped>: ObservableType {
 	public init<Observable: ObservableType>(_ base: Observable) where Observable.ObservedType == ObservedType {
 		self.box = BoxObservable(base: base)
 		box.onNext { _ in _ = self; return .again }
+	}
+
+	fileprivate var concatenated: Any?
+	public func concatenate(_ value: Any) {
+		concatenated = value
 	}
 
 	@discardableResult

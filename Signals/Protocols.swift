@@ -1,4 +1,8 @@
-public protocol ObservableType: class {
+public protocol CascadedType {
+	func concatenate(_ value: Any)
+}
+
+public protocol ObservableType: class, CascadedType {
 	associatedtype ObservedType
 	@discardableResult func onNext(_ callback: @escaping (ObservedType) -> Persistence) -> Self
 }
