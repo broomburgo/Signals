@@ -27,6 +27,7 @@ public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 	fileprivate let root: AnyWeakObservable<Previous>
 	fileprivate let transform: (Previous) -> AnyObservable<Next>
 	fileprivate var dependentPersistence = Persistence.again
+	fileprivate var newObservable: AnyObservable<Next>? = nil
 
 	init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
 		self.root = AnyWeakObservable(root)
@@ -41,6 +42,7 @@ public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 			guard let this = self else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			let newObservable = this.transform(previous)
+			this.newObservable = newObservable
 			newObservable.onNext { value in
 				let newPersistence = callback(value)
 				this.dependentPersistence = newPersistence

@@ -85,7 +85,7 @@ class OperatorsSpec: XCTestCase {
 
 	func testFlatMapSingle() {
 		let emitter1 = Emitter<Int>()
-		let emitter2 = Emitter<String>()
+		weak var emitter2: Emitter<String>? = nil
 
 		let expectedValue1 = 42
 		let expectedValue2 = "42"
@@ -97,7 +97,9 @@ class OperatorsSpec: XCTestCase {
 			.flatMap { (value) -> Emitter<String> in
 				XCTAssertEqual(value, expectedValue1)
 				willObserve1.fulfill()
-				return emitter2
+				let newEmitter = Emitter<String>()
+				emitter2 = newEmitter
+				return newEmitter
 			}
 			.onNext { value in
 				XCTAssertEqual(value, expectedValue2)
@@ -107,7 +109,7 @@ class OperatorsSpec: XCTestCase {
 
 		emitter1.update(expectedValue1)
 		after(0.25) {
-			emitter2.update(expectedValue2)
+			emitter2!.update(expectedValue2)
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
