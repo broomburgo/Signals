@@ -164,20 +164,18 @@ public final class DebounceObservable<Wrapped>: Cascaded, ObservableType {
 	}
 }
 
-public final class CachedObservable<Wrapped>: Cascaded, VariableType, ObservableType {
+public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
 	fileprivate let rootObservable: AnyWeakObservable<Wrapped>
-	fileprivate let rootVariable: AnyWeakVariable<Wrapped>
 	fileprivate var cachedValue: Wrapped? = nil
 	fileprivate var dependentPersistence = Persistence.again
 	fileprivate var ignoreFirst: Bool = false
 
-	init<Observable: ObservableType, Variable: VariableType>(rootObservable: Observable, rootVariable: Variable) where Observable.ObservedType == Wrapped, Variable.VariedType == Wrapped {
+	init<Observable: ObservableType>(rootObservable: Observable) where Observable.ObservedType == Wrapped {
 
 		self.rootObservable = AnyWeakObservable(rootObservable)
-		self.rootVariable = AnyWeakVariable(rootVariable)
 
 		super.init()
 		rootObservable.concatenate(self)
@@ -189,12 +187,6 @@ public final class CachedObservable<Wrapped>: Cascaded, VariableType, Observable
 			this.cachedValue = value
 			return this.dependentPersistence
 		}
-	}
-
-	@discardableResult
-	public func update(_ value: Wrapped) -> Self {
-		rootVariable.update(value)
-		return self
 	}
 
 	@discardableResult

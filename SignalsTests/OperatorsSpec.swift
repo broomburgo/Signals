@@ -187,7 +187,7 @@ class OperatorsSpec: XCTestCase {
 		let willObserve1 = expectation(description: "willObserve1")
 		let willObserve2 = expectation(description: "willObserve2")
 
-		after(0.25) {
+		after(0.1) {
 			let expectedValue2 = 43
 
 			var observedOnce = false

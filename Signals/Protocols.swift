@@ -37,6 +37,10 @@ extension ObservableType {
 	public func combine<Observable: ObservableType>(_ other: Observable) -> Combine2Observable<ObservedType,Observable.ObservedType> {
 		return Combine2Observable(root1Observable: self, root2Observable: other)
 	}
+
+	public var cached: CachedObservable<ObservedType> {
+		return CachedObservable<ObservedType>(rootObservable: self)
+	}
 }
 
 //MARK: - Derived
@@ -45,11 +49,5 @@ extension ObservableType {
 		return map(transform)
 			.filter { $0 != nil }
 			.map { $0! }
-	}
-}
-
-extension ObservableType where Self: VariableType, ObservedType == Self.VariedType {
-	public var cached: CachedObservable<ObservedType> {
-		return CachedObservable<ObservedType>(rootObservable: self, rootVariable: self)
 	}
 }
