@@ -29,8 +29,8 @@ public final class Binding<Wrapped>: Disconnectable {
 	}
 }
 
-extension VariableType {
-	public func bind<Observable>(to observable: Observable) -> Binding<VariedType> where Observable: ObservableType, Observable.ObservedType == VariedType {
-		return Binding(observable: observable, variable: self)
+extension ObservableType {
+	public func bind<Variable>(to variable: Variable) -> Binding<ObservedType> where Variable: VariableType, Variable.VariedType == ObservedType {
+		return Binding(observable: self, variable: variable)
 	}
 }

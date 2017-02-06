@@ -8,7 +8,7 @@ class BindingSpec: XCTestCase {
 		let bound = Emitter<Int>()
 		let sendDisconnect = Emitter<()>()
 
-		let binding = bound.bind(to: emitter.map { $0*2 })
+		let binding = emitter.map { $0*2 }.bind(to: bound)
 
 		let sentValue = 42
 		let expectedValue = 84
