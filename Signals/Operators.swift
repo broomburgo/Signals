@@ -173,7 +173,6 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 	fileprivate let rootObservable: AnyWeakObservable<Wrapped>
 	fileprivate var cachedValue: Wrapped? = nil
 	fileprivate var dependentPersistence = Persistence.again
-	fileprivate var ignoreFirst: Bool = false
 
 	init<Observable: ObservableType>(rootObservable: Observable) where Observable.ObservedType == Wrapped {
 
@@ -184,7 +183,6 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 		
 		rootObservable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
-			guard this.ignoreFirst == false else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			this.cachedValue = value
 			return this.dependentPersistence
@@ -193,7 +191,6 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
-		ignoreFirst = true
 		if let cached = cachedValue {
 			dependentPersistence = callback(cached)
 		}
