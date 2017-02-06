@@ -613,4 +613,34 @@ class OperatorsSpec: XCTestCase {
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
+
+	func testCachedBinding() {
+		let emitter = Emitter<Int>()
+
+		let cached = emitter.cached
+
+		let variable = Emitter<Int>()
+
+		let expectedValue = 42
+		let willObserve = expectation(description: "willObserve")
+
+		variable.onNext {
+			XCTAssertEqual($0, expectedValue)
+			willObserve.fulfill()
+			return .again
+		}
+
+		emitter.update(expectedValue)
+
+		after(0.1) {
+
+			let binding = cached.bind(to: variable)
+
+			after(0.1) {
+				binding.disconnect()
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
 }
