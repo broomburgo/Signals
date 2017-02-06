@@ -1,4 +1,8 @@
-public final class Binding<Wrapped> {
+public protocol Disconnectable {
+	func disconnect()
+}
+
+public final class Binding<Wrapped>: Disconnectable {
 
 	fileprivate var observable: AnyWeakObservable<Wrapped>?
 	fileprivate var variable: AnyWeakVariable<Wrapped>?
