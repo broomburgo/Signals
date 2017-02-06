@@ -4,13 +4,13 @@ public protocol Disconnectable {
 
 public final class Binding<Wrapped>: Disconnectable {
 
-	fileprivate var observable: AnyWeakObservable<Wrapped>?
-	fileprivate var variable: AnyWeakVariable<Wrapped>?
+	fileprivate var observable: AnyObservable<Wrapped>?
+	fileprivate var variable: AnyVariable<Wrapped>?
 	fileprivate var active = true
 
 	public init<Observable: ObservableType, Variable: VariableType>(observable: Observable, variable: Variable) where Observable.ObservedType == Wrapped, Variable.VariedType == Wrapped {
-		self.observable = AnyWeakObservable(observable)
-		self.variable = AnyWeakVariable(variable)
+		self.observable = AnyObservable(observable)
+		self.variable = AnyVariable(variable)
 
 		observable.onNext { [weak self] value in
 			guard let this = self else { return .stop }
