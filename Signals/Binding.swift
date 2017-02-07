@@ -1,8 +1,29 @@
-public protocol Disconnectable {
-	func disconnect()
+public protocol Disposable {
+	func dispose()
 }
 
-public final class Binding<Wrapped>: Disconnectable {
+public final class DisposableBag: Disposable {
+	private var bag = Array<Disposable>()
+
+	public init() {}
+
+	public func add(_ disposable: Disposable) {
+		bag.append(disposable)
+	}
+
+	public func dispose() {
+		bag.forEach { $0.dispose() }
+		bag.removeAll()
+	}
+}
+
+extension Disposable {
+	public func add(to bag: DisposableBag) {
+		bag.add(self)
+	}
+}
+
+public final class Binding<Wrapped>: Disposable {
 
 	fileprivate var observable: AnyObservable<Wrapped>?
 	fileprivate var variable: AnyVariable<Wrapped>?
@@ -24,7 +45,7 @@ public final class Binding<Wrapped>: Disconnectable {
 		}
 	}
 
-	public func disconnect() {
+	public func dispose() {
 		active = false
 	}
 }
