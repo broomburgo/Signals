@@ -637,7 +637,7 @@ class OperatorsSpec: XCTestCase {
 			let binding = cached.bind(to: variable)
 
 			after(0.1) {
-				binding.disconnect()
+				binding.dispose()
 			}
 		}
 

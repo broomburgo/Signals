@@ -26,7 +26,7 @@ class BindingSpec: XCTestCase {
 
 		sendDisconnect.onNext {
 			willObserve2.fulfill()
-			binding.disconnect()
+			binding.dispose()
 			emitter.update(sentValue)
 			emitter.update(sentValue)
 			return .stop
