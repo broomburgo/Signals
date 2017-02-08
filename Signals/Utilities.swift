@@ -1,9 +1,9 @@
 import Foundation
 
 public class Cascaded: CascadedType {
-	fileprivate var concatenated: Any?
+	fileprivate var concatenated: [Any] = []
 	public func concatenate(_ value: Any) {
-		concatenated = value
+		concatenated.append(value)
 	}
 }
 
