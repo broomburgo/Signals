@@ -1,4 +1,4 @@
-private class FixedEmitter<Wrapped>: Cascaded, VariableType, ObservableType {
+private final class FixedEmitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	typealias VariedType = Wrapped
 	typealias ObservedType = Wrapped
 
@@ -29,7 +29,7 @@ private class FixedEmitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	}
 }
 
-public class Emitter<Wrapped>: Cascaded, VariableType, ObservableType {
+public final class Emitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
@@ -37,7 +37,7 @@ public class Emitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	fileprivate let callbackQueue: DispatchQueue
 	fileprivate var fixed: [FixedEmitter<VariedType>] = []
 
-	public init(callbackQueue: DispatchQueue = DispatchQueue.main) {
+	public init(callbackQueue: DispatchQueue = .main) {
 		self.callbackQueue = callbackQueue
 	}
 

@@ -1,5 +1,6 @@
 import Foundation
 import Signals
+import SwiftCheck
 
 class Box<T> {
 	var value: T
