@@ -56,6 +56,27 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testMapSingleCached() {
+		let emitter = Emitter<Int>()
+		let cached = AnyObservable(emitter.cached)
+
+		let sentValue1 = 42
+		let expectedValue1 = "42"
+		let willObserve1 = expectation(description: "willObserve1")
+
+		emitter.update(sentValue1)
+
+		cached
+			.map { "\($0)" }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue1)
+				willObserve1.fulfill()
+				return .again
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func testMapChained() {
 		let emitter = Emitter<Int>()
 
@@ -110,6 +131,39 @@ class OperatorsSpec: XCTestCase {
 		emitter1.update(expectedValue1)
 		after(0.25) {
 			emitter2!.update(expectedValue2)
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testFlatMapSingleCached() {
+		let emitter1 = Emitter<Int>()
+		weak var emitter2: Emitter<String>? = nil
+		let cached = AnyObservable(emitter1.cached)
+
+		let expectedValue1 = 42
+		let expectedValue2 = "42"
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+
+		emitter1.update(expectedValue1)
+		after(0.25) {
+			emitter2!.update(expectedValue2)
+		}
+
+		cached
+			.flatMap { (value) -> Emitter<String> in
+				XCTAssertEqual(value, expectedValue1)
+				willObserve1.fulfill()
+				let newEmitter = Emitter<String>()
+				emitter2 = newEmitter
+				return newEmitter
+			}
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue2)
+				willObserve2.fulfill()
+				return .again
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
@@ -186,6 +240,42 @@ class OperatorsSpec: XCTestCase {
 		let expectedValue1 = 42
 
 		let cached = emitter.cached
+
+		emitter.update(expectedValue1)
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+
+		after(0.1) {
+			let expectedValue2 = 43
+
+			var observedOnce = false
+
+			cached.onNext { value in
+				if observedOnce {
+					XCTAssertEqual(value, expectedValue2)
+					willObserve2.fulfill()
+					return .again
+				} else {
+					observedOnce = true
+					XCTAssertEqual(value, expectedValue1)
+					willObserve1.fulfill()
+					return .again
+				}
+			}
+
+			emitter.update(expectedValue2)
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testCachedAny() {
+		let emitter = Emitter<Int>()
+
+		let expectedValue1 = 42
+
+		let cached = AnyObservable(emitter.cached)
 
 		emitter.update(expectedValue1)
 
