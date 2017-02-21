@@ -42,7 +42,7 @@ public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 			guard let this = self else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			let newObservable = this.transform(previous)
-			this.concatenate(newObservable)
+			this.newObservable = newObservable
 			newObservable.onNext { value in
 				let newPersistence = callback(value)
 				this.dependentPersistence = newPersistence

@@ -178,8 +178,8 @@ class OperatorsSpec: XCTestCase {
 		after(0.25) {
 			emitter1.update(expectedValue2)
 			after(0.25) {
-				XCTAssertNotNil(emitter3)
-				emitter2!.update(expectedValue3)
+				XCTAssertNil(emitter2)
+				emitter3!.update(expectedValue3)
 			}
 		}
 
