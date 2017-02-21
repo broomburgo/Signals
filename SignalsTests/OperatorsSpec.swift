@@ -136,6 +136,56 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testFlatMapMultiple() {
+		let emitter1 = Emitter<Int>()
+		weak var emitter2: Emitter<String>? = nil
+		weak var emitter3: Emitter<String>? = nil
+
+		let expectedValue1 = 42
+		let expectedValue2 = 43
+		let expectedValue3 = "42"
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+		let willObserve3 = expectation(description: "willObserve3")
+
+		var hasObserved = false
+
+		emitter1
+			.flatMap { (value) -> Emitter<String> in
+				if hasObserved {
+					XCTAssertEqual(value, expectedValue2)
+					willObserve2.fulfill()
+					let newEmitter = Emitter<String>()
+					emitter3 = newEmitter
+					return newEmitter
+				} else {
+					hasObserved = true
+					XCTAssertEqual(value, expectedValue1)
+					willObserve1.fulfill()
+					let newEmitter = Emitter<String>()
+					emitter2 = newEmitter
+					return newEmitter
+				}
+			}
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue3)
+				willObserve3.fulfill()
+				return .again
+		}
+
+		emitter1.update(expectedValue1)
+		after(0.25) {
+			emitter1.update(expectedValue2)
+			after(0.25) {
+				XCTAssertNotNil(emitter3)
+				emitter2!.update(expectedValue3)
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func testFlatMapSingleCached() {
 		let emitter1 = Emitter<Int>()
 		weak var emitter2: Emitter<String>? = nil
