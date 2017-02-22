@@ -170,54 +170,39 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
-	fileprivate let rootObservable: AnyWeakObservable<Wrapped>
+	fileprivate let root: AnyWeakObservable<Wrapped>
 	fileprivate var cachedValue: Wrapped? = nil
 	fileprivate var dependentPersistence = Persistence.again
-	fileprivate var initialized = false
-	fileprivate var preinitCallbacks: [(Wrapped) -> Persistence] = []
+	fileprivate let internalEmitter = Emitter<Wrapped>()
 
-	init<Observable: ObservableType>(rootObservable: Observable) where Observable.ObservedType == Wrapped {
+	init<Observable: ObservableType>(root: Observable) where Observable.ObservedType == Wrapped {
 
-		self.rootObservable = AnyWeakObservable(rootObservable)
+		self.root = AnyWeakObservable(root)
 
 		super.init()
-		rootObservable.concatenate(self)
+		root.concatenate(self)
 		
-		rootObservable.onNext { [weak self] value in
+		root.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			this.cachedValue = value
-			if this.initialized == false {
-				this.initialized = true
-				for callback in this.preinitCallbacks {
-					this.dependentPersistence = callback(value)
-					if this.dependentPersistence == .stop {
-						break
-					}
-				}
-				this.preinitCallbacks.removeAll()
-			}
+			this.internalEmitter.update(value)
 			return this.dependentPersistence
 		}
 	}
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
-		guard initialized else {
-			preinitCallbacks.append(callback)
-			return self
-		}
 		if let cached = cachedValue {
 			dependentPersistence = callback(cached)
 		}
-		rootObservable.onNext { [weak self] value in
+		internalEmitter.onNext { [weak self] value in
 			guard let this = self else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			this.cachedValue = value
 			this.dependentPersistence = callback(value)
 			return this.dependentPersistence
 		}
-
 		return self
 	}
 }

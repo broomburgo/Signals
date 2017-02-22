@@ -39,7 +39,7 @@ extension ObservableType {
 	}
 
 	public var cached: CachedObservable<ObservedType> {
-		return CachedObservable<ObservedType>(rootObservable: self)
+		return CachedObservable<ObservedType>(root: self)
 	}
 }
 

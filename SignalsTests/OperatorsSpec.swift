@@ -2,6 +2,15 @@ import XCTest
 @testable import Signals
 import SwiftCheck
 
+class EmitterBox<T> {
+	let emitter = Emitter<T>()
+	var rx_observable = AnyObservable(Emitter<T>())
+
+	init() {
+		self.rx_observable = AnyObservable(emitter)
+	}
+}
+
 class OperatorsSpec: XCTestCase {
 
 	func testAny() {
@@ -186,6 +195,48 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testFlatMapMultiple2() {
+		let emitter1 = Emitter<EmitterBox<Int>>()
+
+		let expectedValue1 = 42
+		let expectedValue2 = 43
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+
+		var hasObserved = false
+
+		emitter1
+			.flatMap { $0.rx_observable }
+			.onNext { value in
+				if hasObserved {
+					XCTAssertEqual(value, expectedValue2)
+					willObserve2.fulfill()
+				} else {
+					hasObserved = true
+					XCTAssertEqual(value, expectedValue1)
+					willObserve1.fulfill()
+				}
+				return .again
+		}
+
+		let emitterBox1 = EmitterBox<Int>()
+		let emitterBox2 = EmitterBox<Int>()
+
+		emitter1.update(emitterBox1)
+		after(0.1) { 
+			emitterBox1.emitter.update(expectedValue1)
+		}
+		after(0.2) { 
+			emitter1.update(emitterBox2)
+		}
+		after(0.3) {
+			emitterBox2.emitter.update(expectedValue2)
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func testFlatMapSingleCached() {
 		let emitter1 = Emitter<Int>()
 		weak var emitter2: Emitter<String>? = nil
@@ -351,6 +402,51 @@ class OperatorsSpec: XCTestCase {
 			}
 
 			emitter.update(expectedValue2)
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testFlatMapCachedAny() {
+		let emitter1 = Emitter<EmitterBox<Int>>()
+
+		let expectedValue1 = 42
+		let expectedValue2 = 43
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+
+		var hasObserved = false
+
+		let observable = AnyObservable(emitter1.cached)
+
+		let emitterBox1 = EmitterBox<Int>()
+		emitter1.update(emitterBox1)
+
+		observable
+			.flatMap { $0.rx_observable }
+			.onNext { value in
+				if hasObserved {
+					XCTAssertEqual(value, expectedValue2)
+					willObserve2.fulfill()
+				} else {
+					hasObserved = true
+					XCTAssertEqual(value, expectedValue1)
+					willObserve1.fulfill()
+				}
+				return .again
+		}
+
+		let emitterBox2 = EmitterBox<Int>()
+
+		after(0.1) {
+			emitterBox1.emitter.update(expectedValue1)
+		}
+		after(0.2) {
+			emitter1.update(emitterBox2)
+		}
+		after(0.3) {
+			emitterBox2.emitter.update(expectedValue2)
 		}
 
 		waitForExpectations(timeout: 1, handler: nil)
