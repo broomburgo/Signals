@@ -43,6 +43,20 @@ extension ObservableType {
 	}
 }
 
+extension Sequence where Iterator.Element: ObservableType {
+	public var unionAll: UnionObservable<Iterator.Element.ObservedType>? {
+		var unified: UnionObservable<Iterator.Element.ObservedType>? = nil
+		for element in self {
+			if let current = unified {
+				unified = current.union(element)
+			} else {
+				unified = UnionObservable(roots: AnyWeakObservable(element))
+			}
+		}
+		return unified
+	}
+}
+
 //MARK: - Derived
 extension ObservableType {
 	public func mapSome<Other>(_ transform: @escaping (ObservedType) -> Other?) -> MapObservable<Other?,Other> {

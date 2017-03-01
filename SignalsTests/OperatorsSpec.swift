@@ -509,6 +509,94 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testUnionAll() {
+		let emitter1 = Emitter<Int>()
+		let emitter2 = Emitter<Int>()
+		let emitter3 = Emitter<Int>()
+
+		let expectedValue1 = 42
+		let expectedValue2 = 43
+		let expectedValue3 = 44
+		let expectedValue4 = 45
+		let expectedValue5 = 46
+		let expectedValue6 = 47
+		let unexpectedValue1 = 48
+		let unexpectedValue2 = 49
+		let unexpectedValue3 = 50
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+		let willObserve3 = expectation(description: "willObserve3")
+		let willObserve4 = expectation(description: "willObserve1")
+		let willObserve5 = expectation(description: "willObserve2")
+		let willObserve6 = expectation(description: "willObserve3")
+
+		var hasObserved1 = false
+		var hasObserved2 = false
+		var hasObserved3 = false
+		var hasObserved4 = false
+		var hasObserved5 = false
+		var hasObserved6 = false
+
+		[emitter1,emitter2,emitter3].unionAll?.onNext { value in
+			guard hasObserved1 else {
+				willObserve1.fulfill()
+				XCTAssertEqual(value, expectedValue1)
+				hasObserved1 = true
+				return .again
+			}
+			guard hasObserved2 else {
+				willObserve2.fulfill()
+				XCTAssertEqual(value, expectedValue2)
+				hasObserved2 = true
+				return .again
+			}
+			guard hasObserved3 else {
+				willObserve3.fulfill()
+				XCTAssertEqual(value, expectedValue3)
+				hasObserved3 = true
+				return .again
+			}
+			guard hasObserved4 else {
+				willObserve4.fulfill()
+				XCTAssertEqual(value, expectedValue4)
+				hasObserved4 = true
+				return .again
+			}
+			guard hasObserved5 else {
+				willObserve5.fulfill()
+				XCTAssertEqual(value, expectedValue5)
+				hasObserved5 = true
+				return .again
+			}
+			guard hasObserved6 else {
+				willObserve6.fulfill()
+				XCTAssertEqual(value, expectedValue6)
+				hasObserved6 = true
+				return .stop
+			}
+			XCTAssertTrue(false)
+			return .again
+		}
+
+		emitter1.update(expectedValue1)
+		emitter2.update(expectedValue2)
+		emitter3.update(expectedValue3)
+		emitter1.update(expectedValue4)
+		emitter2.update(expectedValue5)
+		emitter3.update(expectedValue6)
+		emitter1.update(unexpectedValue1)
+		emitter2.update(unexpectedValue2)
+		emitter3.update(unexpectedValue3)
+
+		let willFinish = expectation(description: "willFinish")
+		after(0.25) {
+			willFinish.fulfill()
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func testDebounce() {
 		let emitter = Emitter<Int>()
 		let observable = emitter.debounce(0.25)
