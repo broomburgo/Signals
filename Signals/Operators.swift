@@ -81,7 +81,7 @@ public final class FilterObservable<Wrapped>: Cascaded, ObservableType {
 	}
 }
 
-public final class UnionObservable<Wrapped>: Cascaded, ObservableType {
+public final class MergeObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias ObservedType = Wrapped
 
 	fileprivate let roots: [AnyWeakObservable<Wrapped>]

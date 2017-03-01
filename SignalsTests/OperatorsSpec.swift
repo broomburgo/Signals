@@ -452,7 +452,7 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
-	func testUnion() {
+	func testMerge() {
 		let emitter1 = Emitter<Int>()
 		let emitter2 = Emitter<Int>()
 
@@ -509,7 +509,7 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
-	func testUnionAll() {
+	func testMergeAll() {
 		let emitter1 = Emitter<Int>()
 		let emitter2 = Emitter<Int>()
 		let emitter3 = Emitter<Int>()
