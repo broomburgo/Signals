@@ -2,20 +2,29 @@ public final class MapObservable<Previous,Next>: Cascaded, ObservableType {
 	public typealias ObservedType = Next
 
 	fileprivate let root: AnyWeakObservable<Previous>
-	fileprivate let transform: (Previous) -> Next
+	fileprivate var dependentPersistence = Persistence.again
+	fileprivate let internalEmitter = Emitter<Next>()
 
 	init<Observable: ObservableType>(root: Observable, transform: @escaping (Previous) -> Next) where Observable.ObservedType == Previous {
 		self.root = AnyWeakObservable(root)
-		self.transform = transform
 		super.init()
 		root.concatenate(self)
+
+		root.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.internalEmitter.update(transform(value))
+			return this.dependentPersistence
+		}
 	}
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (Next) -> Persistence) -> Self {
-		root.onNext { [weak self] previous in
+		internalEmitter.onNext { [weak self] value in
 			guard let this = self else { return .stop }
-			return callback(this.transform(previous))
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.dependentPersistence = callback(value)
+			return this.dependentPersistence
 		}
 		return self
 	}
@@ -58,24 +67,31 @@ public final class FilterObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias ObservedType = Wrapped
 
 	fileprivate let root: AnyWeakObservable<Wrapped>
-	fileprivate let predicate: (Wrapped) -> Bool
-	
+	fileprivate var dependentPersistence = Persistence.again
+	fileprivate let internalEmitter = Emitter<Wrapped>()
+
 	init<Observable: ObservableType>(root: Observable, predicate: @escaping (ObservedType) -> Bool) where Observable.ObservedType == Wrapped {
 		self.root = AnyWeakObservable(root)
-		self.predicate = predicate
 		super.init()
 		root.concatenate(self)
+
+		root.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+			if predicate(value) {
+				this.internalEmitter.update(value)
+			}
+			return this.dependentPersistence
+		}
 	}
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
-		root.onNext { [weak self] value in
+		internalEmitter.onNext { [weak self] value in
 			guard let this = self else { return .stop }
-			if this.predicate(value) {
-				return callback(value)
-			} else {
-				return .again
-			}
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.dependentPersistence = callback(value)
+			return this.dependentPersistence
 		}
 		return self
 	}

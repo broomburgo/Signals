@@ -927,7 +927,8 @@ class OperatorsSpec: XCTestCase {
 
 			originalArray.forEach { emitter.update($0) }
 
-			after(0.1) {
+			after(0.2) {
+				_ = emitter
 				XCTAssertEqual(generatedArray, filteredArray)
 				currentExpectation.fulfill()
 			}
