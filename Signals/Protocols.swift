@@ -44,16 +44,8 @@ extension ObservableType {
 }
 
 extension Sequence where Iterator.Element: ObservableType {
-	public var unionAll: UnionObservable<Iterator.Element.ObservedType>? {
-		var unified: UnionObservable<Iterator.Element.ObservedType>? = nil
-		for element in self {
-			if let current = unified {
-				unified = current.union(element)
-			} else {
-				unified = UnionObservable(roots: AnyWeakObservable(element))
-			}
-		}
-		return unified
+	public var unionAll: UnionObservable<Iterator.Element.ObservedType> {
+		return UnionObservable(roots: map(AnyWeakObservable.init))
 	}
 }
 

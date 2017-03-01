@@ -87,7 +87,11 @@ public final class UnionObservable<Wrapped>: Cascaded, ObservableType {
 	fileprivate let roots: [AnyWeakObservable<Wrapped>]
 	fileprivate var dependentPersistence = Persistence.again
 
-	init(roots: AnyWeakObservable<Wrapped>...) {
+	convenience init(roots: AnyWeakObservable<Wrapped>...) {
+		self.init(roots: roots)
+	}
+
+	init(roots: [AnyWeakObservable<Wrapped>]) {
 		self.roots = roots
 		super.init()
 		roots.forEach {

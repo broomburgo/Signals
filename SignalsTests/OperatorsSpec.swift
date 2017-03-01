@@ -538,7 +538,7 @@ class OperatorsSpec: XCTestCase {
 		var hasObserved5 = false
 		var hasObserved6 = false
 
-		[emitter1,emitter2,emitter3].unionAll?.onNext { value in
+		[emitter1,emitter2,emitter3].unionAll.onNext { value in
 			guard hasObserved1 else {
 				willObserve1.fulfill()
 				XCTAssertEqual(value, expectedValue1)
