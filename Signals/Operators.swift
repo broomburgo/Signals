@@ -86,28 +86,37 @@ public final class MergeObservable<Wrapped>: Cascaded, ObservableType {
 
 	fileprivate let roots: [AnyWeakObservable<Wrapped>]
 	fileprivate var dependentPersistence = Persistence.again
+	fileprivate let internalEmitter = Emitter<Wrapped>()
 
-	convenience init(roots: AnyWeakObservable<Wrapped>...) {
-		self.init(roots: roots)
-	}
-
-	init(roots: [AnyWeakObservable<Wrapped>]) {
-		self.roots = roots
+	init<Observable: ObservableType>(roots: [Observable]) where Observable.ObservedType == Wrapped {
+		self.roots = roots.map(AnyWeakObservable.init)
 		super.init()
+
 		roots.forEach {
 			$0.concatenate(self)
 		}
-	}
 
-	@discardableResult
-	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
 		roots.forEach {
 			$0.onNext { [weak self] value in
 				guard let this = self else { return .stop }
 				guard this.dependentPersistence != .stop else { return .stop }
-				this.dependentPersistence  = callback(value)
+				this.internalEmitter.update(value)
 				return this.dependentPersistence
 			}
+		}
+	}
+
+	convenience init<Observable: ObservableType>(roots: Observable...) where Observable.ObservedType == Wrapped {
+		self.init(roots: roots)
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
+		internalEmitter.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.dependentPersistence = callback(value)
+			return this.dependentPersistence
 		}
 		return self
 	}

@@ -26,8 +26,8 @@ extension ObservableType {
 		return FilterObservable(root: self, predicate: predicate)
 	}
 
-	public func union<Observable: ObservableType>(_ other: Observable) -> MergeObservable<ObservedType> where Observable.ObservedType == ObservedType {
-		return MergeObservable(roots: AnyWeakObservable(self),AnyWeakObservable(other))
+	public func merge<Observable: ObservableType>(_ other: Observable) -> MergeObservable<ObservedType> where Observable.ObservedType == ObservedType {
+		return MergeObservable(roots: AnyObservable(self),AnyObservable(other))
 	}
 
 	public func debounce(_ throttleDuration: Double) -> DebounceObservable<ObservedType> {
@@ -44,7 +44,7 @@ extension ObservableType {
 }
 
 extension Sequence where Iterator.Element: ObservableType {
-	public var unionAll: MergeObservable<Iterator.Element.ObservedType> {
+	public var mergeAll: MergeObservable<Iterator.Element.ObservedType> {
 		return MergeObservable(roots: map(AnyWeakObservable.init))
 	}
 }
