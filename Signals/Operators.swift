@@ -1,9 +1,9 @@
 public final class MapObservable<Previous,Next>: Cascaded, ObservableType {
 	public typealias ObservedType = Next
 
-	fileprivate let root: AnyWeakObservable<Previous>
-	fileprivate var dependentPersistence = Persistence.again
-	fileprivate let internalEmitter = Emitter<Next>()
+	private let root: AnyWeakObservable<Previous>
+	private var dependentPersistence = Persistence.again
+	private let internalEmitter = Emitter<Next>()
 
 	init<Observable: ObservableType>(root: Observable, transform: @escaping (Previous) -> Next) where Observable.ObservedType == Previous {
 		self.root = AnyWeakObservable(root)
@@ -33,30 +33,39 @@ public final class MapObservable<Previous,Next>: Cascaded, ObservableType {
 public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 	public typealias ObservedType = Next
 
-	fileprivate let root: AnyWeakObservable<Previous>
-	fileprivate let transform: (Previous) -> AnyObservable<Next>
-	fileprivate var dependentPersistence = Persistence.again
-	fileprivate var newObservable: AnyObservable<Next>? = nil
+	private let root: AnyWeakObservable<Previous>
+	private let transform: (Previous) -> AnyObservable<Next>
+	private var dependentPersistence = Persistence.again
+	private var newObservable: AnyObservable<Next>? = nil
+	private let internalEmitter = Emitter<Next>()
 
 	init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
 		self.root = AnyWeakObservable(root)
 		self.transform = { AnyObservable(transform($0)) }
 		super.init()
 		root.concatenate(self)
-	}
 
-	@discardableResult
-	public func onNext(_ callback: @escaping (Next) -> Persistence) -> Self {
 		root.onNext { [weak self] previous in
 			guard let this = self else { return .stop }
 			guard this.dependentPersistence != .stop else { return .stop }
 			let newObservable = this.transform(previous)
 			this.newObservable = newObservable
-			newObservable.onNext { value in
-				let newPersistence = callback(value)
-				this.dependentPersistence = newPersistence
-				return newPersistence
+			newObservable.onNext { [weak self] value in
+				guard let this = self else { return .stop }
+				guard this.dependentPersistence != .stop else { return .stop }
+				this.internalEmitter.update(value)
+				return this.dependentPersistence
 			}
+			return this.dependentPersistence
+		}
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (Next) -> Persistence) -> Self {
+		internalEmitter.onNext { [weak self] value in
+			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+			this.dependentPersistence = callback(value)
 			return this.dependentPersistence
 		}
 		return self
@@ -66,9 +75,9 @@ public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 public final class FilterObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias ObservedType = Wrapped
 
-	fileprivate let root: AnyWeakObservable<Wrapped>
-	fileprivate var dependentPersistence = Persistence.again
-	fileprivate let internalEmitter = Emitter<Wrapped>()
+	private let root: AnyWeakObservable<Wrapped>
+	private var dependentPersistence = Persistence.again
+	private let internalEmitter = Emitter<Wrapped>()
 
 	init<Observable: ObservableType>(root: Observable, predicate: @escaping (ObservedType) -> Bool) where Observable.ObservedType == Wrapped {
 		self.root = AnyWeakObservable(root)
@@ -100,9 +109,9 @@ public final class FilterObservable<Wrapped>: Cascaded, ObservableType {
 public final class MergeObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias ObservedType = Wrapped
 
-	fileprivate let roots: [AnyWeakObservable<Wrapped>]
-	fileprivate var dependentPersistence = Persistence.again
-	fileprivate let internalEmitter = Emitter<Wrapped>()
+	private let roots: [AnyWeakObservable<Wrapped>]
+	private var dependentPersistence = Persistence.again
+	private let internalEmitter = Emitter<Wrapped>()
 
 	init<Observable: ObservableType>(roots: [Observable]) where Observable.ObservedType == Wrapped {
 		self.roots = roots.map(AnyWeakObservable.init)
@@ -141,10 +150,10 @@ public final class MergeObservable<Wrapped>: Cascaded, ObservableType {
 public final class DebounceObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias ObservedType = Wrapped
 
-	fileprivate let root: AnyWeakObservable<Wrapped>
-	fileprivate let emitter: Emitter<Wrapped>
+	private let root: AnyWeakObservable<Wrapped>
+	private let emitter: Emitter<Wrapped>
 
-	fileprivate var currentIdentifier: Int = 0 {
+	private var currentIdentifier: Int = 0 {
 		didSet {
 			if currentIdentifier == Int.max {
 				currentIdentifier = 0
@@ -152,7 +161,7 @@ public final class DebounceObservable<Wrapped>: Cascaded, ObservableType {
 		}
 	}
 
-	fileprivate var dependentPersistence = Persistence.again
+	private var dependentPersistence = Persistence.again
 
 	init<Observable: ObservableType>(root: Observable, throttleDuration: Double) where Observable.ObservedType == ObservedType {
 		let emitter = Emitter<Wrapped>()
@@ -165,6 +174,8 @@ public final class DebounceObservable<Wrapped>: Cascaded, ObservableType {
 
 		root.onNext { [weak self] value in
 			guard let this = self else { return .stop }
+			guard this.dependentPersistence != .stop else { return .stop }
+
 			this.currentIdentifier += 1
 			let identifier = this.currentIdentifier
 
@@ -182,7 +193,7 @@ public final class DebounceObservable<Wrapped>: Cascaded, ObservableType {
 
 		emitter.onNext { [weak self] value in
 			guard let this = self else { return .stop }
-
+			guard this.dependentPersistence != .stop else { return .stop }
 			this.dependentPersistence = callback(value)
 			if case .stop = this.dependentPersistence {
 				this.currentIdentifier = 0
@@ -199,10 +210,10 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 	public typealias VariedType = Wrapped
 	public typealias ObservedType = Wrapped
 
-	fileprivate let root: AnyWeakObservable<Wrapped>
-	fileprivate var cachedValue: Wrapped? = nil
-	fileprivate var dependentPersistence = Persistence.again
-	fileprivate let internalEmitter = Emitter<Wrapped>()
+	private let root: AnyWeakObservable<Wrapped>
+	private var cachedValue: Wrapped? = nil
+	private var dependentPersistence = Persistence.again
+	private let internalEmitter = Emitter<Wrapped>()
 
 	init<Observable: ObservableType>(root: Observable) where Observable.ObservedType == Wrapped {
 
@@ -239,12 +250,12 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 public final class Combine2Observable<Wrapped1,Wrapped2>: Cascaded, ObservableType {
 	public typealias ObservedType = (Wrapped1,Wrapped2)
 
-	fileprivate let emitter: Emitter<(Wrapped1,Wrapped2)>
-	fileprivate let root1Observable: AnyWeakObservable<Wrapped1>
-	fileprivate let root2Observable: AnyWeakObservable<Wrapped2>
-	fileprivate var dependentPersistence = Persistence.again
-	fileprivate var latest1: Wrapped1? = nil
-	fileprivate var latest2: Wrapped2? = nil
+	private let emitter: Emitter<(Wrapped1,Wrapped2)>
+	private let root1Observable: AnyWeakObservable<Wrapped1>
+	private let root2Observable: AnyWeakObservable<Wrapped2>
+	private var dependentPersistence = Persistence.again
+	private var latest1: Wrapped1? = nil
+	private var latest2: Wrapped2? = nil
 
 
 	init<Observable1,Observable2>(root1Observable: Observable1, root2Observable: Observable2) where Observable1: ObservableType, Observable1.ObservedType == Wrapped1, Observable2: ObservableType, Observable2.ObservedType == Wrapped2 {
@@ -273,7 +284,7 @@ public final class Combine2Observable<Wrapped1,Wrapped2>: Cascaded, ObservableTy
 		}
 	}
 
-	fileprivate func emitIfPossible() {
+	private func emitIfPossible() {
 		guard let latest1 = self.latest1, let latest2 = self.latest2 else { return }
 		emitter.update(latest1,latest2)
 	}
