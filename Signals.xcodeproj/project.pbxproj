@@ -74,6 +74,10 @@
 		38B2D89B1D46580C00E27E62 /* Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		38BC834D1D3647DF000F8BDE /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		38BC83591D367F7E000F8BDE /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		38D041761E925449003F7B43 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		38D041771E925449003F7B43 /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
+		38D041781E925449003F7B43 /* codecov.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = codecov.yml; sourceTree = "<group>"; };
+		38D041791E925449003F7B43 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		38F6A3AF1D4E325100B824FA /* TypeErasers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeErasers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,6 +105,7 @@
 		3826CD831D32BDD5003CE220 = {
 			isa = PBXGroup;
 			children = (
+				38D041751E925432003F7B43 /* Docs */,
 				38305FF01E38B24900E6582F /* Frameworks */,
 				3826CD8F1D32BDD5003CE220 /* Signals */,
 				3826CD9B1D32BDD5003CE220 /* SignalsTests */,
@@ -179,6 +184,17 @@
 				3826CD921D32BDD5003CE220 /* Info.plist */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		38D041751E925432003F7B43 /* Docs */ = {
+			isa = PBXGroup;
+			children = (
+				38D041791E925449003F7B43 /* README.md */,
+				38D041771E925449003F7B43 /* Cartfile.private */,
+				38D041761E925449003F7B43 /* .travis.yml */,
+				38D041781E925449003F7B43 /* codecov.yml */,
+			);
+			name = Docs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
