@@ -1,2 +1,2 @@
-github "Quick/Nimble" "v6.0.1"
-github "typelift/SwiftCheck" "0.7.3"
+github "Quick/Nimble" "v6.1.0"
+github "typelift/SwiftCheck" "0.8.0"
