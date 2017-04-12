@@ -17,7 +17,7 @@ public func once <T> (_ callback: @escaping (T) -> ()) -> (T) -> Persistence {
 	}
 }
 
-public func whileTrue <T> (_ predicate: @escaping (T) -> Bool) -> (@escaping (T) -> ()) -> (T) -> Persistence {
+public func asLongAs <T> (_ predicate: @escaping (T) -> Bool) -> (@escaping (T) -> ()) -> (T) -> Persistence {
 	return { callback in
 		{ x in
 			guard predicate(x) else { return .stop }
@@ -26,3 +26,4 @@ public func whileTrue <T> (_ predicate: @escaping (T) -> Bool) -> (@escaping (T)
 		}
 	}
 }
+

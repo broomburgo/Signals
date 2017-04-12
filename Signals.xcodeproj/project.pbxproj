@@ -18,7 +18,7 @@
 		38AA43A21D3F849A001F0438 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A11D3F849A001F0438 /* Protocols.swift */; };
 		38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */; };
 		38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */; };
-		38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */; };
+		38AA43C21D3FD206001F0438 /* PersistenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA43C11D3FD206001F0438 /* PersistenceSpec.swift */; };
 		38B134FD1E51BB7C002CFC34 /* Variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B134FC1E51BB7C002CFC34 /* Variables.swift */; };
 		38B135011E51BC90002CFC34 /* VariablesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B135001E51BC90002CFC34 /* VariablesSpec.swift */; };
 		38B135031E51BD9A002CFC34 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38B135021E51BD9A002CFC34 /* Nimble.framework */; };
@@ -67,7 +67,7 @@
 		38AA43A11D3F849A001F0438 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmitterSpec.swift; path = SignalsTests/EmitterSpec.swift; sourceTree = SOURCE_ROOT; };
 		38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OperatorsSpec.swift; path = SignalsTests/OperatorsSpec.swift; sourceTree = SOURCE_ROOT; };
-		38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UtilitiesSpec.swift; path = SignalsTests/UtilitiesSpec.swift; sourceTree = SOURCE_ROOT; };
+		38AA43C11D3FD206001F0438 /* PersistenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistenceSpec.swift; path = SignalsTests/PersistenceSpec.swift; sourceTree = SOURCE_ROOT; };
 		38B134FC1E51BB7C002CFC34 /* Variables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Variables.swift; sourceTree = "<group>"; };
 		38B135001E51BC90002CFC34 /* VariablesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VariablesSpec.swift; path = SignalsTests/VariablesSpec.swift; sourceTree = SOURCE_ROOT; };
 		38B135021E51BD9A002CFC34 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 				38509FF21E0A8DE50047CAAF /* BindingSpec.swift */,
 				38AA43A51D3F87DF001F0438 /* EmitterSpec.swift */,
 				38AA43A71D3F8C12001F0438 /* OperatorsSpec.swift */,
-				38AA43C11D3FD206001F0438 /* UtilitiesSpec.swift */,
+				38AA43C11D3FD206001F0438 /* PersistenceSpec.swift */,
 				38B135001E51BC90002CFC34 /* VariablesSpec.swift */,
 			);
 			name = Spec;
@@ -323,7 +323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38AA43C21D3FD206001F0438 /* UtilitiesSpec.swift in Sources */,
+				38AA43C21D3FD206001F0438 /* PersistenceSpec.swift in Sources */,
 				38B135011E51BC90002CFC34 /* VariablesSpec.swift in Sources */,
 				38AA43A81D3F8C12001F0438 /* OperatorsSpec.swift in Sources */,
 				38AA43A61D3F87DF001F0438 /* EmitterSpec.swift in Sources */,

@@ -80,4 +80,25 @@ class SignalsSpec: XCTestCase {
 
 		waitForExpectations(timeout: 1, handler: nil)
 	}
+
+	func testFulfilled() {
+
+		let fulfilled = Fulfilled(42)
+
+		let willObserve1 = expectation(description: "willObserve1")
+		fulfilled.onNext {
+			XCTAssertEqual($0, 42)
+			willObserve1.fulfill()
+			return .stop
+		}
+
+		let willObserve2 = expectation(description: "willObserve2")
+		fulfilled.onNext {
+			XCTAssertEqual($0, 42)
+			willObserve2.fulfill()
+			return .stop
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
 }

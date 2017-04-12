@@ -62,3 +62,19 @@ public final class Emitter<Wrapped>: Cascaded, VariableType, ObservableType {
 		return self
 	}
 }
+
+public final class Fulfilled<Wrapped>: Cascaded, ObservableType {
+
+	public typealias ObservedType = Wrapped
+
+	private let value: Wrapped
+	public init(_ value: Wrapped) {
+		self.value = value
+	}
+
+	@discardableResult
+	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
+		_ = callback(value)
+		return self
+	}
+}

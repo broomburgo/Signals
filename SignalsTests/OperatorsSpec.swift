@@ -371,6 +371,36 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testCachedTwice() {
+		let emitter = Emitter<Int>()
+
+		let expectedValue = 42
+
+		let cached = emitter.cached
+
+		emitter.update(expectedValue)
+
+		let willObserve1 = expectation(description: "willObserve1")
+		let willObserve2 = expectation(description: "willObserve2")
+
+		after(0.1) { 
+			cached.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve1.fulfill()
+				return .stop
+			}
+
+			cached.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve2.fulfill()
+				return .stop
+			}
+		}
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+
 	func testCachedAny() {
 		let emitter = Emitter<Int>()
 
