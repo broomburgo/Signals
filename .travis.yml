@@ -5,7 +5,7 @@ xcode_scheme: Signals
 xcode_sdk: iphonesimulator10.3
 
 script:
-  - xcodebuild clean build test -project "Signals.xcodeproj" -scheme "Signals" -destination 'platform=iOS Simulator,id=22FA2149-1241-469C-BF6D-462D3837DB72,OS=10.3'
+  - xcodebuild clean build test -project "Signals.xcodeproj" -scheme "Signals" -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3'
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
