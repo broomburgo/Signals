@@ -14,6 +14,10 @@ public protocol VariableType: class {
 
 //MARK: - Main
 extension ObservableType {
+	public var any: AnyObservable<ObservedType> {
+		return AnyObservable(self)
+	}
+
 	public func map<Other>(_ transform: @escaping (ObservedType) -> Other) -> MapObservable<ObservedType,Other> {
 		return MapObservable(root: self, transform: transform)
 	}
