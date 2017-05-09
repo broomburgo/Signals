@@ -34,12 +34,7 @@ public final class Binding<Wrapped>: Disposable {
 		self.variable = AnyVariable(variable)
 
 		observable.onNext { [weak self] value in
-			guard let this = self else { return .stop }
-			guard this.active else {
-				this.observable = nil
-				this.variable = nil
-				return .stop
-			}
+			guard let this = self, this.active else { return .stop }
 			variable.update(value)
 			return .again
 		}
@@ -47,6 +42,8 @@ public final class Binding<Wrapped>: Disposable {
 
 	public func dispose() {
 		active = false
+		observable = nil
+		variable = nil
 	}
 }
 
