@@ -5,7 +5,7 @@ public final class MapObservable<Previous,Next>: Cascaded, ObservableType {
 	private var dependentPersistence = Persistence.again
 	private let internalEmitter = Emitter<Next>()
 
-	init<Observable: ObservableType>(root: Observable, transform: @escaping (Previous) -> Next) where Observable.ObservedType == Previous {
+	public init<Observable: ObservableType>(root: Observable, transform: @escaping (Previous) -> Next) where Observable.ObservedType == Previous {
 		self.root = AnyWeakObservable(root)
 		super.init()
 		root.concatenate(self)
@@ -39,7 +39,7 @@ public final class FlatMapObservable<Previous,Next>: Cascaded, ObservableType {
 	private var newObservable: AnyObservable<Next>? = nil
 	private let internalEmitter = Emitter<Next>()
 
-	init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
+	public init<Observable: ObservableType, OtherObservable: ObservableType>(root: Observable, transform: @escaping (Previous) -> OtherObservable) where Observable.ObservedType == Previous, OtherObservable.ObservedType == Next {
 		self.root = AnyWeakObservable(root)
 		self.transform = { AnyObservable(transform($0)) }
 		super.init()
@@ -79,7 +79,7 @@ public final class FilterObservable<Wrapped>: Cascaded, ObservableType {
 	private var dependentPersistence = Persistence.again
 	private let internalEmitter = Emitter<Wrapped>()
 
-	init<Observable: ObservableType>(root: Observable, predicate: @escaping (ObservedType) -> Bool) where Observable.ObservedType == Wrapped {
+	public init<Observable: ObservableType>(root: Observable, predicate: @escaping (ObservedType) -> Bool) where Observable.ObservedType == Wrapped {
 		self.root = AnyWeakObservable(root)
 		super.init()
 		root.concatenate(self)
@@ -113,7 +113,7 @@ public final class MergeObservable<Wrapped>: Cascaded, ObservableType {
 	private var dependentPersistence = Persistence.again
 	private let internalEmitter = Emitter<Wrapped>()
 
-	init<Observable: ObservableType>(roots: [Observable]) where Observable.ObservedType == Wrapped {
+	public init<Observable: ObservableType>(roots: [Observable]) where Observable.ObservedType == Wrapped {
 		self.roots = roots.map(AnyWeakObservable.init)
 		super.init()
 
@@ -163,7 +163,7 @@ public final class DebounceObservable<Wrapped>: Cascaded, ObservableType {
 
 	private var dependentPersistence = Persistence.again
 
-	init<Observable: ObservableType>(root: Observable, throttleDuration: Double) where Observable.ObservedType == ObservedType {
+	public init<Observable: ObservableType>(root: Observable, throttleDuration: Double) where Observable.ObservedType == ObservedType {
 		let emitter = Emitter<Wrapped>()
 
 		self.root = AnyWeakObservable(root)
@@ -215,7 +215,7 @@ public final class CachedObservable<Wrapped>: Cascaded, ObservableType {
 	private var dependentPersistence = Persistence.again
 	private let internalEmitter = Emitter<Wrapped>()
 
-	init<Observable: ObservableType>(root: Observable) where Observable.ObservedType == Wrapped {
+	public init<Observable: ObservableType>(root: Observable) where Observable.ObservedType == Wrapped {
 
 		self.root = AnyWeakObservable(root)
 
@@ -258,7 +258,7 @@ public final class Combine2Observable<Wrapped1,Wrapped2>: Cascaded, ObservableTy
 	private var latest2: Wrapped2? = nil
 
 
-	init<Observable1,Observable2>(root1Observable: Observable1, root2Observable: Observable2) where Observable1: ObservableType, Observable1.ObservedType == Wrapped1, Observable2: ObservableType, Observable2.ObservedType == Wrapped2 {
+	public init<Observable1,Observable2>(root1Observable: Observable1, root2Observable: Observable2) where Observable1: ObservableType, Observable1.ObservedType == Wrapped1, Observable2: ObservableType, Observable2.ObservedType == Wrapped2 {
 		self.emitter = Emitter<(Wrapped1,Wrapped2)>()
 		self.root1Observable = AnyWeakObservable(root1Observable)
 		self.root2Observable = AnyWeakObservable(root2Observable)
