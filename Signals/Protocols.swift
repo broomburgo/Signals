@@ -14,6 +14,7 @@ public protocol VariableType: class {
 
 //MARK: - Main
 extension ObservableType {
+	@discardableResult
 	public func onAll(_ callback: @escaping (ObservedType) -> ()) -> Self {
 		return onNext(always(callback))
 	}
