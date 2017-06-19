@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "382858E71EF7B56600C765DB"
-               BuildableName = "Signals-macos.framework"
+               BuildableName = "Signals.framework"
                BlueprintName = "Signals-macos"
                ReferencedContainer = "container:Signals.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "382858E71EF7B56600C765DB"
-            BuildableName = "Signals-macos.framework"
+            BuildableName = "Signals.framework"
             BlueprintName = "Signals-macos"
             ReferencedContainer = "container:Signals.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "382858E71EF7B56600C765DB"
-            BuildableName = "Signals-macos.framework"
+            BuildableName = "Signals.framework"
             BlueprintName = "Signals-macos"
             ReferencedContainer = "container:Signals.xcodeproj">
          </BuildableReference>
