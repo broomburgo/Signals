@@ -1,3 +1,5 @@
+import Dispatch
+
 public final class MapObservable<Previous,Next>: Cascaded, ObservableType {
 	public typealias ObservedType = Next
 

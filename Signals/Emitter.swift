@@ -1,3 +1,5 @@
+import Dispatch
+
 private final class FixedEmitter<Wrapped>: Cascaded, VariableType, ObservableType {
 	typealias VariedType = Wrapped
 	typealias ObservedType = Wrapped
