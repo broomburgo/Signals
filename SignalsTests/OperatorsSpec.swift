@@ -419,6 +419,59 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1)
 	}
 
+	func testFulfilledFilter() {
+		let expectedValue = 42
+		let rx_action = Fulfilled(42)
+
+		let willObserve = expectation(description: "willObserve")
+
+		rx_action
+			.filter { $0 % 2 == 0 }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
+	func testFulfilledMapFilter() {
+		let expectedValue = 84
+		let rx_action = Fulfilled(42)
+
+		let willObserve = expectation(description: "willObserve")
+
+		rx_action
+			.map { $0*2 }
+			.filter { $0 % 2 == 0 }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
+	func testFulfilledFilterMap() {
+		let expectedValue = 84
+		let rx_action = Fulfilled(42)
+
+		let willObserve = expectation(description: "willObserve")
+
+		rx_action
+			.filter { $0 % 2 == 0 }
+			.map { $0*2 }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
 	func testCached() {
 		let emitter = Emitter<Int>()
 
