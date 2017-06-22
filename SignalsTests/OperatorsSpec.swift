@@ -335,6 +335,90 @@ class OperatorsSpec: XCTestCase {
 		waitForExpectations(timeout: 1, handler: nil)
 	}
 
+	func testMapFilter() {
+		let emitter = Emitter<Int>()
+
+		let sentValue = 42
+		let expectedValue = 84
+		let unexpectedValue = 42
+		let willObserve = expectation(description: "willObserve")
+
+		let rx_action = AnyObservable(emitter)
+
+		rx_action
+			.map { $0*2 }
+			.filter { $0 != unexpectedValue }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
+		}
+
+		emitter.update(unexpectedValue)
+		emitter.update(sentValue)
+		emitter.update(sentValue)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testFilterMap() {
+		let emitter = Emitter<Int>()
+
+		let sentValue = 42
+		let expectedValue = 84
+		let unexpectedValue = 84
+		let willObserve = expectation(description: "willObserve")
+
+		let rx_action = AnyObservable(emitter)
+
+		rx_action
+			.filter { $0 != unexpectedValue }
+			.map { $0*2 }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
+		}
+
+		emitter.update(unexpectedValue)
+		emitter.update(sentValue)
+		emitter.update(sentValue)
+
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func testFulfilled() {
+		let expectedValue = 42
+		let rx_action = Fulfilled(expectedValue)
+
+		let willObserve = expectation(description: "willObserve")
+
+		rx_action.onNext { value in
+			XCTAssertEqual(value, expectedValue)
+			willObserve.fulfill()
+			return .stop
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
+	func testFulfilledMap() {
+		let expectedValue = 84
+		let rx_action = Fulfilled(42)
+
+		let willObserve = expectation(description: "willObserve")
+
+		rx_action
+			.map { $0*2 }
+			.onNext { value in
+				XCTAssertEqual(value, expectedValue)
+				willObserve.fulfill()
+				return .stop
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
 	func testCached() {
 		let emitter = Emitter<Int>()
 

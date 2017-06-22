@@ -76,7 +76,9 @@ public final class Fulfilled<Wrapped>: Cascaded, ObservableType {
 
 	@discardableResult
 	public func onNext(_ callback: @escaping (Wrapped) -> Persistence) -> Self {
-		_ = callback(value)
+		DispatchQueue.main.async {
+			_ = callback(self.value)
+		}
 		return self
 	}
 }
