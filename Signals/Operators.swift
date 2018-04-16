@@ -288,14 +288,14 @@ public final class Combine2Observable<Wrapped1,Wrapped2>: Cascaded, ObservableTy
 
 	private func emitIfPossible() {
 		guard let latest1 = self.latest1, let latest2 = self.latest2 else { return }
-		emitter.update(latest1,latest2)
+		emitter.update((latest1,latest2))
 	}
 
 	@discardableResult
-	public func onNext(_ callback: @escaping (Wrapped1, Wrapped2) -> Persistence) -> Self {
+	public func onNext(_ callback: @escaping ((Wrapped1, Wrapped2)) -> Persistence) -> Self {
 		emitter.onNext { [weak self] tuple in
 			guard let this = self else { return .stop }
-			this.dependentPersistence = callback(tuple.0,tuple.1)
+			this.dependentPersistence = callback(tuple)
 			return this.dependentPersistence
 		}
 

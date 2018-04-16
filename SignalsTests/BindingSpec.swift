@@ -18,7 +18,7 @@ class BindingSpec: XCTestCase {
 		bound.onNext { value in
 			willObserve1.fulfill()
 			XCTAssertEqual(value, expectedValue)
-			sendDisconnect.update()
+			sendDisconnect.update(())
 			return .again
 		}
 

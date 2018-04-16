@@ -1078,11 +1078,11 @@ class OperatorsSpec: XCTestCase {
 	}
 
 	func testMapSome() {
-		property("'mapSome' works like default 'flatMap' for collections of optionals") <- forAll { (aa: ArrayOf<OptionalOf<Int>>, ad: String) in
+		property("'mapSome' works like default 'flatMap' for collections of optionals") <- forAll { (aa: Array<Optional<Int>>, ad: String) in
 			let currentExpectation = self.expectation(description: ad)
 
-			let originalArray = aa.getArray.map { $0.getOptional }
-			let filteredArray = originalArray.flatMap { $0 }
+			let originalArray = aa.map { $0 }
+			let filteredArray = originalArray.compactMap { $0 }
 			var generatedArray: [Int] = []
 
 			let emitter = Emitter<Int?>()
